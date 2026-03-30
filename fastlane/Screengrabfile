@@ -1,0 +1,11 @@
+# NOTE: The screengrab action itself is not used for capture (screengrab 2.x
+# doesn't support Android 13+ storage permissions). Screenshot capture is
+# handled by UiAutomator in ScreenshotTest.kt and pulled via adb in the
+# Fastfile 'screenshots' lane.
+#
+# This file is kept so that `fastlane screengrab` can still be called and
+# the metadata directory structure is documented.
+
+app_package_name("com.beatbridge")
+locales(["en-US"])
+output_directory("fastlane/metadata/android")

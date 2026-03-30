@@ -51,7 +51,7 @@ class MainActivityInstrumentedTest {
         assumeTrue("Skipped: device has no Bluetooth hardware", hasBluetooth)
 
         ActivityScenario.launch(MainActivity::class.java).use {
-            onView(withId(R.id.tvStatus)).check(matches(isDisplayed()))
+            onView(withId(R.id.tv_status)).check(matches(isDisplayed()))
         }
     }
 
@@ -64,7 +64,7 @@ class MainActivityInstrumentedTest {
         ActivityScenario.launch(MainActivity::class.java).use {
             // The RecyclerView is always in the layout; visibility depends on
             // whether paired devices exist, but the view itself must be present.
-            onView(withId(R.id.rvDevices)) // throws if view is not in hierarchy
+            onView(withId(R.id.rv_devices)) // throws if view is not in hierarchy
         }
     }
 }

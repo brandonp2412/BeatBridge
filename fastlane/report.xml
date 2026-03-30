@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fastlane.lanes">
+    
+    
+    
+      
+      <testcase classname="fastlane.lanes" name="00: default_platform" time="0.0004248">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="01: assembleDebug" time="1.616609">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="02: assembleDebugAndroidTest" time="1.2273119">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="03: adb" time="0.4281041">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="04: adb" time="0.2228525">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="05: adb" time="0.0446137">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="06: adb" time="0.0387575">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="07: adb" time="6.5378913">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="08: adb pull /sdcard/Android/data/com.beatbridge/files/screenshots/. &quot;C:/Users/brandon/BeatBridge/fastlane/metadata/android/en-US/images/phoneScreenshots&quot;" time="0.0417126">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="09: adb" time="0.0781571">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="10: adb" time="0.088046">
+        
+      </testcase>
+    
+  </testsuite>
+</testsuites>

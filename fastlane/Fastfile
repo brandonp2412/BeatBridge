@@ -17,6 +17,58 @@ platform :android do
     gradle(task: "assemble", build_type: "Release")
   end
 
+  desc "Capture screenshots on a connected device/emulator (requires Bluetooth)"
+  lane :screenshots do
+    output_dir = File.expand_path(
+      "../metadata/android/en-US/images/phoneScreenshots", __FILE__
+    )
+    FileUtils.mkdir_p(output_dir)
+
+    # Build both APKs
+    gradle(task: "assemble", build_type: "Debug")
+    gradle(task: "assemble", build_type: "DebugAndroidTest")
+
+    app_apk  = "app/build/outputs/apk/debug/app-debug.apk"
+    test_apk = "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
+
+    # Install both APKs so the external files dir persists for pulling
+    adb(command: "install -t -r #{app_apk}")
+    adb(command: "install -t -r #{test_apk}")
+
+    # Grant runtime permissions so the app doesn't show a permission dialog during capture
+    adb(command: "shell pm grant com.beatbridge android.permission.BLUETOOTH_CONNECT")
+    adb(command: "shell pm grant com.beatbridge android.permission.POST_NOTIFICATIONS")
+
+    # Run only the screenshot test
+    adb(command: "shell am instrument -w " \
+                 "-e class com.beatbridge.ScreenshotTest " \
+                 "com.beatbridge.test/androidx.test.runner.AndroidJUnitRunner")
+
+    # Give the device a moment to flush writes
+    sleep(2)
+
+    # Pull screenshots — using Ruby File.join avoids MSYS path mangling
+    sh "adb pull /sdcard/Android/data/com.beatbridge/files/screenshots/. \"#{output_dir}\""
+
+    UI.success "Screenshots saved to #{output_dir}"
+  ensure
+    # Always clean up APKs
+    adb(command: "uninstall com.beatbridge.test") rescue nil
+    adb(command: "uninstall com.beatbridge") rescue nil
+  end
+
+  desc "Regenerate store graphics (icon.png + featureGraphic.png) from their SVG sources"
+  lane :graphics do
+    images_dir = File.expand_path("../metadata/android/en-US/images", __FILE__)
+    ["icon", "featureGraphic"].each do |name|
+      svg = File.join(images_dir, "#{name}.svg")
+      png = File.join(images_dir, "#{name}.png")
+      w, h = name == "icon" ? [512, 512] : [1024, 500]
+      sh "inkscape --export-type=png --export-width=#{w} --export-height=#{h} -o '#{png}' '#{svg}'"
+      UI.success "Generated #{name}.png (#{w}×#{h})"
+    end
+  end
+
   desc "Run tests and build a release APK"
   lane :ci do
     test

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7C4DFF"/>
+      <stop offset="100%" stop-color="#6200EE"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background square (F-Droid / Play Store apply their own shape mask) -->
+  <rect width="512" height="512" fill="url(#bg)"/>
+
+  <!-- Music note — scaled from 108x108 viewport, centered in 512x512 -->
+  <!-- Original path viewport: 108x108, note spans x:34–70, y:24–72 -->
+  <!-- Scale ≈ 3.5 → note size ~126×168px, centered at (256,256) -->
+  <g transform="translate(193, 168) scale(3.5)">
+    <path
+      fill="#FFFFFF"
+      d="M45,30 L70,24 L70,44 L65,45.5 L65,32 L50,36 L50,64
+         Q50,72 42,72 Q34,72 34,64 Q34,56 42,56 Q46,56 50,58 L50,30 Z"/>
+  </g>
+</svg>
