@@ -68,8 +68,15 @@ jobs:
       - name: Grant Gradle wrapper execute permission
         run: chmod +x gradlew
 
+      - name: Decode keystore
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > app/keystore.jks
+
       - name: Build release APKs
         run: ./gradlew assembleRelease --stacktrace
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
       - name: Compute version tag
         id: version
@@ -81,13 +88,10 @@ jobs:
         run: |
           TAG="${{ steps.version.outputs.tag }}"
           OUTDIR="app/build/outputs/apk/release"
-          for APK in "$OUTDIR"/app-*-release-unsigned.apk; do
-            ABI=$(basename "$APK" | sed 's/app-\(.*\)-release-unsigned\.apk/\1/')
+          for APK in "$OUTDIR"/app-*-release.apk; do
+            ABI=$(basename "$APK" | sed 's/app-\(.*\)-release\.apk/\1/')
             cp "$APK" "$OUTDIR/BeatBridge-${TAG}-${ABI}.apk"
           done
-          if [ -f "$OUTDIR/app-release-unsigned.apk" ]; then
-            cp "$OUTDIR/app-release-unsigned.apk" "$OUTDIR/BeatBridge-${TAG}-universal.apk"
-          fi
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -106,7 +110,7 @@ jobs:
             | Method | Notes |
             |--------|-------|
             | **F-Droid** | Verified build from source, signed by F-Droid *(recommended)* |
-            | **APK below** | Unsigned — built directly from this commit |
+            | **APK below** | Signed — built directly from this commit |
             | **Build yourself** | `git clone`, checkout this tag, `./gradlew assembleRelease` |
 
             See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/${{ steps.version.outputs.tag }}/CHANGELOG.md) for what's new.
