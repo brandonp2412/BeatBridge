@@ -32,7 +32,7 @@ No logins. No accounts. No internet. Just music.
 ## Screenshots
 
 <div align="center">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" alt="BeatBridge main screen" width="270"/>
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/04_full_list.png" alt="BeatBridge main screen" width="270"/>
 </div>
 
 ## Requirements
