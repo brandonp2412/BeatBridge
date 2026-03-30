@@ -142,7 +142,7 @@ See [CHANGELOG.md](CHANGELOG.md).
 
 ```
 BeatBridge — Auto-play music when your Bluetooth device connects
-Copyright (C) 2024 BeatBridge Contributors
+Copyright (C) 2026 BeatBridge Contributors
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
