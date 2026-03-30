@@ -1,0 +1,26 @@
+default_platform(:android)
+
+platform :android do
+
+  desc "Run unit tests"
+  lane :test do
+    gradle(task: "test")
+  end
+
+  desc "Build a debug APK"
+  lane :build_debug do
+    gradle(task: "assemble", build_type: "Debug")
+  end
+
+  desc "Build an unsigned release APK"
+  lane :build_release do
+    gradle(task: "assemble", build_type: "Release")
+  end
+
+  desc "Run tests and build a release APK"
+  lane :ci do
+    test
+    build_release
+  end
+
+end

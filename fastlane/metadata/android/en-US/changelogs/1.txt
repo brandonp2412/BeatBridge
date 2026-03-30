@@ -1,0 +1,6 @@
+Initial release.
+
+• Select any paired Bluetooth device as your auto-play trigger
+• Foreground service monitors for device connection events
+• Automatically resumes playback in your active media app on connect
+• Supports Android 8.0 through Android 15

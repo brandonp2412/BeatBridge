@@ -1,0 +1,25 @@
+BeatBridge automatically resumes music playback the moment your chosen Bluetooth device connects — your car speakers, headphones, or any paired device.
+
+HOW IT WORKS
+
+Select one paired Bluetooth device from the list. BeatBridge starts a lightweight foreground service that listens for that device to connect. When it does, BeatBridge sends a standard media play event to Android, resuming whatever you were last listening to in Spotify, YouTube Music, Pocket Casts, or any other media app.
+
+FEATURES
+
+• One-tap setup — pick your device and you're done
+• Works with any media player that responds to Android media key events
+• Persistent — keeps watching even after the app is closed
+• No polling — wakes only on Bluetooth connection events, so battery impact is minimal
+• Fully offline — no internet access, no accounts, no tracking
+
+PERMISSIONS
+
+• Bluetooth — to read your list of paired devices and detect when one connects
+• Foreground Service — to keep the monitor running in the background
+• Notifications — to display the persistent "Watching for…" status notification (Android 13+)
+
+No location access. No storage access. No network access.
+
+OPEN SOURCE
+
+BeatBridge is free and open-source software licensed under the GNU General Public License v3. Source code is available on GitHub.

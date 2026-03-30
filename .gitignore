@@ -1,0 +1,50 @@
+### Android ###
+*.iml
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+### Android patch for local.properties ###
+# This file is intentionally kept out of version control.
+# Each developer should have their own local.properties pointing to their SDK.
+
+### Gradle ###
+.gradle/
+build/
+gradle-app.setting
+!gradle-wrapper.jar
+!gradle-wrapper.properties
+.gradletasknamecache
+
+### IntelliJ / Android Studio ###
+*.iws
+out/
+.idea/
+
+### Kotlin ###
+*.class
+
+### macOS ###
+.DS_Store
+.AppleDouble
+.LSOverride
+
+### Windows ###
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+### VS Code ###
+.vscode/
+
+### Release / Keystore (never commit signing keys) ###
+*.jks
+*.keystore
+keystore.properties

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Music note icon as the app foreground -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,28 L54,62 Q54,70 46,70 Q38,70 38,62 Q38,54 46,54 Q50,54 54,56 L54,36 L70,32 L70,48 Q70,56 62,56 Q54,56 54,48 Q54,44 58,42" />
+    <!-- Simplified filled music note -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M45,30 L70,24 L70,44 L65,45.5 L65,32 L50,36 L50,64 Q50,72 42,72 Q34,72 34,64 Q34,56 42,56 Q46,56 50,58 L50,30 Z" />
+</vector>

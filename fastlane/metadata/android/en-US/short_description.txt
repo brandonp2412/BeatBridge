@@ -1,0 +1,1 @@
+Auto-play music when your Bluetooth device connects.

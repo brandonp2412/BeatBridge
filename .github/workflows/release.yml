@@ -1,0 +1,61 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build & Publish Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Grant Gradle wrapper execute permission
+        run: chmod +x gradlew
+
+      - name: Run unit tests
+        run: ./gradlew test --stacktrace
+
+      - name: Build release APK
+        run: ./gradlew assembleRelease --stacktrace
+
+      - name: Rename APK with version tag
+        run: |
+          VERSION="${{ github.ref_name }}"
+          cp app/build/outputs/apk/release/app-release-unsigned.apk \
+             app/build/outputs/apk/release/BeatBridge-${VERSION}-unsigned.apk
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: BeatBridge ${{ github.ref_name }}
+          generate_release_notes: true
+          files: app/build/outputs/apk/release/BeatBridge-${{ github.ref_name }}-unsigned.apk
+          body: |
+            ## BeatBridge ${{ github.ref_name }}
+
+            Auto-play music when your Bluetooth device connects.
+
+            ### Install options
+
+            | Method | Notes |
+            |--------|-------|
+            | **F-Droid** | Verified build from source, signed by F-Droid *(recommended)* |
+            | **APK below** | Unsigned — built directly from this tag's source |
+            | **Build yourself** | `git clone`, checkout this tag, `./gradlew assembleRelease` |
+
+            See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/${{ github.ref_name }}/CHANGELOG.md) for what's new.
