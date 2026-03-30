@@ -1,9 +1,11 @@
-name: Release
+name: Release (manual)
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to build and release (e.g. v1.0.5)'
+        required: true
 
 permissions:
   contents: write
@@ -33,20 +35,27 @@ jobs:
       - name: Build release APK
         run: ./gradlew assembleRelease --stacktrace
 
-      - name: Rename APK with version tag
+      - name: Rename APKs with version
         run: |
-          VERSION="${{ github.ref_name }}"
-          cp app/build/outputs/apk/release/app-release-unsigned.apk \
-             app/build/outputs/apk/release/BeatBridge-${VERSION}-unsigned.apk
+          TAG="${{ github.event.inputs.tag }}"
+          OUTDIR="app/build/outputs/apk/release"
+          for APK in "$OUTDIR"/app-*-release-unsigned.apk; do
+            ABI=$(basename "$APK" | sed 's/app-\(.*\)-release-unsigned\.apk/\1/')
+            cp "$APK" "$OUTDIR/BeatBridge-${TAG}-${ABI}.apk"
+          done
+          if [ -f "$OUTDIR/app-release-unsigned.apk" ]; then
+            cp "$OUTDIR/app-release-unsigned.apk" "$OUTDIR/BeatBridge-${TAG}-universal.apk"
+          fi
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          name: BeatBridge ${{ github.ref_name }}
+          tag_name: ${{ github.event.inputs.tag }}
+          name: BeatBridge ${{ github.event.inputs.tag }}
           generate_release_notes: true
-          files: app/build/outputs/apk/release/BeatBridge-${{ github.ref_name }}-unsigned.apk
+          files: app/build/outputs/apk/release/BeatBridge-*.apk
           body: |
-            ## BeatBridge ${{ github.ref_name }}
+            ## BeatBridge ${{ github.event.inputs.tag }}
 
             Auto-play music when your Bluetooth device connects.
 
@@ -58,4 +67,4 @@ jobs:
             | **APK below** | Unsigned — built directly from this tag's source |
             | **Build yourself** | `git clone`, checkout this tag, `./gradlew assembleRelease` |
 
-            See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/${{ github.ref_name }}/CHANGELOG.md) for what's new.
+            See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/${{ github.event.inputs.tag }}/CHANGELOG.md) for what's new.
