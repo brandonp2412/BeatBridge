@@ -81,8 +81,8 @@ jobs:
       - name: Compute version tag
         id: version
         run: |
-          VERSION=$(grep 'versionName' app/build.gradle.kts | grep -oP '"\K[^"]+')
-          echo "tag=v${VERSION}.${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+          VERSION=$(grep '^versionName=' version.properties | cut -d= -f2)
+          echo "tag=v${VERSION}" >> "$GITHUB_OUTPUT"
 
       - name: Rename APKs with version
         run: |
