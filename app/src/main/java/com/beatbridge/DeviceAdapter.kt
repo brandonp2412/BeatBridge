@@ -14,6 +14,8 @@ class DeviceAdapter(
     private val onSelect: (BluetoothDevice) -> Unit
 ) : RecyclerView.Adapter<DeviceAdapter.ViewHolder>() {
 
+    private var filtered = devices.toMutableList()
+
     inner class ViewHolder(val binding: ItemDeviceBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -23,7 +25,7 @@ class DeviceAdapter(
 
     @SuppressLint("MissingPermission")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val device = devices[position]
+        val device = filtered[position]
         val isSelected = device.address == selectedAddress
 
         holder.binding.tvDeviceName.text = device.name ?: "Unknown Device"
@@ -31,15 +33,26 @@ class DeviceAdapter(
         holder.binding.ivCheck.visibility = if (isSelected) View.VISIBLE else View.INVISIBLE
         holder.itemView.isSelected = isSelected
 
-        holder.itemView.setOnClickListener {
-            onSelect(device)
-        }
+        holder.itemView.setOnClickListener { onSelect(device) }
     }
 
-    override fun getItemCount(): Int = devices.size
+    override fun getItemCount(): Int = filtered.size
 
     fun updateSelection(address: String) {
         selectedAddress = address
+        notifyDataSetChanged()
+    }
+
+    @SuppressLint("MissingPermission")
+    fun filter(query: String) {
+        filtered = if (query.isBlank()) {
+            devices.toMutableList()
+        } else {
+            devices.filter {
+                (it.name ?: "").contains(query, ignoreCase = true) ||
+                        it.address.contains(query, ignoreCase = true)
+            }.toMutableList()
+        }
         notifyDataSetChanged()
     }
 }

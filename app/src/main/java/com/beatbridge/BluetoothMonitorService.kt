@@ -10,24 +10,23 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.media.AudioManager
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.view.KeyEvent
 import androidx.core.app.NotificationCompat
 
 /**
  * Foreground service that listens for Bluetooth ACL_CONNECTED events.
- * When the user's selected device connects, it dispatches a media play key event
- * to resume playback in whatever media app was last active.
- *
- * A foreground service is used so that the dynamic BroadcastReceiver keeps
- * working after Android 8.0 restricted implicit manifest receivers.
+ * When the user's selected device connects, it optionally launches the user's
+ * chosen music app and then dispatches a media play key event.
  */
 class BluetoothMonitorService : Service() {
 
+    private val handler = Handler(Looper.getMainLooper())
+
     private val bluetoothReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            if (intent.action != BluetoothDevice.ACTION_ACL_CONNECTED) return
-
             val device: BluetoothDevice? = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
                 intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE, BluetoothDevice::class.java)
             } else {
@@ -35,7 +34,10 @@ class BluetoothMonitorService : Service() {
                 intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
             }
 
-            device?.let { handleDeviceConnected(it) }
+            when (intent.action) {
+                BluetoothDevice.ACTION_ACL_CONNECTED -> device?.let { handleDeviceConnected(it) }
+                BluetoothDevice.ACTION_ACL_DISCONNECTED -> device?.let { handleDeviceDisconnected(it) }
+            }
         }
     }
 
@@ -43,11 +45,13 @@ class BluetoothMonitorService : Service() {
         super.onCreate()
         createNotificationChannel()
         startForeground(NOTIFICATION_ID, buildNotification("Monitoring for your device…"))
-        registerReceiver(bluetoothReceiver, IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED))
+        val filter = IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED).apply {
+            addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
+        }
+        registerReceiver(bluetoothReceiver, filter)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        // Update notification to reflect the currently watched device name
         val prefs = getSharedPreferences(MainActivity.PREFS_NAME, MODE_PRIVATE)
         val name = prefs.getString(MainActivity.PREF_SELECTED_NAME, null)
         val text = if (name != null) "Waiting for $name to connect..." else "No device selected yet"
@@ -59,8 +63,37 @@ class BluetoothMonitorService : Service() {
     private fun handleDeviceConnected(device: BluetoothDevice) {
         val prefs = getSharedPreferences(MainActivity.PREFS_NAME, MODE_PRIVATE)
         val selectedAddress = prefs.getString(MainActivity.PREF_SELECTED_DEVICE, null) ?: return
-        if (device.address == selectedAddress) {
-            triggerMediaPlay()
+        if (device.address != selectedAddress) return
+
+        val name = prefs.getString(MainActivity.PREF_SELECTED_NAME, null) ?: device.address
+        updateNotification("Connected to $name — starting playback…")
+
+        val appPackage = prefs.getString(MainActivity.PREF_SELECTED_APP, null)
+        if (appPackage != null) {
+            launchAppThenPlay(appPackage, name)
+        } else {
+            triggerMediaPlay(name)
+        }
+    }
+
+    private fun handleDeviceDisconnected(device: BluetoothDevice) {
+        val prefs = getSharedPreferences(MainActivity.PREFS_NAME, MODE_PRIVATE)
+        val selectedAddress = prefs.getString(MainActivity.PREF_SELECTED_DEVICE, null) ?: return
+        if (device.address != selectedAddress) return
+
+        val name = prefs.getString(MainActivity.PREF_SELECTED_NAME, null) ?: device.address
+        updateNotification("Waiting for $name to connect…")
+    }
+
+    private fun launchAppThenPlay(packageName: String, deviceName: String) {
+        val launchIntent = packageManager.getLaunchIntentForPackage(packageName)
+        if (launchIntent != null) {
+            launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(launchIntent)
+            // Give the app a moment to come to the foreground before sending play
+            handler.postDelayed({ triggerMediaPlay(deviceName) }, LAUNCH_DELAY_MS)
+        } else {
+            triggerMediaPlay(deviceName)
         }
     }
 
@@ -68,10 +101,15 @@ class BluetoothMonitorService : Service() {
      * Sends MEDIA_PLAY key events via AudioManager so the active media session
      * resumes playback (Spotify, YouTube Music, Podcast apps, etc.).
      */
-    private fun triggerMediaPlay() {
+    private fun triggerMediaPlay(deviceName: String) {
         val audioManager = getSystemService(AudioManager::class.java)
         audioManager.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY))
         audioManager.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PLAY))
+        updateNotification("Playing — connected to $deviceName")
+    }
+
+    private fun updateNotification(text: String) {
+        getSystemService(NotificationManager::class.java).notify(NOTIFICATION_ID, buildNotification(text))
     }
 
     private fun createNotificationChannel() {
@@ -104,11 +142,13 @@ class BluetoothMonitorService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
         unregisterReceiver(bluetoothReceiver)
     }
 
     companion object {
         private const val CHANNEL_ID = "beatbridge_monitor"
         private const val NOTIFICATION_ID = 1
+        private const val LAUNCH_DELAY_MS = 1000L
     }
 }

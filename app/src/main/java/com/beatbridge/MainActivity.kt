@@ -10,6 +10,8 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -25,7 +27,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var prefs: SharedPreferences
     private lateinit var bluetoothAdapter: BluetoothAdapter
     private val deviceList = mutableListOf<BluetoothDevice>()
+    private val musicAppList = mutableListOf<MusicApp>()
     private lateinit var deviceAdapter: DeviceAdapter
+    private lateinit var appAdapter: AppAdapter
 
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -55,17 +59,41 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        setupRecyclerView()
+        loadMusicApps()
+        setupDeviceRecyclerView()
+        setupAppRecyclerView()
+        setupSearch()
         checkPermissionsAndLoad()
         updateStatusLabel()
 
-        // Resume monitoring service if a device was previously selected
         if (prefs.getString(PREF_SELECTED_DEVICE, null) != null) {
             startMonitorService()
         }
     }
 
-    private fun setupRecyclerView() {
+    private fun loadMusicApps() {
+        musicAppList.clear()
+
+        // Show all launchable apps so the user can pick any media player
+        val launchIntent = Intent(Intent.ACTION_MAIN, null).apply {
+            addCategory(Intent.CATEGORY_LAUNCHER)
+        }
+        val found = packageManager.queryIntentActivities(launchIntent, 0)
+            .mapNotNull { resolveInfo ->
+                val pkg = resolveInfo.activityInfo.packageName
+                val label = resolveInfo.loadLabel(packageManager).toString()
+                if (pkg == packageName) null else MusicApp(pkg, label)
+            }
+            .sortedBy { it.appName }
+
+        musicAppList.addAll(found)
+
+        val isEmpty = musicAppList.isEmpty()
+        binding.tvAppsEmpty.visibility = if (isEmpty) View.VISIBLE else View.GONE
+        binding.rvApps.visibility = if (isEmpty) View.GONE else View.VISIBLE
+    }
+
+    private fun setupDeviceRecyclerView() {
         deviceAdapter = DeviceAdapter(
             devices = deviceList,
             selectedAddress = prefs.getString(PREF_SELECTED_DEVICE, null),
@@ -74,6 +102,36 @@ class MainActivity : AppCompatActivity() {
         binding.rvDevices.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = deviceAdapter
+            addItemDecoration(DividerItemDecoration(this@MainActivity, DividerItemDecoration.VERTICAL))
+        }
+    }
+
+    private fun setupSearch() {
+        binding.etDeviceSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                deviceAdapter.filter(s?.toString() ?: "")
+            }
+        })
+        binding.etAppSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                appAdapter.filter(s?.toString() ?: "")
+            }
+        })
+    }
+
+    private fun setupAppRecyclerView() {
+        appAdapter = AppAdapter(
+            apps = musicAppList,
+            selectedPackage = prefs.getString(PREF_SELECTED_APP, null),
+            onSelect = { app -> onAppSelected(app) }
+        )
+        binding.rvApps.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            adapter = appAdapter
             addItemDecoration(DividerItemDecoration(this@MainActivity, DividerItemDecoration.VERTICAL))
         }
     }
@@ -89,6 +147,20 @@ class MainActivity : AppCompatActivity() {
         updateStatusLabel()
         startMonitorService()
         Toast.makeText(this, "Now watching: $displayName", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun onAppSelected(app: MusicApp) {
+        val current = prefs.getString(PREF_SELECTED_APP, null)
+        if (current == app.packageName) {
+            // Tap again to deselect
+            prefs.edit().remove(PREF_SELECTED_APP).apply()
+            appAdapter.updateSelection(null)
+            Toast.makeText(this, "No app — will resume whatever was last playing", Toast.LENGTH_SHORT).show()
+        } else {
+            prefs.edit().putString(PREF_SELECTED_APP, app.packageName).apply()
+            appAdapter.updateSelection(app.packageName)
+            Toast.makeText(this, "Will open ${app.appName} on connect", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun checkPermissionsAndLoad() {
@@ -119,7 +191,8 @@ class MainActivity : AppCompatActivity() {
         deviceList.addAll(
             (bluetoothAdapter.bondedDevices ?: emptySet()).sortedBy { it.name ?: it.address }
         )
-        deviceAdapter.notifyDataSetChanged()
+        // Re-run the current filter so `filtered` syncs with the newly loaded list
+        deviceAdapter.filter(binding.etDeviceSearch.text.toString())
 
         val isEmpty = deviceList.isEmpty()
         binding.tvEmpty.visibility = if (isEmpty) View.VISIBLE else View.GONE
@@ -143,5 +216,6 @@ class MainActivity : AppCompatActivity() {
         const val PREFS_NAME = "beatbridge_prefs"
         const val PREF_SELECTED_DEVICE = "selected_device_address"
         const val PREF_SELECTED_NAME = "selected_device_name"
+        const val PREF_SELECTED_APP = "selected_app_package"
     }
 }

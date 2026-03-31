@@ -7,31 +7,22 @@
     android:minHeight="60dp"
     android:orientation="horizontal"
     android:paddingHorizontal="20dp"
-    android:paddingVertical="10dp">
+    android:paddingVertical="8dp">
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/iv_app_icon"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginEnd="14dp"
+        android:contentDescription="App icon" />
+
+    <TextView
+        android:id="@+id/tv_app_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tv_device_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:textColor="@color/bb_on_surface" />
-
-        <TextView
-            android:id="@+id/tv_device_address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:textSize="12sp"
-            android:textColor="@color/bb_on_surface_dim" />
-
-    </LinearLayout>
+        android:textSize="15sp"
+        android:textColor="@color/bb_on_surface" />
 
     <ImageView
         android:id="@+id/iv_check"

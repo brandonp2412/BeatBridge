@@ -1,15 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Music note icon as the app foreground -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
+
+    <!--
+        Single eighth-note (quaver) centred in the 108×108 canvas.
+        Safe zone: 18–90 on each axis. The note sits comfortably inside it.
+
+        Anatomy:
+          • Notehead: filled ellipse at bottom-left, tilted slightly
+          • Stem:     vertical rectangle up the right side of the notehead
+          • Flag:     curved path from the top of the stem sweeping right then down
+    -->
+
+    <!-- Notehead (ellipse approximated with a circle-ish rounded rect) -->
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M54,28 L54,62 Q54,70 46,70 Q38,70 38,62 Q38,54 46,54 Q50,54 54,56 L54,36 L70,32 L70,48 Q70,56 62,56 Q54,56 54,48 Q54,44 58,42" />
-    <!-- Simplified filled music note -->
+        android:pathData="
+            M44,76
+            a10,7 -20 1,0 20,0
+            a10,7 -20 1,0 -20,0
+            Z" />
+
+    <!-- Stem -->
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M45,30 L70,24 L70,44 L65,45.5 L65,32 L50,36 L50,64 Q50,72 42,72 Q34,72 34,64 Q34,56 42,56 Q46,56 50,58 L50,30 Z" />
+        android:pathData="
+            M60,76
+            L60,34
+            L64,34
+            L64,76
+            Z" />
+
+    <!-- Flag — a gentle swoop from top of stem -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="
+            M64,34
+            C72,36 76,42 74,50
+            C72,58 66,60 64,58
+            L64,54
+            C66,56 70,54 71,48
+            C72,42 69,38 64,38
+            Z" />
+
 </vector>

@@ -1,13 +1,13 @@
 <resources>
-    <style name="Theme.BeatBridge" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+    <style name="Theme.BeatBridge" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/bb_primary</item>
+        <item name="colorPrimaryVariant">@color/bb_primary_dark</item>
         <item name="colorOnPrimary">@color/white</item>
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+        <item name="colorSurface">@color/bb_surface</item>
+        <item name="colorOnSurface">@color/bb_on_surface</item>
+        <item name="android:windowBackground">@color/bb_surface</item>
+        <item name="android:statusBarColor">@color/bb_surface</item>
+        <item name="android:navigationBarColor">@color/bb_surface</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 </resources>

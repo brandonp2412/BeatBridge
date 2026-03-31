@@ -1,67 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="@color/bb_surface"
+    android:clipToPadding="false"
+    android:fitsSystemWindows="true">
 
-    <!-- Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingTop="48dp"
-        android:paddingBottom="20dp"
-        android:paddingHorizontal="20dp"
-        android:background="?attr/colorPrimary">
+        android:orientation="vertical">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="52dp"
+            android:paddingBottom="24dp"
+            android:paddingHorizontal="20dp"
+            android:background="@color/bb_surface_variant">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BeatBridge"
+                android:textColor="@color/bb_primary"
+                android:textSize="28sp"
+                android:letterSpacing="-0.01"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Tap a device below to activate auto-play"
+                android:textColor="@color/bb_on_surface_dim"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
+        <!-- ── Paired Devices ── -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="24dp"
+            android:paddingBottom="12dp"
+            android:text="Bluetooth Device"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.05"
+            android:textColor="@color/bb_primary" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="8dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:hint="Search devices…">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_device_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:imeOptions="actionSearch"
+                android:maxLines="1"
+                android:textColor="@color/bb_on_surface"
+                android:textColorHint="@color/bb_on_surface_dim" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_empty"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="BeatBridge"
-            android:textColor="@android:color/white"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            android:padding="24dp"
+            android:gravity="center"
+            android:text="No paired devices found.\n\nPair a Bluetooth device in your phone's Settings first, then reopen BeatBridge."
+            android:textSize="14sp"
+            android:textColor="@color/bb_on_surface_dim"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_devices"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:nestedScrollingEnabled="false" />
+
+        <!-- divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/bb_divider" />
+
+        <!-- ── Music App ── -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="24dp"
+            android:paddingBottom="4dp"
+            android:text="Music App"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.05"
+            android:textColor="@color/bb_primary" />
 
         <TextView
-            android:id="@+id/tv_status"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Tap a device below to activate auto-play"
-            android:textColor="#CCFFFFFF"
-            android:textSize="13sp" />
+            android:paddingHorizontal="20dp"
+            android:paddingBottom="12dp"
+            android:text="Opens this app when your device connects, then starts playback. Tap again to deselect."
+            android:textSize="12sp"
+            android:textColor="@color/bb_on_surface_dim" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="8dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:hint="Search apps…">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_app_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:imeOptions="actionSearch"
+                android:maxLines="1"
+                android:textColor="@color/bb_on_surface"
+                android:textColorHint="@color/bb_on_surface_dim" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tv_apps_empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="24dp"
+            android:gravity="center"
+            android:text="No apps found."
+            android:textSize="14sp"
+            android:textColor="@color/bb_on_surface_dim"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_apps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:nestedScrollingEnabled="false"
+            android:paddingBottom="24dp" />
 
     </LinearLayout>
 
-    <!-- Section label -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="8dp"
-        android:text="PAIRED DEVICES"
-        android:textSize="11sp"
-        android:letterSpacing="0.1"
-        android:textColor="?attr/colorPrimary" />
-
-    <!-- Empty state -->
-    <TextView
-        android:id="@+id/tv_empty"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="24dp"
-        android:gravity="center"
-        android:text="No paired devices found.\n\nPair a Bluetooth device in your phone's Settings first, then reopen BeatBridge."
-        android:textSize="14sp"
-        android:visibility="gone" />
-
-    <!-- Device list -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_devices"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingBottom="16dp" />
-
-</LinearLayout>
+</androidx.core.widget.NestedScrollView>
