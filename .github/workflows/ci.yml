@@ -68,6 +68,16 @@ jobs:
       - name: Grant Gradle wrapper execute permission
         run: chmod +x gradlew
 
+      - name: Compute version
+        id: version
+        run: |
+          BASE=$(grep '^versionName=' version.properties | cut -d= -f2)
+          PATCH=${{ github.run_number }}
+          VERSION="${BASE}.${PATCH}"
+          echo "versionName=${VERSION}" > version.properties
+          echo "versionCode=${PATCH}" >> version.properties
+          echo "tag=v${VERSION}" >> "$GITHUB_OUTPUT"
+
       - name: Decode keystore
         run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > app/keystore.jks
 
@@ -77,12 +87,6 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-
-      - name: Compute version tag
-        id: version
-        run: |
-          VERSION=$(grep '^versionName=' version.properties | cut -d= -f2)
-          echo "tag=v${VERSION}" >> "$GITHUB_OUTPUT"
 
       - name: Rename APKs with version
         run: |
