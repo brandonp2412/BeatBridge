@@ -48,3 +48,4 @@ $RECYCLE.BIN/
 *.jks
 *.keystore
 keystore.properties
+version.properties

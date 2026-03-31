@@ -1,5 +1,12 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
+}
+
+val versionProps = Properties().also { props ->
+    val f = rootProject.file("version.properties")
+    if (f.exists()) props.load(f.inputStream())
 }
 
 android {
@@ -10,8 +17,8 @@ android {
         applicationId = "com.beatbridge"
         minSdk = 26
         targetSdk = 36
-        versionCode = 10
-        versionName = "1.0.10"
+        versionCode = (versionProps["versionCode"] as String?)?.toInt() ?: 10
+        versionName = (versionProps["versionName"] as String?) ?: "1.0.10"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 

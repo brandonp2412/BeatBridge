@@ -18,6 +18,17 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.tag }}
+
+      - name: Set version from tag
+        run: |
+          TAG="${{ github.event.inputs.tag }}"
+          VERSION="${TAG#v}"
+          # Derive versionCode from patch number (e.g. 1.0.10 -> 10)
+          PATCH=$(echo "$VERSION" | cut -d. -f3)
+          echo "versionName=$VERSION" > version.properties
+          echo "versionCode=$PATCH" >> version.properties
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
