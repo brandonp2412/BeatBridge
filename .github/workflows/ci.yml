@@ -71,7 +71,7 @@ jobs:
       - name: Compute version
         id: version
         run: |
-          BASE=$(grep '^versionName=' version.properties | cut -d= -f2 | tr -d '\r')
+          BASE=$(grep '^versionBase=' version.properties | cut -d= -f2 | tr -d '\r')
           PATCH=${{ github.run_number }}
           VERSION="${BASE}.${PATCH}"
           echo "versionName=${VERSION}" > version.properties
