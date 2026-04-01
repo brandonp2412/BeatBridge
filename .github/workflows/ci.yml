@@ -74,7 +74,8 @@ jobs:
           BASE=$(grep '^versionBase=' version.properties | cut -d= -f2 | tr -d '\r')
           PATCH=${{ github.run_number }}
           VERSION="${BASE}.${PATCH}"
-          echo "versionName=${VERSION}" > version.properties
+          echo "versionBase=${BASE}" > version.properties
+          echo "versionName=${VERSION}" >> version.properties
           echo "versionCode=${PATCH}" >> version.properties
           echo "tag=v${VERSION}" >> "$GITHUB_OUTPUT"
 
