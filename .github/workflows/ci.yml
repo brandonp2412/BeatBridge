@@ -99,11 +99,11 @@ jobs:
 
       - name: Commit and push new version
         run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
           VERSION=$(grep ^versionName version.properties | cut -d '=' -f2 | tr -d '\r')
           git add version.properties
           git commit -m "Bump to $VERSION [skip-ci]"
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
           git tag ${{ steps.version.outputs.tag }}
           git push origin master
           git push origin ${{ steps.version.outputs.tag }}
