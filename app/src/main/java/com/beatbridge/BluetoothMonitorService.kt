@@ -44,20 +44,11 @@ class BluetoothMonitorService : Service() {
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
-        startForeground(NOTIFICATION_ID, buildNotification("Monitoring for your device…"))
+        startForeground(NOTIFICATION_ID, buildNotification("Persistent notification"))
         val filter = IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED).apply {
             addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
         }
         registerReceiver(bluetoothReceiver, filter)
-    }
-
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val prefs = getSharedPreferences(MainActivity.PREFS_NAME, MODE_PRIVATE)
-        val name = prefs.getString(MainActivity.PREF_SELECTED_NAME, null)
-        val text = if (name != null) "Waiting for $name to connect..." else "No device selected yet"
-        val nm = getSystemService(NotificationManager::class.java)
-        nm.notify(NOTIFICATION_ID, buildNotification(text))
-        return START_STICKY
     }
 
     private fun handleDeviceConnected(device: BluetoothDevice) {
@@ -66,7 +57,6 @@ class BluetoothMonitorService : Service() {
         if (device.address != selectedAddress) return
 
         val name = prefs.getString(MainActivity.PREF_SELECTED_NAME, null) ?: device.address
-        updateNotification("Connected to $name — starting playback…")
 
         val appPackage = prefs.getString(MainActivity.PREF_SELECTED_APP, null)
         if (appPackage != null) {
@@ -80,9 +70,6 @@ class BluetoothMonitorService : Service() {
         val prefs = getSharedPreferences(MainActivity.PREFS_NAME, MODE_PRIVATE)
         val selectedAddress = prefs.getString(MainActivity.PREF_SELECTED_DEVICE, null) ?: return
         if (device.address != selectedAddress) return
-
-        val name = prefs.getString(MainActivity.PREF_SELECTED_NAME, null) ?: device.address
-        updateNotification("Waiting for $name to connect…")
     }
 
     private fun launchAppThenPlay(packageName: String, deviceName: String) {
@@ -105,11 +92,6 @@ class BluetoothMonitorService : Service() {
         val audioManager = getSystemService(AudioManager::class.java)
         audioManager.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY))
         audioManager.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PLAY))
-        updateNotification("Playing — connected to $deviceName")
-    }
-
-    private fun updateNotification(text: String) {
-        getSystemService(NotificationManager::class.java).notify(NOTIFICATION_ID, buildNotification(text))
     }
 
     private fun createNotificationChannel() {
