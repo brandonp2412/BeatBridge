@@ -65,6 +65,10 @@ android {
         }
     }
 
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
+    }
 }
 
 // ABI-specific versionCodes: base * 100 + suffix (x86_64=1, armeabi-v7a=2, arm64-v8a=3, x86=4)
