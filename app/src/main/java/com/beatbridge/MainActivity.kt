@@ -208,7 +208,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun startMonitorService() {
+    fun startMonitorService() {
         startForegroundService(Intent(this, BluetoothMonitorService::class.java))
     }
 
