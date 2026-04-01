@@ -81,6 +81,17 @@ jobs:
       - name: Decode keystore
         run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > app/keystore.jks
 
+      - name: Commit and push new version
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          VERSION=$(grep ^versionName version.properties | cut -d '=' -f2 | tr -d '\r')
+          git add version.properties
+          git commit -m "Bump to $VERSION [skip-ci]"
+          git tag ${{ steps.version.outputs.tag }}
+          git push origin master
+          git push origin ${{ steps.version.outputs.tag }}
+
       - name: Build release APKs
         run: ./gradlew assembleRelease --stacktrace
         env:
@@ -96,17 +107,6 @@ jobs:
             ABI=$(basename "$APK" | sed 's/app-\(.*\)-release\.apk/\1/')
             cp "$APK" "$OUTDIR/BeatBridge-${TAG}-${ABI}.apk"
           done
-
-      - name: Commit and push new version
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          VERSION=$(grep ^versionName version.properties | cut -d '=' -f2 | tr -d '\r')
-          git add version.properties
-          git commit -m "Bump to $VERSION [skip-ci]"
-          git tag ${{ steps.version.outputs.tag }}
-          git push origin master
-          git push origin ${{ steps.version.outputs.tag }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
