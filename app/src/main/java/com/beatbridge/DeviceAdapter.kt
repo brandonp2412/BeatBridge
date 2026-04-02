@@ -1,17 +1,18 @@
 package com.beatbridge
 
-import android.annotation.SuppressLint
-import android.bluetooth.BluetoothDevice
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.beatbridge.databinding.ItemDeviceBinding
 
+data class BtDevice(val address: String, val name: String)
+
 class DeviceAdapter(
-    private val devices: List<BluetoothDevice>,
+    private val devices: List<BtDevice>,
     private var selectedAddress: String?,
-    private val onSelect: (BluetoothDevice) -> Unit
+    private val onSelect: (BtDevice) -> Unit
 ) : RecyclerView.Adapter<DeviceAdapter.ViewHolder>() {
 
     private var filtered = devices.toMutableList()
@@ -23,12 +24,11 @@ class DeviceAdapter(
         return ViewHolder(binding)
     }
 
-    @SuppressLint("MissingPermission")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val device = filtered[position]
         val isSelected = device.address == selectedAddress
 
-        holder.binding.tvDeviceName.text = device.name ?: "Unknown Device"
+        holder.binding.tvDeviceName.text = device.name.ifEmpty { "Unknown Device" }
         holder.binding.tvDeviceAddress.text = device.address
         holder.binding.ivCheck.visibility = if (isSelected) View.VISIBLE else View.INVISIBLE
         holder.itemView.isSelected = isSelected
@@ -39,20 +39,31 @@ class DeviceAdapter(
     override fun getItemCount(): Int = filtered.size
 
     fun updateSelection(address: String) {
+        val oldPos = filtered.indexOfFirst { it.address == selectedAddress }
+        val newPos = filtered.indexOfFirst { it.address == address }
         selectedAddress = address
-        notifyDataSetChanged()
+        if (oldPos >= 0) notifyItemChanged(oldPos)
+        if (newPos >= 0) notifyItemChanged(newPos)
     }
 
-    @SuppressLint("MissingPermission")
     fun filter(query: String) {
-        filtered = if (query.isBlank()) {
+        val newList = if (query.isBlank()) {
             devices.toMutableList()
         } else {
             devices.filter {
-                (it.name ?: "").contains(query, ignoreCase = true) ||
+                it.name.contains(query, ignoreCase = true) ||
                         it.address.contains(query, ignoreCase = true)
             }.toMutableList()
         }
-        notifyDataSetChanged()
+        val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+            override fun getOldListSize() = filtered.size
+            override fun getNewListSize() = newList.size
+            override fun areItemsTheSame(oldPos: Int, newPos: Int) =
+                filtered[oldPos].address == newList[newPos].address
+            override fun areContentsTheSame(oldPos: Int, newPos: Int) =
+                filtered[oldPos] == newList[newPos]
+        })
+        filtered = newList
+        diff.dispatchUpdatesTo(this)
     }
 }

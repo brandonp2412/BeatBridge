@@ -3,7 +3,6 @@ package com.beatbridge
 import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.content.Intent
 import android.content.SharedPreferences
@@ -20,13 +19,14 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.beatbridge.databinding.ActivityMainBinding
+import androidx.core.content.edit
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var prefs: SharedPreferences
     private lateinit var bluetoothAdapter: BluetoothAdapter
-    private val deviceList = mutableListOf<BluetoothDevice>()
+    private val deviceList = mutableListOf<BtDevice>()
     private val musicAppList = mutableListOf<MusicApp>()
     private lateinit var deviceAdapter: DeviceAdapter
     private lateinit var appAdapter: AppAdapter
@@ -136,13 +136,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("MissingPermission")
-    private fun onDeviceSelected(device: BluetoothDevice) {
-        val displayName = device.name ?: device.address
-        prefs.edit()
-            .putString(PREF_SELECTED_DEVICE, device.address)
-            .putString(PREF_SELECTED_NAME, displayName)
-            .apply()
+    private fun onDeviceSelected(device: BtDevice) {
+        val displayName = device.name.ifEmpty { device.address }
+        prefs.edit {
+            putString(PREF_SELECTED_DEVICE, device.address)
+                .putString(PREF_SELECTED_NAME, displayName)
+        }
         deviceAdapter.updateSelection(device.address)
         updateStatusLabel()
         startMonitorService()
@@ -153,11 +152,11 @@ class MainActivity : AppCompatActivity() {
         val current = prefs.getString(PREF_SELECTED_APP, null)
         if (current == app.packageName) {
             // Tap again to deselect
-            prefs.edit().remove(PREF_SELECTED_APP).apply()
+            prefs.edit {remove(PREF_SELECTED_APP)}
             appAdapter.updateSelection(null)
             Toast.makeText(this, "No app — will resume whatever was last playing", Toast.LENGTH_SHORT).show()
         } else {
-            prefs.edit().putString(PREF_SELECTED_APP, app.packageName).apply()
+            prefs.edit { putString(PREF_SELECTED_APP, app.packageName) }
             appAdapter.updateSelection(app.packageName)
             Toast.makeText(this, "Will open ${app.appName} on connect", Toast.LENGTH_SHORT).show()
         }
@@ -189,7 +188,9 @@ class MainActivity : AppCompatActivity() {
     private fun loadPairedDevices() {
         deviceList.clear()
         deviceList.addAll(
-            (bluetoothAdapter.bondedDevices ?: emptySet()).sortedBy { it.name ?: it.address }
+            (bluetoothAdapter.bondedDevices ?: emptySet())
+                .map { BtDevice(address = it.address, name = it.name ?: "") }
+                .sortedBy { it.name.ifEmpty { it.address } }
         )
         // Re-run the current filter so `filtered` syncs with the newly loaded list
         deviceAdapter.filter(binding.etDeviceSearch.text.toString())

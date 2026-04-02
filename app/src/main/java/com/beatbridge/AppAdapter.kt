@@ -3,6 +3,7 @@ package com.beatbridge
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.beatbridge.databinding.ItemAppBinding
 
@@ -44,16 +45,28 @@ class AppAdapter(
     override fun getItemCount(): Int = filtered.size
 
     fun updateSelection(packageName: String?) {
+        val oldPos = filtered.indexOfFirst { it.packageName == selectedPackage }
+        val newPos = filtered.indexOfFirst { it.packageName == packageName }
         selectedPackage = packageName
-        notifyDataSetChanged()
+        if (oldPos >= 0) notifyItemChanged(oldPos)
+        if (newPos >= 0) notifyItemChanged(newPos)
     }
 
     fun filter(query: String) {
-        filtered = if (query.isBlank()) {
+        val newList = if (query.isBlank()) {
             apps.toMutableList()
         } else {
             apps.filter { it.appName.contains(query, ignoreCase = true) }.toMutableList()
         }
-        notifyDataSetChanged()
+        val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+            override fun getOldListSize() = filtered.size
+            override fun getNewListSize() = newList.size
+            override fun areItemsTheSame(oldPos: Int, newPos: Int) =
+                filtered[oldPos].packageName == newList[newPos].packageName
+            override fun areContentsTheSame(oldPos: Int, newPos: Int) =
+                filtered[oldPos] == newList[newPos]
+        })
+        filtered = newList
+        diff.dispatchUpdatesTo(this)
     }
 }
