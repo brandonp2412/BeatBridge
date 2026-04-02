@@ -44,7 +44,7 @@ class BluetoothMonitorService : Service() {
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
-        startForeground(NOTIFICATION_ID, buildNotification("Persistent notification"))
+        startForeground(NOTIFICATION_ID, buildNotification())
         val filter = IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED).apply {
             addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
         }
@@ -56,13 +56,11 @@ class BluetoothMonitorService : Service() {
         val selectedAddress = prefs.getString(MainActivity.PREF_SELECTED_DEVICE, null) ?: return
         if (device.address != selectedAddress) return
 
-        val name = prefs.getString(MainActivity.PREF_SELECTED_NAME, null) ?: device.address
-
         val appPackage = prefs.getString(MainActivity.PREF_SELECTED_APP, null)
         if (appPackage != null) {
-            launchAppThenPlay(appPackage, name)
+            launchAppThenPlay(appPackage)
         } else {
-            triggerMediaPlay(name)
+            triggerMediaPlay()
         }
     }
 
@@ -72,15 +70,15 @@ class BluetoothMonitorService : Service() {
         if (device.address != selectedAddress) return
     }
 
-    private fun launchAppThenPlay(packageName: String, deviceName: String) {
+    private fun launchAppThenPlay(packageName: String) {
         val launchIntent = packageManager.getLaunchIntentForPackage(packageName)
         if (launchIntent != null) {
             launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(launchIntent)
             // Give the app a moment to come to the foreground before sending play
-            handler.postDelayed({ triggerMediaPlay(deviceName) }, LAUNCH_DELAY_MS)
+            handler.postDelayed({ triggerMediaPlay() }, LAUNCH_DELAY_MS)
         } else {
-            triggerMediaPlay(deviceName)
+            triggerMediaPlay()
         }
     }
 
@@ -88,7 +86,7 @@ class BluetoothMonitorService : Service() {
      * Sends MEDIA_PLAY key events via AudioManager so the active media session
      * resumes playback (Spotify, YouTube Music, Podcast apps, etc.).
      */
-    private fun triggerMediaPlay(deviceName: String) {
+    private fun triggerMediaPlay() {
         val audioManager = getSystemService(AudioManager::class.java)
         audioManager.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY))
         audioManager.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PLAY))
@@ -105,10 +103,10 @@ class BluetoothMonitorService : Service() {
         getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
     }
 
-    private fun buildNotification(contentText: String) =
+    private fun buildNotification() =
         NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("BeatBridge")
-            .setContentText(contentText)
+            .setContentText("Persistent notification")
             .setSmallIcon(android.R.drawable.ic_media_play)
             .setOngoing(true)
             .setContentIntent(
