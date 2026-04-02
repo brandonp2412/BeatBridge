@@ -28,8 +28,16 @@ platform :android do
     gradle(task: "assemble", build_type: "Debug")
     gradle(task: "assemble", build_type: "DebugAndroidTest")
 
-    app_apk  = "app/build/outputs/apk/debug/app-debug.apk"
-    test_apk = "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
+    root = File.expand_path("..", __dir__)
+    apk_dir = File.join(root, "app/build/outputs/apk/debug")
+
+    # The build produces ABI-split APKs; pick the one matching the connected device.
+    device_abi = `adb shell getprop ro.product.cpu.abi`.strip
+    app_apk = File.join(apk_dir, "app-#{device_abi}-debug.apk")
+    # Fall back to a universal APK if an ABI-split one doesn't exist
+    app_apk = File.join(apk_dir, "app-debug.apk") unless File.exist?(app_apk)
+
+    test_apk = File.join(root, "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk")
 
     # Install both APKs so the external files dir persists for pulling
     adb(command: "install -t -r #{app_apk}")

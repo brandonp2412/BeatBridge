@@ -5,57 +5,57 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="00: default_platform" time="0.0004248">
+      <testcase classname="fastlane.lanes" name="00: default_platform" time="0.0004084">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="01: assembleDebug" time="1.616609">
+      <testcase classname="fastlane.lanes" name="01: assembleDebug" time="1.5472238">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="02: assembleDebugAndroidTest" time="1.2273119">
+      <testcase classname="fastlane.lanes" name="02: assembleDebugAndroidTest" time="1.3715441">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="03: adb" time="0.4281041">
+      <testcase classname="fastlane.lanes" name="03: adb" time="0.2914334">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="04: adb" time="0.2228525">
+      <testcase classname="fastlane.lanes" name="04: adb" time="0.1718256">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="05: adb" time="0.0446137">
+      <testcase classname="fastlane.lanes" name="05: adb" time="0.0415727">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="06: adb" time="0.0387575">
+      <testcase classname="fastlane.lanes" name="06: adb" time="0.0399068">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="07: adb" time="6.5378913">
+      <testcase classname="fastlane.lanes" name="07: adb" time="7.5997874">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="08: adb pull /sdcard/Android/data/com.beatbridge/files/screenshots/. &quot;C:/Users/brandon/BeatBridge/fastlane/metadata/android/en-US/images/phoneScreenshots&quot;" time="0.0417126">
+      <testcase classname="fastlane.lanes" name="08: adb pull /sdcard/Android/data/com.beatbridge/files/screenshots/. &quot;C:/Users/brandon/BeatBridge/fastlane/metadata/android/en-US/images/phoneScreenshots&quot;" time="0.0498689">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="09: adb" time="0.0781571">
+      <testcase classname="fastlane.lanes" name="09: adb" time="0.0914801">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="10: adb" time="0.088046">
+      <testcase classname="fastlane.lanes" name="10: adb" time="0.1149021">
         
       </testcase>
     
