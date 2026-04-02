@@ -17,7 +17,7 @@ class DeviceAdapter(
 
     private var filtered = devices.toMutableList()
 
-    inner class ViewHolder(val binding: ItemDeviceBinding) : RecyclerView.ViewHolder(binding.root)
+    class ViewHolder(val binding: ItemDeviceBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemDeviceBinding.inflate(LayoutInflater.from(parent.context), parent, false)

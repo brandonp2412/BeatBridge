@@ -17,7 +17,7 @@ class AppAdapter(
 
     private var filtered = apps.toMutableList()
 
-    inner class ViewHolder(val binding: ItemAppBinding) : RecyclerView.ViewHolder(binding.root)
+    class ViewHolder(val binding: ItemAppBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemAppBinding.inflate(LayoutInflater.from(parent.context), parent, false)
