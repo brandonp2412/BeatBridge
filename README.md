@@ -8,11 +8,7 @@
 [![Min SDK](https://img.shields.io/badge/Android-8.0%2B-brightgreen.svg)](https://developer.android.com/about/versions/oreo)
 [![F-Droid](https://img.shields.io/f-droid/v/com.beatbridge?color=blueviolet)](https://f-droid.org/packages/com.beatbridge)
 
-**Automatically resume music playback the moment your Bluetooth device connects.**
-
 </div>
-
----
 
 ## What it does
 
@@ -35,17 +31,6 @@ No logins. No accounts. No internet. Just music.
   <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/04_full_list.png" alt="BeatBridge main screen" width="270"/>
 </div>
 
-## Requirements
-
-- Android 8.0 (API 26) or higher
-- At least one paired Bluetooth device
-
-## Install
-
-### F-Droid _(recommended)_
-
-BeatBridge is available on [F-Droid](https://f-droid.org/packages/com.beatbridge) — every build is verified from source, signed by F-Droid, and free of proprietary blobs.
-
 ### Build from source
 
 ```bash
@@ -56,21 +41,6 @@ cd BeatBridge
 ```
 
 Requirements: JDK 17, Android SDK with API 36.
-
-### GitHub Releases
-
-Unsigned APKs are attached to each [GitHub Release](https://github.com/brandonp2412/BeatBridge/releases). For a verified, signed build prefer F-Droid.
-
-## Permissions
-
-| Permission                                                   | Why                                              |
-| ------------------------------------------------------------ | ------------------------------------------------ |
-| `BLUETOOTH_CONNECT` (Android 12+)                            | Read paired device names and addresses           |
-| `BLUETOOTH` / `BLUETOOTH_ADMIN` (Android ≤ 11)               | Read paired devices on older OS versions         |
-| `FOREGROUND_SERVICE` / `FOREGROUND_SERVICE_CONNECTED_DEVICE` | Keep the monitor service alive                   |
-| `POST_NOTIFICATIONS` (Android 13+)                           | Show the persistent "Watching for…" notification |
-
-No location, no storage, no internet.
 
 ## How it works
 
@@ -133,10 +103,6 @@ BeatBridge is designed to meet F-Droid inclusion requirements:
 - No network access, no tracking
 - Reproducible builds from source via `./gradlew assembleRelease`
 - Fastlane metadata in [`fastlane/metadata/android/`](fastlane/metadata/android/)
-
-## Changelog
-
-See [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 
