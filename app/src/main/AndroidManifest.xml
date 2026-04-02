@@ -10,7 +10,8 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 
     <!-- Foreground service permissions -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"
+        tools:ignore="ForegroundServicesPolicy" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
 
     <!-- Notification permission (Android 13+) -->
@@ -21,7 +22,7 @@
 
     <!-- Needed to list all installed apps for the music app picker -->
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
-        tools:ignore="QueryAllPackagesPermission" />
+        tools:ignore="PackageVisibilityPolicy,QueryAllPackagesPermission" />
 
     <queries>
         <intent>
