@@ -107,7 +107,7 @@ class BluetoothMonitorService : Service() {
         NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("BeatBridge")
             .setContentText("Persistent notification")
-            .setSmallIcon(android.R.drawable.ic_media_play)
+            .setSmallIcon(R.drawable.ic_music_note)
             .setOngoing(true)
             .setContentIntent(
                 PendingIntent.getActivity(
