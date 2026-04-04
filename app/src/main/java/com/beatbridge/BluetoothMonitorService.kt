@@ -36,7 +36,6 @@ class BluetoothMonitorService : Service() {
 
             when (intent.action) {
                 BluetoothDevice.ACTION_ACL_CONNECTED -> device?.let { handleDeviceConnected(it) }
-                BluetoothDevice.ACTION_ACL_DISCONNECTED -> device?.let { handleDeviceDisconnected(it) }
             }
         }
     }
@@ -44,6 +43,7 @@ class BluetoothMonitorService : Service() {
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
+        createLaunchNotificationChannel()
         startForeground(NOTIFICATION_ID, buildNotification())
         val filter = IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED).apply {
             addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
@@ -64,22 +64,30 @@ class BluetoothMonitorService : Service() {
         }
     }
 
-    private fun handleDeviceDisconnected(device: BluetoothDevice) {
-        val prefs = getSharedPreferences(MainActivity.PREFS_NAME, MODE_PRIVATE)
-        val selectedAddress = prefs.getString(MainActivity.PREF_SELECTED_DEVICE, null) ?: return
-        if (device.address != selectedAddress) return
-    }
-
     private fun launchAppThenPlay(packageName: String) {
-        val launchIntent = packageManager.getLaunchIntentForPackage(packageName)
-        if (launchIntent != null) {
-            launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(launchIntent)
-            // Give the app a moment to come to the foreground before sending play
-            handler.postDelayed({ triggerMediaPlay() }, LAUNCH_DELAY_MS)
-        } else {
+        val launchIntent = packageManager.getLaunchIntentForPackage(packageName) ?: run {
             triggerMediaPlay()
+            return
         }
+        launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        val pendingIntent = PendingIntent.getActivity(
+            this, REQUEST_CODE_LAUNCH, launchIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        // startActivity from a Service is blocked on Android 10+. A full-screen intent
+        // notification fires the pending intent automatically and bypasses that restriction.
+        // Uses a HIGH-importance channel — IMPORTANCE_LOW would suppress the intent.
+        val notification = NotificationCompat.Builder(this, LAUNCH_CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_music_note)
+            .setContentTitle("BeatBridge")
+            .setContentText("Starting music…")
+            .setFullScreenIntent(pendingIntent, true)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setCategory(NotificationCompat.CATEGORY_TRANSPORT)
+            .setAutoCancel(true)
+            .build()
+        getSystemService(NotificationManager::class.java).notify(LAUNCH_NOTIFICATION_ID, notification)
+        handler.postDelayed({ triggerMediaPlay() }, LAUNCH_DELAY_MS)
     }
 
     /**
@@ -99,6 +107,17 @@ class BluetoothMonitorService : Service() {
             NotificationManager.IMPORTANCE_LOW
         ).apply {
             description = "Running in the background to detect your paired device"
+        }
+        getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
+    }
+
+    private fun createLaunchNotificationChannel() {
+        val channel = NotificationChannel(
+            LAUNCH_CHANNEL_ID,
+            "BeatBridge App Launch",
+            NotificationManager.IMPORTANCE_HIGH
+        ).apply {
+            description = "Briefly shown when launching your music app"
         }
         getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
     }
@@ -128,7 +147,10 @@ class BluetoothMonitorService : Service() {
 
     companion object {
         private const val CHANNEL_ID = "beatbridge_monitor"
+        private const val LAUNCH_CHANNEL_ID = "beatbridge_launch"
         private const val NOTIFICATION_ID = 1
+        private const val LAUNCH_NOTIFICATION_ID = 2
+        private const val REQUEST_CODE_LAUNCH = 1
         private const val LAUNCH_DELAY_MS = 1000L
     }
 }
