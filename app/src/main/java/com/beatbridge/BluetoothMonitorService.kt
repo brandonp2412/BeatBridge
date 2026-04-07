@@ -70,23 +70,8 @@ class BluetoothMonitorService : Service() {
             return
         }
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        val pendingIntent = PendingIntent.getActivity(
-            this, REQUEST_CODE_LAUNCH, launchIntent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        // startActivity from a Service is blocked on Android 10+. A full-screen intent
-        // notification fires the pending intent automatically and bypasses that restriction.
-        // Uses a HIGH-importance channel — IMPORTANCE_LOW would suppress the intent.
-        val notification = NotificationCompat.Builder(this, LAUNCH_CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_music_note)
-            .setContentTitle("BeatBridge")
-            .setContentText("Starting music…")
-            .setFullScreenIntent(pendingIntent, true)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setCategory(NotificationCompat.CATEGORY_TRANSPORT)
-            .setAutoCancel(true)
-            .build()
-        getSystemService(NotificationManager::class.java).notify(LAUNCH_NOTIFICATION_ID, notification)
+        startActivity(launchIntent)
+
         handler.postDelayed({ triggerMediaPlay() }, LAUNCH_DELAY_MS)
     }
 

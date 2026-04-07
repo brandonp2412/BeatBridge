@@ -7,8 +7,10 @@ import android.bluetooth.BluetoothManager
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -20,6 +22,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.beatbridge.databinding.ActivityMainBinding
 import androidx.core.content.edit
+import androidx.core.net.toUri
 
 class MainActivity : AppCompatActivity() {
 
@@ -155,7 +158,16 @@ class MainActivity : AppCompatActivity() {
             prefs.edit {remove(PREF_SELECTED_APP)}
             appAdapter.updateSelection(null)
             Toast.makeText(this, "No app — will resume whatever was last playing", Toast.LENGTH_SHORT).show()
-        } else {
+        }
+        else {
+            if (!Settings.canDrawOverlays(this)) {
+                val intent = Intent(
+                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    "package:${packageName}".toUri()
+                )
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }
             prefs.edit { putString(PREF_SELECTED_APP, app.packageName) }
             appAdapter.updateSelection(app.packageName)
             Toast.makeText(this, "Will open ${app.appName} on connect", Toast.LENGTH_SHORT).show()
