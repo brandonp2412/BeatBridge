@@ -4,6 +4,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.bluetooth.BluetoothClass
 import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -51,10 +52,20 @@ class BluetoothMonitorService : Service() {
         registerReceiver(bluetoothReceiver, filter)
     }
 
+    private fun isAudioDevice(device: BluetoothDevice): Boolean {
+        val major = device.bluetoothClass?.majorDeviceClass ?: return false
+        return major == BluetoothClass.Device.Major.AUDIO_VIDEO
+    }
+
     private fun handleDeviceConnected(device: BluetoothDevice) {
         val prefs = getSharedPreferences(MainActivity.PREFS_NAME, MODE_PRIVATE)
-        val selectedAddress = prefs.getString(MainActivity.PREF_SELECTED_DEVICE, null) ?: return
-        if (device.address != selectedAddress) return
+        val anyDevice = prefs.getBoolean(MainActivity.PREF_ANY_DEVICE, false)
+        if (anyDevice) {
+            if (!isAudioDevice(device)) return
+        } else {
+            val selectedAddress = prefs.getString(MainActivity.PREF_SELECTED_DEVICE, null) ?: return
+            if (device.address != selectedAddress) return
+        }
 
         val appPackage = prefs.getString(MainActivity.PREF_SELECTED_APP, null)
         if (appPackage != null) {

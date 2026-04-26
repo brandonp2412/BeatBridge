@@ -7,7 +7,6 @@ import android.bluetooth.BluetoothManager
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -66,10 +65,12 @@ class MainActivity : AppCompatActivity() {
         setupDeviceRecyclerView()
         setupAppRecyclerView()
         setupSearch()
+        setupAnyDeviceToggle()
         checkPermissionsAndLoad()
         updateStatusLabel()
 
-        if (prefs.getString(PREF_SELECTED_DEVICE, null) != null) {
+        if (prefs.getString(PREF_SELECTED_DEVICE, null) != null ||
+            prefs.getBoolean(PREF_ANY_DEVICE, false)) {
             startMonitorService()
         }
     }
@@ -139,7 +140,26 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupAnyDeviceToggle() {
+        val anyDevice = prefs.getBoolean(PREF_ANY_DEVICE, false)
+        binding.switchAnyDevice.isChecked = anyDevice
+        updateDeviceSectionEnabled(!anyDevice)
+        binding.switchAnyDevice.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit { putBoolean(PREF_ANY_DEVICE, isChecked) }
+            updateDeviceSectionEnabled(!isChecked)
+            updateStatusLabel()
+            startMonitorService()
+        }
+    }
+
+    private fun updateDeviceSectionEnabled(enabled: Boolean) {
+        binding.layoutDeviceSection.alpha = if (enabled) 1f else 0.38f
+        binding.tilDeviceSearch.isEnabled = enabled
+        binding.etDeviceSearch.isEnabled = enabled
+    }
+
     private fun onDeviceSelected(device: BtDevice) {
+        if (prefs.getBoolean(PREF_ANY_DEVICE, false)) return
         val displayName = device.name.ifEmpty { device.address }
         prefs.edit {
             putString(PREF_SELECTED_DEVICE, device.address)
@@ -213,11 +233,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateStatusLabel() {
-        val selectedName = prefs.getString(PREF_SELECTED_NAME, null)
-        binding.tvStatus.text = if (selectedName != null) {
-            "Watching: $selectedName"
-        } else {
-            "Tap a device below to activate auto-play"
+        binding.tvStatus.text = when {
+            prefs.getBoolean(PREF_ANY_DEVICE, false) -> "Auto-playing on any Bluetooth connection"
+            prefs.getString(PREF_SELECTED_NAME, null) != null -> "Watching: ${prefs.getString(PREF_SELECTED_NAME, null)}"
+            else -> "Tap a device below to activate auto-play"
         }
     }
 
@@ -230,5 +249,6 @@ class MainActivity : AppCompatActivity() {
         const val PREF_SELECTED_DEVICE = "selected_device_address"
         const val PREF_SELECTED_NAME = "selected_device_name"
         const val PREF_SELECTED_APP = "selected_app_package"
+        const val PREF_ANY_DEVICE = "any_device"
     }
 }
