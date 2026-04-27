@@ -16,6 +16,8 @@ BeatBridge runs a lightweight background service that watches for your chosen Bl
 
 No logins. No accounts. No internet. Just music.
 
+<a href="https://f-droid.org/packages/com.beatbridge"><img src="./docs/get-it-on-fdroid.png" alt="Get it on F-Droid" style="height: 80px !important"></a>
+
 ## Features
 
 - **One-tap setup** — pick your device from the paired devices list and you're done
