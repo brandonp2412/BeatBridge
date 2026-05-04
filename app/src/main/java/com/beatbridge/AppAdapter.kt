@@ -11,7 +11,7 @@ data class MusicApp(val packageName: String, val appName: String)
 
 class AppAdapter(
     private val apps: List<MusicApp>,
-    private var selectedPackage: String?,
+    private var selectedPackages: Set<String>,
     private val onSelect: (MusicApp) -> Unit
 ) : RecyclerView.Adapter<AppAdapter.ViewHolder>() {
 
@@ -26,7 +26,7 @@ class AppAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val app = filtered[position]
-        val isSelected = app.packageName == selectedPackage
+        val isSelected = app.packageName in selectedPackages
 
         holder.binding.tvAppName.text = app.appName
         holder.binding.ivCheck.visibility = if (isSelected) View.VISIBLE else View.INVISIBLE
@@ -44,12 +44,14 @@ class AppAdapter(
 
     override fun getItemCount(): Int = filtered.size
 
-    fun updateSelection(packageName: String?) {
-        val oldPos = filtered.indexOfFirst { it.packageName == selectedPackage }
-        val newPos = filtered.indexOfFirst { it.packageName == packageName }
-        selectedPackage = packageName
-        if (oldPos >= 0) notifyItemChanged(oldPos)
-        if (newPos >= 0) notifyItemChanged(newPos)
+    fun updateSelections(packages: Set<String>) {
+        val old = selectedPackages
+        selectedPackages = packages
+        filtered.forEachIndexed { index, app ->
+            val wasSelected = app.packageName in old
+            val isNow = app.packageName in packages
+            if (wasSelected != isNow) notifyItemChanged(index)
+        }
     }
 
     fun filter(query: String) {

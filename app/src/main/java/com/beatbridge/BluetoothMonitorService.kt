@@ -17,11 +17,6 @@ import android.os.Looper
 import android.view.KeyEvent
 import androidx.core.app.NotificationCompat
 
-/**
- * Foreground service that listens for Bluetooth ACL_CONNECTED events.
- * When the user's selected device connects, it optionally launches the user's
- * chosen music app and then dispatches a media play key event.
- */
 class BluetoothMonitorService : Service() {
 
     private val handler = Handler(Looper.getMainLooper())
@@ -63,33 +58,36 @@ class BluetoothMonitorService : Service() {
         if (anyDevice) {
             if (!isAudioDevice(device)) return
         } else {
-            val selectedAddress = prefs.getString(MainActivity.PREF_SELECTED_DEVICE, null) ?: return
-            if (device.address != selectedAddress) return
+            val selectedAddresses = prefs.getStringSet(MainActivity.PREF_SELECTED_DEVICES, emptySet()) ?: emptySet()
+            if (selectedAddresses.isEmpty() || device.address !in selectedAddresses) return
         }
 
-        val appPackage = prefs.getString(MainActivity.PREF_SELECTED_APP, null)
-        if (appPackage != null) {
-            launchAppThenPlay(appPackage)
+        val appPackages = (prefs.getStringSet(MainActivity.PREF_SELECTED_APPS, emptySet()) ?: emptySet()).toList()
+        val delayMs = prefs.getInt(MainActivity.PREF_LAUNCH_DELAY, 1) * 1000L
+
+        if (appPackages.isNotEmpty()) {
+            launchAppsSequentially(appPackages, delayMs)
         } else {
             triggerMediaPlay()
         }
     }
 
-    private fun launchAppThenPlay(packageName: String) {
-        val launchIntent = packageManager.getLaunchIntentForPackage(packageName) ?: run {
-            triggerMediaPlay()
-            return
+    private fun launchAppsSequentially(packages: List<String>, delayMs: Long) {
+        fun step(index: Int) {
+            if (index >= packages.size) {
+                triggerMediaPlay()
+                return
+            }
+            val launchIntent = packageManager.getLaunchIntentForPackage(packages[index])
+            if (launchIntent != null) {
+                launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(launchIntent)
+            }
+            handler.postDelayed({ step(index + 1) }, delayMs)
         }
-        launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(launchIntent)
-
-        handler.postDelayed({ triggerMediaPlay() }, LAUNCH_DELAY_MS)
+        step(0)
     }
 
-    /**
-     * Sends MEDIA_PLAY key events via AudioManager so the active media session
-     * resumes playback (Spotify, YouTube Music, Podcast apps, etc.).
-     */
     private fun triggerMediaPlay() {
         val audioManager = getSystemService(AudioManager::class.java)
         audioManager.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY))
@@ -145,8 +143,5 @@ class BluetoothMonitorService : Service() {
         private const val CHANNEL_ID = "beatbridge_monitor"
         private const val LAUNCH_CHANNEL_ID = "beatbridge_launch"
         private const val NOTIFICATION_ID = 1
-        private const val LAUNCH_NOTIFICATION_ID = 2
-        private const val REQUEST_CODE_LAUNCH = 1
-        private const val LAUNCH_DELAY_MS = 1000L
     }
 }

@@ -11,7 +11,7 @@ data class BtDevice(val address: String, val name: String)
 
 class DeviceAdapter(
     private val devices: List<BtDevice>,
-    private var selectedAddress: String?,
+    private var selectedAddresses: Set<String>,
     private val onSelect: (BtDevice) -> Unit
 ) : RecyclerView.Adapter<DeviceAdapter.ViewHolder>() {
 
@@ -26,7 +26,7 @@ class DeviceAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val device = filtered[position]
-        val isSelected = device.address == selectedAddress
+        val isSelected = device.address in selectedAddresses
 
         holder.binding.tvDeviceName.text = device.name.ifEmpty { "Unknown Device" }
         holder.binding.tvDeviceAddress.text = device.address
@@ -38,12 +38,14 @@ class DeviceAdapter(
 
     override fun getItemCount(): Int = filtered.size
 
-    fun updateSelection(address: String) {
-        val oldPos = filtered.indexOfFirst { it.address == selectedAddress }
-        val newPos = filtered.indexOfFirst { it.address == address }
-        selectedAddress = address
-        if (oldPos >= 0) notifyItemChanged(oldPos)
-        if (newPos >= 0) notifyItemChanged(newPos)
+    fun updateSelections(addresses: Set<String>) {
+        val old = selectedAddresses
+        selectedAddresses = addresses
+        filtered.forEachIndexed { index, device ->
+            val wasSelected = device.address in old
+            val isNow = device.address in addresses
+            if (wasSelected != isNow) notifyItemChanged(index)
+        }
     }
 
     fun filter(query: String) {

@@ -13,6 +13,7 @@ import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.widget.SeekBar
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -66,11 +67,12 @@ class MainActivity : AppCompatActivity() {
         setupAppRecyclerView()
         setupSearch()
         setupAnyDeviceToggle()
+        setupDelaySlider()
         checkPermissionsAndLoad()
         updateStatusLabel()
 
-        if (prefs.getString(PREF_SELECTED_DEVICE, null) != null ||
-            prefs.getBoolean(PREF_ANY_DEVICE, false)) {
+        val selectedDevices = prefs.getStringSet(PREF_SELECTED_DEVICES, null)
+        if (selectedDevices?.isNotEmpty() == true || prefs.getBoolean(PREF_ANY_DEVICE, false)) {
             startMonitorService()
         }
     }
@@ -78,7 +80,6 @@ class MainActivity : AppCompatActivity() {
     private fun loadMusicApps() {
         musicAppList.clear()
 
-        // Show all launchable apps so the user can pick any media player
         val launchIntent = Intent(Intent.ACTION_MAIN, null).apply {
             addCategory(Intent.CATEGORY_LAUNCHER)
         }
@@ -100,7 +101,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupDeviceRecyclerView() {
         deviceAdapter = DeviceAdapter(
             devices = deviceList,
-            selectedAddress = prefs.getString(PREF_SELECTED_DEVICE, null),
+            selectedAddresses = prefs.getStringSet(PREF_SELECTED_DEVICES, emptySet()) ?: emptySet(),
             onSelect = { device -> onDeviceSelected(device) }
         )
         binding.rvDevices.apply {
@@ -130,7 +131,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupAppRecyclerView() {
         appAdapter = AppAdapter(
             apps = musicAppList,
-            selectedPackage = prefs.getString(PREF_SELECTED_APP, null),
+            selectedPackages = prefs.getStringSet(PREF_SELECTED_APPS, emptySet()) ?: emptySet(),
             onSelect = { app -> onAppSelected(app) }
         )
         binding.rvApps.apply {
@@ -152,6 +153,26 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupDelaySlider() {
+        val saved = prefs.getInt(PREF_LAUNCH_DELAY, 1)
+        binding.sliderDelay.progress = saved
+        updateDelayLabel(saved)
+        binding.sliderDelay.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    prefs.edit { putInt(PREF_LAUNCH_DELAY, progress) }
+                    updateDelayLabel(progress)
+                }
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar) {}
+        })
+    }
+
+    private fun updateDelayLabel(seconds: Int) {
+        binding.tvDelayLabel.text = "Launch delay: ${seconds}s"
+    }
+
     private fun updateDeviceSectionEnabled(enabled: Boolean) {
         binding.layoutDeviceSection.alpha = if (enabled) 1f else 0.38f
         binding.tilDeviceSearch.isEnabled = enabled
@@ -160,26 +181,29 @@ class MainActivity : AppCompatActivity() {
 
     private fun onDeviceSelected(device: BtDevice) {
         if (prefs.getBoolean(PREF_ANY_DEVICE, false)) return
+        val current = LinkedHashSet(prefs.getStringSet(PREF_SELECTED_DEVICES, emptySet()) ?: emptySet())
         val displayName = device.name.ifEmpty { device.address }
-        prefs.edit {
-            putString(PREF_SELECTED_DEVICE, device.address)
-                .putString(PREF_SELECTED_NAME, displayName)
+        if (device.address in current) {
+            current.remove(device.address)
+            Toast.makeText(this, "Removed: $displayName", Toast.LENGTH_SHORT).show()
+        } else {
+            current.add(device.address)
+            Toast.makeText(this, "Added: $displayName", Toast.LENGTH_SHORT).show()
         }
-        deviceAdapter.updateSelection(device.address)
+        prefs.edit { putStringSet(PREF_SELECTED_DEVICES, current) }
+        deviceAdapter.updateSelections(current)
         updateStatusLabel()
         startMonitorService()
-        Toast.makeText(this, "Now watching: $displayName", Toast.LENGTH_SHORT).show()
     }
 
     private fun onAppSelected(app: MusicApp) {
-        val current = prefs.getString(PREF_SELECTED_APP, null)
-        if (current == app.packageName) {
-            // Tap again to deselect
-            prefs.edit {remove(PREF_SELECTED_APP)}
-            appAdapter.updateSelection(null)
-            Toast.makeText(this, "No app — will resume whatever was last playing", Toast.LENGTH_SHORT).show()
-        }
-        else {
+        val current = LinkedHashSet(prefs.getStringSet(PREF_SELECTED_APPS, emptySet()) ?: emptySet())
+        if (app.packageName in current) {
+            current.remove(app.packageName)
+            prefs.edit { putStringSet(PREF_SELECTED_APPS, current) }
+            appAdapter.updateSelections(current)
+            Toast.makeText(this, "Removed ${app.appName}", Toast.LENGTH_SHORT).show()
+        } else {
             if (!Settings.canDrawOverlays(this)) {
                 val intent = Intent(
                     Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
@@ -188,8 +212,9 @@ class MainActivity : AppCompatActivity() {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }
-            prefs.edit { putString(PREF_SELECTED_APP, app.packageName) }
-            appAdapter.updateSelection(app.packageName)
+            current.add(app.packageName)
+            prefs.edit { putStringSet(PREF_SELECTED_APPS, current) }
+            appAdapter.updateSelections(current)
             Toast.makeText(this, "Will open ${app.appName} on connect", Toast.LENGTH_SHORT).show()
         }
     }
@@ -224,7 +249,6 @@ class MainActivity : AppCompatActivity() {
                 .map { BtDevice(address = it.address, name = it.name ?: "") }
                 .sortedBy { it.name.ifEmpty { it.address } }
         )
-        // Re-run the current filter so `filtered` syncs with the newly loaded list
         deviceAdapter.filter(binding.etDeviceSearch.text.toString())
 
         val isEmpty = deviceList.isEmpty()
@@ -233,9 +257,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateStatusLabel() {
+        val selectedAddresses = prefs.getStringSet(PREF_SELECTED_DEVICES, emptySet()) ?: emptySet()
         binding.tvStatus.text = when {
             prefs.getBoolean(PREF_ANY_DEVICE, false) -> "Auto-playing on any Bluetooth connection"
-            prefs.getString(PREF_SELECTED_NAME, null) != null -> "Watching: ${prefs.getString(PREF_SELECTED_NAME, null)}"
+            selectedAddresses.isNotEmpty() -> {
+                val names = selectedAddresses.map { addr ->
+                    deviceList.find { it.address == addr }?.name?.ifEmpty { addr } ?: addr
+                }
+                "Watching: ${names.joinToString(", ")}"
+            }
             else -> "Tap a device below to activate auto-play"
         }
     }
@@ -246,9 +276,9 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val PREFS_NAME = "beatbridge_prefs"
-        const val PREF_SELECTED_DEVICE = "selected_device_address"
-        const val PREF_SELECTED_NAME = "selected_device_name"
-        const val PREF_SELECTED_APP = "selected_app_package"
+        const val PREF_SELECTED_DEVICES = "selected_device_addresses"
+        const val PREF_SELECTED_APPS = "selected_app_packages"
         const val PREF_ANY_DEVICE = "any_device"
+        const val PREF_LAUNCH_DELAY = "launch_delay_seconds"
     }
 }

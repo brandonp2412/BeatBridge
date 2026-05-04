@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bb_surface"
@@ -76,7 +77,7 @@
                 android:paddingHorizontal="20dp"
                 android:paddingTop="24dp"
                 android:paddingBottom="12dp"
-                android:text="Bluetooth Device"
+                android:text="Bluetooth Devices"
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:letterSpacing="0.05"
@@ -130,14 +131,14 @@
             android:layout_marginTop="8dp"
             android:background="@color/bb_divider" />
 
-        <!-- ── Music App ── -->
+        <!-- ── Music Apps ── -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="20dp"
             android:paddingTop="24dp"
             android:paddingBottom="4dp"
-            android:text="Music App"
+            android:text="Music Apps"
             android:textSize="13sp"
             android:textStyle="bold"
             android:letterSpacing="0.05"
@@ -148,9 +149,28 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="20dp"
             android:paddingBottom="12dp"
-            android:text="Opens this app when your device connects, then starts playback. Tap again to deselect."
+            android:text="Opens selected apps when your device connects, then starts playback. Tap to select or deselect."
             android:textSize="12sp"
             android:textColor="@color/bb_on_surface_dim" />
+
+        <!-- Launch delay slider -->
+        <TextView
+            android:id="@+id/tv_delay_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:text="Launch delay: 1s"
+            android:textSize="13sp"
+            android:textColor="@color/bb_on_surface_dim" />
+
+        <SeekBar
+            android:id="@+id/slider_delay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginBottom="12dp"
+            android:max="10"
+            android:progress="1" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"

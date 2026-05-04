@@ -3,13 +3,6 @@ package com.beatbridge
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-/**
- * Unit tests for MainActivity preference key constants.
- *
- * These verify that the SharedPreferences key names are stable and do not
- * accidentally change between builds — a regression that would silently lose
- * the user's saved device selection across an update.
- */
 class MainActivityPrefsTest {
 
     @Test
@@ -18,24 +11,31 @@ class MainActivityPrefsTest {
     }
 
     @Test
-    fun prefSelectedDeviceKey_isCorrect() {
-        assertEquals("selected_device_address", MainActivity.PREF_SELECTED_DEVICE)
+    fun prefSelectedDevicesKey_isCorrect() {
+        assertEquals("selected_device_addresses", MainActivity.PREF_SELECTED_DEVICES)
     }
 
     @Test
-    fun prefSelectedNameKey_isCorrect() {
-        assertEquals("selected_device_name", MainActivity.PREF_SELECTED_NAME)
+    fun prefSelectedAppsKey_isCorrect() {
+        assertEquals("selected_app_packages", MainActivity.PREF_SELECTED_APPS)
+    }
+
+    @Test
+    fun prefLaunchDelayKey_isCorrect() {
+        assertEquals("launch_delay_seconds", MainActivity.PREF_LAUNCH_DELAY)
     }
 
     @Test
     fun prefKeys_areDistinct() {
         val keys = setOf(
-            MainActivity.PREF_SELECTED_DEVICE,
-            MainActivity.PREF_SELECTED_NAME
+            MainActivity.PREF_SELECTED_DEVICES,
+            MainActivity.PREF_SELECTED_APPS,
+            MainActivity.PREF_ANY_DEVICE,
+            MainActivity.PREF_LAUNCH_DELAY
         )
         assertEquals(
             "Preference keys must be unique to avoid collisions in SharedPreferences",
-            2, keys.size
+            4, keys.size
         )
     }
 }
