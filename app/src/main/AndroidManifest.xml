@@ -49,6 +49,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".WhatsNewActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
+
         <!-- Foreground service that dynamically registers the BT receiver -->
         <service
             android:name=".BluetoothMonitorService"

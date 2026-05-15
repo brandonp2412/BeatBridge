@@ -22,14 +22,36 @@
             android:paddingHorizontal="20dp"
             android:background="@color/bb_surface_variant">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="BeatBridge"
-                android:textColor="@color/bb_primary"
-                android:textSize="28sp"
-                android:letterSpacing="-0.01"
-                android:textStyle="bold" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="BeatBridge"
+                    android:textColor="@color/bb_primary"
+                    android:textSize="28sp"
+                    android:letterSpacing="-0.01"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_whats_new"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="What's New"
+                    android:textColor="@color/bb_primary"
+                    android:textSize="12sp"
+                    android:paddingVertical="4dp"
+                    android:paddingHorizontal="8dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_status"

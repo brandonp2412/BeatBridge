@@ -1,0 +1,5 @@
+• Auto-play music when a Bluetooth device connects
+• Select any paired device as the trigger
+• Status label shows the active watched device
+• Persistent settings across app restarts
+• Supports Android 8.0 through Android 15

@@ -70,6 +70,9 @@ class MainActivity : AppCompatActivity() {
         setupDelaySlider()
         checkPermissionsAndLoad()
         updateStatusLabel()
+        binding.tvWhatsNew.setOnClickListener {
+            startActivity(Intent(this, WhatsNewActivity::class.java))
+        }
 
         val selectedDevices = prefs.getStringSet(PREF_SELECTED_DEVICES, null)
         if (selectedDevices?.isNotEmpty() == true || prefs.getBoolean(PREF_ANY_DEVICE, false)) {

@@ -1,0 +1,4 @@
+• Allow selecting which music app to launch on connect
+• Automatically start BeatBridge on device reboot
+• Change persistent notification style
+• Improve list performance

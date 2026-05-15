@@ -1,0 +1,2 @@
+• Fix pixelated notification icon
+• Fix music app not launching
