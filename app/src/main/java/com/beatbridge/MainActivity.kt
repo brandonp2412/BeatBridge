@@ -16,6 +16,7 @@ import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -105,7 +106,8 @@ class MainActivity : AppCompatActivity() {
         deviceAdapter = DeviceAdapter(
             devices = deviceList,
             selectedAddresses = prefs.getStringSet(PREF_SELECTED_DEVICES, emptySet()) ?: emptySet(),
-            onSelect = { device -> onDeviceSelected(device) }
+            onSelect = { device -> onDeviceSelected(device) },
+            onConfigure = { device -> showDeviceAppDialog(device) }
         )
         binding.rvDevices.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
@@ -273,6 +275,35 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun showDeviceAppDialog(device: BtDevice) {
+        val deviceName = device.name.ifEmpty { device.address }
+        val key = "$PREF_DEVICE_APPS_PREFIX${device.address}"
+        val savedApps = prefs.getStringSet(key, null)
+
+        val appNames = musicAppList.map { it.appName }.toTypedArray()
+        val checked = BooleanArray(musicAppList.size) { i ->
+            savedApps?.contains(musicAppList[i].packageName) ?: false
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle("Apps for $deviceName")
+            .setMessage("Override global app selection for this device only. Leave all unchecked to use the global selection.")
+            .setMultiChoiceItems(appNames, checked) { _, which, isChecked ->
+                checked[which] = isChecked
+            }
+            .setPositiveButton("Save") { _, _ ->
+                val selected = musicAppList.filterIndexed { i, _ -> checked[i] }
+                    .map { it.packageName }.toSet()
+                if (selected.isEmpty()) {
+                    prefs.edit { remove(key) }
+                } else {
+                    prefs.edit { putStringSet(key, selected) }
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
     fun startMonitorService() {
         startForegroundService(Intent(this, BluetoothMonitorService::class.java))
     }
@@ -283,5 +314,6 @@ class MainActivity : AppCompatActivity() {
         const val PREF_SELECTED_APPS = "selected_app_packages"
         const val PREF_ANY_DEVICE = "any_device"
         const val PREF_LAUNCH_DELAY = "launch_delay_seconds"
+        const val PREF_DEVICE_APPS_PREFIX = "device_apps_"
     }
 }

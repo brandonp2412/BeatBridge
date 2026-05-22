@@ -62,7 +62,9 @@ class BluetoothMonitorService : Service() {
             if (selectedAddresses.isEmpty() || device.address !in selectedAddresses) return
         }
 
-        val appPackages = (prefs.getStringSet(MainActivity.PREF_SELECTED_APPS, emptySet()) ?: emptySet()).toList()
+        val deviceKey = "${MainActivity.PREF_DEVICE_APPS_PREFIX}${device.address}"
+        val deviceApps = prefs.getStringSet(deviceKey, null)
+        val appPackages = (deviceApps ?: prefs.getStringSet(MainActivity.PREF_SELECTED_APPS, emptySet()) ?: emptySet()).toList()
         val delayMs = prefs.getInt(MainActivity.PREF_LAUNCH_DELAY, 1) * 1000L
 
         if (appPackages.isNotEmpty()) {

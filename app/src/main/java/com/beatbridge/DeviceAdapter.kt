@@ -12,7 +12,8 @@ data class BtDevice(val address: String, val name: String)
 class DeviceAdapter(
     private val devices: List<BtDevice>,
     private var selectedAddresses: Set<String>,
-    private val onSelect: (BtDevice) -> Unit
+    private val onSelect: (BtDevice) -> Unit,
+    private val onConfigure: (BtDevice) -> Unit = {}
 ) : RecyclerView.Adapter<DeviceAdapter.ViewHolder>() {
 
     private var filtered = devices.toMutableList()
@@ -34,6 +35,7 @@ class DeviceAdapter(
         holder.itemView.isSelected = isSelected
 
         holder.itemView.setOnClickListener { onSelect(device) }
+        holder.binding.ivTune.setOnClickListener { onConfigure(device) }
     }
 
     override fun getItemCount(): Int = filtered.size
