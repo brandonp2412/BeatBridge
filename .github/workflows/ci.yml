@@ -132,12 +132,24 @@ jobs:
       - name: Decode keystore
         run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > app/keystore.jks
 
+      - name: Update changelog
+        run: |
+          VERSION=$(grep ^versionName version.properties | cut -d '=' -f2 | tr -d '\r')
+          DATE=$(date +%Y-%m-%d)
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || git rev-list --max-parents=0 HEAD)
+          COMMITS=$(git log "${LAST_TAG}..HEAD" --pretty=format:"- %s" | grep -v '\[skip-ci\]')
+          if [ -n "$COMMITS" ]; then
+            NEW_SECTION="## [${VERSION}] - ${DATE}\n\n### Changed\n${COMMITS}\n"
+            awk -v new="$NEW_SECTION" '/^## \[/{if(!done){print new; done=1}} {print}' CHANGELOG.md > CHANGELOG.tmp
+            mv CHANGELOG.tmp CHANGELOG.md
+          fi
+
       - name: Commit and push new version
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           VERSION=$(grep ^versionName version.properties | cut -d '=' -f2 | tr -d '\r')
-          git add version.properties app/src/main/assets/changelogs/
+          git add version.properties CHANGELOG.md app/src/main/assets/changelogs/
           git commit -m "Bump to $VERSION [skip-ci]"
           git tag ${{ steps.version.outputs.tag }}
           git push origin master
