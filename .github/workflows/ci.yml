@@ -53,6 +53,8 @@ jobs:
     if: github.event_name == 'push'
     permissions:
       contents: write
+    outputs:
+      tag: ${{ steps.version.outputs.tag }}
 
     steps:
       - name: Checkout source
@@ -171,6 +173,12 @@ jobs:
             cp "$APK" "$OUTDIR/BeatBridge-${TAG}-${ABI}.apk"
           done
 
+      - name: Upload release APKs
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apks
+          path: app/build/outputs/apk/release/BeatBridge-*.apk
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -192,3 +200,44 @@ jobs:
             | **Build yourself** | `git clone`, checkout this tag, `./gradlew assembleRelease` |
 
             See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/${{ steps.version.outputs.tag }}/CHANGELOG.md) for what's new.
+
+  virustotal:
+    needs: release
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    permissions:
+      contents: write
+    steps:
+      - name: Download release APKs
+        uses: actions/download-artifact@v4
+        with:
+          name: release-apks
+          path: release-apks
+
+      - name: VirusTotal Scan
+        id: vt
+        uses: crazy-max/ghaction-virustotal@v4
+        with:
+          vt_api_key: ${{ secrets.VT_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          files: |
+            release-apks/BeatBridge-${{ needs.release.outputs.tag }}-arm64-v8a.apk
+            release-apks/BeatBridge-${{ needs.release.outputs.tag }}-armeabi-v7a.apk
+            release-apks/BeatBridge-${{ needs.release.outputs.tag }}-x86_64.apk
+            release-apks/BeatBridge-${{ needs.release.outputs.tag }}-x86.apk
+
+      - name: Append VirusTotal links to release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ needs.release.outputs.tag }}
+          ANALYSIS: ${{ steps.vt.outputs.analysis }}
+        run: |
+          VT_SECTION=$'\n\n---\n**VirusTotal Analysis**\n'
+          IFS=',' read -ra ENTRIES <<< "$ANALYSIS"
+          for entry in "${ENTRIES[@]}"; do
+            filename=$(basename "${entry%%=*}")
+            url="${entry##*=}"
+            VT_SECTION+="- [${filename}](${url})"$'\n'
+          done
+          CURRENT_BODY=$(gh release view "$VERSION" --json body -q .body)
+          gh release edit "$VERSION" --notes "${CURRENT_BODY}${VT_SECTION}"
