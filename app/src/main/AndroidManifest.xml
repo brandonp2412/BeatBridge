@@ -54,6 +54,11 @@
             android:exported="false"
             android:parentActivityName=".MainActivity" />
 
+        <activity
+            android:name=".DeviceAppsActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
+
         <!-- Foreground service that dynamically registers the BT receiver -->
         <service
             android:name=".BluetoothMonitorService"

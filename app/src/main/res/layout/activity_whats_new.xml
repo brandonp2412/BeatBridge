@@ -1,9 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.recyclerview.widget.RecyclerView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rv_changelogs"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bb_surface"
-    android:clipToPadding="false"
-    android:paddingBottom="24dp" />
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    android:background="@color/bb_surface">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/bb_surface_variant"
+        app:title="What's New"
+        app:titleTextColor="@color/bb_on_surface"
+        app:navigationIcon="?attr/homeAsUpIndicator" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_changelogs"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="24dp" />
+
+</LinearLayout>

@@ -23,8 +23,8 @@ class WhatsNewActivity : AppCompatActivity() {
         binding = ActivityWhatsNewBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "What's New"
 
         val changelogs = loadChangelogs()
         binding.rvChangelogs.layoutManager = LinearLayoutManager(this)

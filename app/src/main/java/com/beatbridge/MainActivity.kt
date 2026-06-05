@@ -16,7 +16,6 @@ import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -74,6 +73,12 @@ class MainActivity : AppCompatActivity() {
         binding.tvWhatsNew.setOnClickListener {
             startActivity(Intent(this, WhatsNewActivity::class.java))
         }
+        binding.tvSourceCode.setOnClickListener {
+            startActivity(Intent(Intent.ACTION_VIEW, "https://github.com/brandonp2412/BeatBridge".toUri()))
+        }
+        binding.tvDonate.setOnClickListener {
+            startActivity(Intent(Intent.ACTION_VIEW, "https://github.com/sponsors/brandonp2412".toUri()))
+        }
 
         val selectedDevices = prefs.getStringSet(PREF_SELECTED_DEVICES, null)
         if (selectedDevices?.isNotEmpty() == true || prefs.getBoolean(PREF_ANY_DEVICE, false)) {
@@ -107,7 +112,7 @@ class MainActivity : AppCompatActivity() {
             devices = deviceList,
             selectedAddresses = prefs.getStringSet(PREF_SELECTED_DEVICES, emptySet()) ?: emptySet(),
             onSelect = { device -> onDeviceSelected(device) },
-            onConfigure = { device -> showDeviceAppDialog(device) }
+            onConfigure = { device -> openDeviceAppsScreen(device) }
         )
         binding.rvDevices.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
@@ -275,33 +280,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showDeviceAppDialog(device: BtDevice) {
-        val deviceName = device.name.ifEmpty { device.address }
-        val key = "$PREF_DEVICE_APPS_PREFIX${device.address}"
-        val savedApps = prefs.getStringSet(key, null)
-
-        val appNames = musicAppList.map { it.appName }.toTypedArray()
-        val checked = BooleanArray(musicAppList.size) { i ->
-            savedApps?.contains(musicAppList[i].packageName) ?: false
+    private fun openDeviceAppsScreen(device: BtDevice) {
+        val intent = Intent(this, DeviceAppsActivity::class.java).apply {
+            putExtra(DeviceAppsActivity.EXTRA_DEVICE_ADDRESS, device.address)
+            putExtra(DeviceAppsActivity.EXTRA_DEVICE_NAME, device.name.ifEmpty { device.address })
         }
-
-        AlertDialog.Builder(this)
-            .setTitle("Apps for $deviceName")
-            .setMessage("Override global app selection for this device only. Leave all unchecked to use the global selection.")
-            .setMultiChoiceItems(appNames, checked) { _, which, isChecked ->
-                checked[which] = isChecked
-            }
-            .setPositiveButton("Save") { _, _ ->
-                val selected = musicAppList.filterIndexed { i, _ -> checked[i] }
-                    .map { it.packageName }.toSet()
-                if (selected.isEmpty()) {
-                    prefs.edit { remove(key) }
-                } else {
-                    prefs.edit { putStringSet(key, selected) }
-                }
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
+        startActivity(intent)
     }
 
     fun startMonitorService() {

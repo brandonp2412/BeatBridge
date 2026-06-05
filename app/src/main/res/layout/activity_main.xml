@@ -17,8 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="52dp"
-            android:paddingBottom="24dp"
+            android:paddingTop="24dp"
+            android:paddingBottom="16dp"
             android:paddingHorizontal="20dp"
             android:background="@color/bb_surface_variant">
 
@@ -223,8 +223,52 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipToPadding="false"
-            android:nestedScrollingEnabled="false"
-            android:paddingBottom="24dp" />
+            android:nestedScrollingEnabled="false" />
+
+        <!-- ── About ── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="24dp"
+            android:paddingBottom="32dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="12dp"
+                android:text="About"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05"
+                android:textColor="@color/bb_primary" />
+
+            <TextView
+                android:id="@+id/tv_source_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="10dp"
+                android:text="Source Code"
+                android:textColor="@color/bb_on_surface"
+                android:textSize="14sp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/tv_donate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="10dp"
+                android:text="Donate"
+                android:textColor="@color/bb_on_surface"
+                android:textSize="14sp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
