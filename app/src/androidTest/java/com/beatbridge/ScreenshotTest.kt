@@ -110,8 +110,7 @@ class ScreenshotTest {
         // Pre-seed prefs so the header renders the right text on first draw
         context.getSharedPreferences(MainActivity.PREFS_NAME, Context.MODE_PRIVATE)
             .edit()
-            .putString(MainActivity.PREF_SELECTED_DEVICE, selectedAddress)
-            .putString(MainActivity.PREF_SELECTED_NAME, selectedName)
+            .putStringSet(MainActivity.PREF_SELECTED_DEVICES, setOfNotNull(selectedAddress))
             .commit()
 
         uiDevice.wakeUp()

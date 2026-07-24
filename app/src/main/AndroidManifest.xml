@@ -25,6 +25,9 @@
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="PackageVisibilityPolicy,QueryAllPackagesPermission" />
 
+    <!-- Needed to apply per-device equalizer profiles -->
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+
     <queries>
         <intent>
             <action android:name="android.intent.action.MAIN" />
@@ -58,6 +61,19 @@
             android:name=".DeviceAppsActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".DeviceEqualizerActivity"
+            android:exported="false"
+            android:parentActivityName=".DeviceAppsActivity" />
+
+        <!-- Translucent trampoline for notification action buttons -->
+        <activity
+            android:name=".NotificationActionActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <!-- Foreground service that dynamically registers the BT receiver -->
         <service

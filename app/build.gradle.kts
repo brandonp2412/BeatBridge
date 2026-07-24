@@ -22,26 +22,50 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    val keystorePassword = System.getenv("KEYSTORE_PASSWORD")
-    if (keystorePassword != null) {
+    val keyPropsFile = sequenceOf(
+        rootProject.file("key.properties"),
+        File(System.getProperty("user.home"), "flexify/android/key.properties")
+    ).firstOrNull { it.exists() }
+    val keyProps = Properties().also { props ->
+        if (keyPropsFile != null) keyPropsFile.inputStream().use { props.load(it) }
+    }
+
+    fun cred(prop: String, env: String) = keyProps.getProperty(prop) ?: System.getenv(env)
+
+    val storePassword = cred("storePassword", "KEYSTORE_PASSWORD")
+    if (storePassword != null) {
         signingConfigs {
             create("release") {
-                storeFile = file("keystore.jks")
-                storePassword = keystorePassword
-                keyAlias = System.getenv("KEY_ALIAS")
-                keyPassword = System.getenv("KEY_PASSWORD")
+                storeFile = cred("storeFile", "KEYSTORE_FILE")
+                    ?.let { path ->
+                        val f = File(path)
+                        if (f.isAbsolute || keyPropsFile == null) f
+                        else sequenceOf(
+                            File(keyPropsFile.parentFile, path),
+                            File(keyPropsFile.parentFile, "app/$path")
+                        ).firstOrNull { it.exists() } ?: File(keyPropsFile.parentFile, path)
+                    }
+                    ?: file("keystore.jks")
+                this.storePassword = storePassword
+                keyAlias = cred("keyAlias", "KEY_ALIAS")
+                keyPassword = cred("keyPassword", "KEY_PASSWORD")
             }
         }
     }
 
     buildTypes {
+        debug {
+            if (storePassword != null) {
+                signingConfig = signingConfigs.getByName("release")
+            }
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            if (keystorePassword != null) {
+            if (storePassword != null) {
                 signingConfig = signingConfigs.getByName("release")
             }
         }

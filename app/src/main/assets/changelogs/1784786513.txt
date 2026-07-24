@@ -1,0 +1,2 @@
+• Per-device equalizer profiles — set a dedicated EQ for a device and it's applied automatically on connect
+• Ask on connect — optionally get a notification with choices (Play / Open app / Audio settings) instead of auto-playing

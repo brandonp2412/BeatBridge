@@ -1,0 +1,11 @@
+<resources>
+    <color name="bb_primary">#FFBB86FC</color>
+    <color name="bb_primary_dark">#FF6200EE</color>
+    <color name="bb_on_primary">#FF000000</color>
+    <color name="bb_surface">#FF121212</color>
+    <color name="bb_surface_variant">#FF1E1E1E</color>
+    <color name="bb_on_surface">#FFFFFFFF</color>
+    <color name="bb_on_surface_dim">#99FFFFFF</color>
+    <color name="bb_divider">#1FFFFFFF</color>
+    <color name="bb_selected_fill">#26BB86FC</color>
+</resources>

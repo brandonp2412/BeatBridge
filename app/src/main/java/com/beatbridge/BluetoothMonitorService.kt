@@ -1,5 +1,6 @@
 package com.beatbridge
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -10,7 +11,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.SharedPreferences
 import android.media.AudioManager
+import android.media.audiofx.Equalizer
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
@@ -20,6 +23,7 @@ import androidx.core.app.NotificationCompat
 class BluetoothMonitorService : Service() {
 
     private val handler = Handler(Looper.getMainLooper())
+    private var equalizer: Equalizer? = null
 
     private val bluetoothReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -32,6 +36,7 @@ class BluetoothMonitorService : Service() {
 
             when (intent.action) {
                 BluetoothDevice.ACTION_ACL_CONNECTED -> device?.let { handleDeviceConnected(it) }
+                BluetoothDevice.ACTION_ACL_DISCONNECTED -> releaseEqualizer()
             }
         }
     }
@@ -40,6 +45,7 @@ class BluetoothMonitorService : Service() {
         super.onCreate()
         createNotificationChannel()
         createLaunchNotificationChannel()
+        createActionsNotificationChannel()
         startForeground(NOTIFICATION_ID, buildNotification())
         val filter = IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED).apply {
             addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
@@ -62,16 +68,95 @@ class BluetoothMonitorService : Service() {
             if (selectedAddresses.isEmpty() || device.address !in selectedAddresses) return
         }
 
+        applyEqualizer(prefs, device.address)
+
         val deviceKey = "${MainActivity.PREF_DEVICE_APPS_PREFIX}${device.address}"
         val deviceApps = prefs.getStringSet(deviceKey, null)
         val appPackages = (deviceApps ?: prefs.getStringSet(MainActivity.PREF_SELECTED_APPS, emptySet()) ?: emptySet()).toList()
         val delayMs = prefs.getInt(MainActivity.PREF_LAUNCH_DELAY, 1) * 1000L
+
+        val askKey = "${MainActivity.PREF_DEVICE_ASK_PREFIX}${device.address}"
+        if (prefs.getBoolean(askKey, false)) {
+            showDeviceChoices(device, appPackages)
+            return
+        }
 
         if (appPackages.isNotEmpty()) {
             launchAppsSequentially(appPackages, delayMs)
         } else {
             triggerMediaPlay()
         }
+    }
+
+    private fun applyEqualizer(prefs: SharedPreferences, address: String) {
+        val raw = prefs.getString("${MainActivity.PREF_DEVICE_EQ_PREFIX}$address", null) ?: return
+        val levels = raw.split(",").mapNotNull { it.toShortOrNull() }
+        if (levels.isEmpty()) return
+        try {
+            equalizer?.release()
+            val eq = Equalizer(0, 0)
+            eq.enabled = true
+            for (i in 0 until minOf(levels.size, eq.numberOfBands.toInt())) {
+                eq.setBandLevel(i.toShort(), levels[i])
+            }
+            equalizer = eq
+        } catch (_: Exception) {
+            equalizer = null
+        }
+    }
+
+    private fun releaseEqualizer() {
+        equalizer?.release()
+        equalizer = null
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun showDeviceChoices(device: BluetoothDevice, appPackages: List<String>) {
+        val deviceName = device.name ?: device.address
+        val builder = NotificationCompat.Builder(this, ACTIONS_CHANNEL_ID)
+            .setContentTitle("$deviceName connected")
+            .setContentText("What do you want to do?")
+            .setSmallIcon(R.drawable.ic_music_note)
+            .setAutoCancel(true)
+            .setContentIntent(
+                PendingIntent.getActivity(
+                    this, 0,
+                    Intent(this, MainActivity::class.java),
+                    PendingIntent.FLAG_IMMUTABLE
+                )
+            )
+
+        builder.addAction(0, "Play", choicePendingIntent(NotificationActionActivity.ACTION_PLAY, device.address, 1))
+
+        if (appPackages.isNotEmpty()) {
+            val label = if (appPackages.size == 1) {
+                "Open ${appLabel(appPackages[0])}"
+            } else {
+                "Open ${appPackages.size} apps"
+            }
+            builder.addAction(0, label, choicePendingIntent(NotificationActionActivity.ACTION_OPEN_APPS, device.address, 2))
+        }
+
+        builder.addAction(0, "Audio settings", choicePendingIntent(NotificationActionActivity.ACTION_AUDIO_SETTINGS, device.address, 3))
+
+        getSystemService(NotificationManager::class.java).notify(ACTIONS_NOTIFICATION_ID, builder.build())
+    }
+
+    private fun choicePendingIntent(action: String, address: String, requestCode: Int): PendingIntent {
+        val intent = Intent(this, NotificationActionActivity::class.java)
+            .setAction(action)
+            .putExtra(NotificationActionActivity.EXTRA_DEVICE_ADDRESS, address)
+        return PendingIntent.getActivity(
+            this, requestCode, intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+    }
+
+    private fun appLabel(packageName: String): String = try {
+        @Suppress("DEPRECATION")
+        packageManager.getApplicationLabel(packageManager.getApplicationInfo(packageName, 0)).toString()
+    } catch (_: Exception) {
+        packageName
     }
 
     private fun launchAppsSequentially(packages: List<String>, delayMs: Long) {
@@ -118,6 +203,17 @@ class BluetoothMonitorService : Service() {
         getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
     }
 
+    private fun createActionsNotificationChannel() {
+        val channel = NotificationChannel(
+            ACTIONS_CHANNEL_ID,
+            "BeatBridge Device Choices",
+            NotificationManager.IMPORTANCE_HIGH
+        ).apply {
+            description = "Shown when a device connects so you can pick what happens"
+        }
+        getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
+    }
+
     private fun buildNotification() =
         NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("BeatBridge")
@@ -138,12 +234,15 @@ class BluetoothMonitorService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacksAndMessages(null)
+        releaseEqualizer()
         unregisterReceiver(bluetoothReceiver)
     }
 
     companion object {
         private const val CHANNEL_ID = "beatbridge_monitor"
         private const val LAUNCH_CHANNEL_ID = "beatbridge_launch"
+        private const val ACTIONS_CHANNEL_ID = "beatbridge_device_actions"
         private const val NOTIFICATION_ID = 1
+        const val ACTIONS_NOTIFICATION_ID = 2
     }
 }

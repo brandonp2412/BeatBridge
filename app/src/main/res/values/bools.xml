@@ -1,0 +1,3 @@
+<resources>
+    <bool name="bb_light_status_bar">true</bool>
+</resources>

@@ -299,5 +299,7 @@ class MainActivity : AppCompatActivity() {
         const val PREF_ANY_DEVICE = "any_device"
         const val PREF_LAUNCH_DELAY = "launch_delay_seconds"
         const val PREF_DEVICE_APPS_PREFIX = "device_apps_"
+        const val PREF_DEVICE_ASK_PREFIX = "device_ask_"
+        const val PREF_DEVICE_EQ_PREFIX = "device_eq_"
     }
 }

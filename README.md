@@ -22,6 +22,8 @@ No logins. No accounts. No internet. Just music.
 
 - **One-tap setup** — pick your device from the paired devices list and you're done
 - **Works with any media app** — dispatches a standard Android media key event so any player responds
+- **Per-device equalizer** — apply a dedicated EQ profile when a specific device connects
+- **Ask on connect** — optionally get a notification with choices (play, open app, audio settings) instead of auto-playing
 - **Persistent monitoring** — foreground service keeps watching even after you close the app
 - **Battery-conscious** — no polling; wakes only on Bluetooth ACL connection events
 - **Fully offline** — zero network permissions, zero tracking

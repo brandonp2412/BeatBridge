@@ -1,11 +1,13 @@
 <resources>
-    <color name="bb_primary">#FFBB86FC</color>
-    <color name="bb_primary_dark">#FF6200EE</color>
-    <color name="bb_surface">#FF121212</color>
-    <color name="bb_surface_variant">#FF1E1E1E</color>
-    <color name="bb_on_surface">#FFFFFFFF</color>
-    <color name="bb_on_surface_dim">#99FFFFFF</color>
-    <color name="bb_divider">#1FFFFFFF</color>
+    <color name="bb_primary">#FF6200EE</color>
+    <color name="bb_primary_dark">#FF3700B3</color>
+    <color name="bb_on_primary">#FFFFFFFF</color>
+    <color name="bb_surface">#FFFFFFFF</color>
+    <color name="bb_surface_variant">#FFF3EFF7</color>
+    <color name="bb_on_surface">#FF1C1B1F</color>
+    <color name="bb_on_surface_dim">#991C1B1F</color>
+    <color name="bb_divider">#1F1C1B1F</color>
+    <color name="bb_selected_fill">#1A6200EE</color>
     <!-- legacy names kept for compatibility -->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>

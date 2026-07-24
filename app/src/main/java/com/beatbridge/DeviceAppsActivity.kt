@@ -31,9 +31,22 @@ class DeviceAppsActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = deviceName
-        supportActionBar?.subtitle = "Override app selection"
+        supportActionBar?.subtitle = "Per-device settings"
 
         prefs = getSharedPreferences(MainActivity.PREFS_NAME, MODE_PRIVATE)
+
+        val askKey = "${MainActivity.PREF_DEVICE_ASK_PREFIX}$deviceAddress"
+        binding.switchAsk.isChecked = prefs.getBoolean(askKey, false)
+        binding.switchAsk.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit { putBoolean(askKey, isChecked) }
+        }
+
+        binding.rowEqualizer.setOnClickListener {
+            startActivity(Intent(this, DeviceEqualizerActivity::class.java).apply {
+                putExtra(DeviceEqualizerActivity.EXTRA_DEVICE_ADDRESS, deviceAddress)
+                putExtra(DeviceEqualizerActivity.EXTRA_DEVICE_NAME, deviceName)
+            })
+        }
 
         loadApps()
         setupRecyclerView()
