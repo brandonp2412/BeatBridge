@@ -1,0 +1,1 @@
+• Add ability to auto equalize and have notification options per device
