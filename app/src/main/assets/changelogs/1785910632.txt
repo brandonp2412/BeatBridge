@@ -1,0 +1,1 @@
+• Fix visual separation of dividers
