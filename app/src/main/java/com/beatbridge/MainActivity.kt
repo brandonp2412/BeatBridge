@@ -18,7 +18,6 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.beatbridge.databinding.ActivityMainBinding
 import androidx.core.content.edit
@@ -117,7 +116,7 @@ class MainActivity : AppCompatActivity() {
         binding.rvDevices.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = deviceAdapter
-            addItemDecoration(DividerItemDecoration(this@MainActivity, DividerItemDecoration.VERTICAL))
+            addItemDecoration(createListDivider())
         }
     }
 
@@ -147,9 +146,14 @@ class MainActivity : AppCompatActivity() {
         binding.rvApps.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = appAdapter
-            addItemDecoration(DividerItemDecoration(this@MainActivity, DividerItemDecoration.VERTICAL))
+            addItemDecoration(createListDivider())
         }
     }
+
+    private fun createListDivider() = SelectionAwareDividerDecoration(
+        color = ContextCompat.getColor(this, R.color.bb_divider),
+        density = resources.displayMetrics.density,
+    )
 
     private fun setupAnyDeviceToggle() {
         val anyDevice = prefs.getBoolean(PREF_ANY_DEVICE, false)
