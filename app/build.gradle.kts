@@ -20,6 +20,8 @@ android {
         versionCode = (versionProps["versionCode"] as String?)?.toInt() ?: 1
         versionName = (versionProps["versionName"] as String?) ?: "1.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        // Lets emulator-based CI exercise the UI without system permission dialogs.
+        testInstrumentationRunnerArguments["grantAll"] = "true"
     }
 
     val keyPropsFile = sequenceOf(
@@ -123,5 +125,6 @@ dependencies {
 
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    androidTestImplementation("androidx.test:rules:1.6.1")
     androidTestImplementation("androidx.test.uiautomator:uiautomator:2.3.0")
 }

@@ -1,5 +1,6 @@
 package com.beatbridge
 
+import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
@@ -9,8 +10,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.UiDevice
 import org.junit.Assume.assumeTrue
+import org.junit.Assert.assertTrue
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.File
@@ -35,6 +39,12 @@ class ScreenshotTest {
     private val instrumentation = InstrumentationRegistry.getInstrumentation()
     private val context = instrumentation.targetContext
     private val uiDevice = UiDevice.getInstance(instrumentation)
+
+    @get:Rule
+    val permissions: GrantPermissionRule = GrantPermissionRule.grant(
+        Manifest.permission.BLUETOOTH_CONNECT,
+        Manifest.permission.POST_NOTIFICATIONS,
+    )
     private val outputDir by lazy {
         File(context.getExternalFilesDir(null), "screenshots").also { it.mkdirs() }
     }
@@ -149,7 +159,9 @@ class ScreenshotTest {
             }
 
             Thread.sleep(700) // let layout settle
-            uiDevice.takeScreenshot(File(outputDir, "$filename.png"), 1.0f, 100)
+            val screenshot = File(outputDir, "$filename.png")
+            assertTrue("Could not capture $filename", uiDevice.takeScreenshot(screenshot, 1.0f, 100))
+            assertTrue("Screenshot was not written: ${screenshot.absolutePath}", screenshot.isFile)
         }
     }
 }

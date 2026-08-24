@@ -1,5 +1,6 @@
 package com.beatbridge
 
+import android.Manifest
 import android.content.pm.PackageManager
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
@@ -8,8 +9,10 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.rule.GrantPermissionRule
 import org.junit.Assert.assertEquals
 import org.junit.Assume.assumeTrue
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -23,6 +26,12 @@ import org.junit.runner.RunWith
 class MainActivityInstrumentedTest {
 
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
+
+    @get:Rule
+    val permissions: GrantPermissionRule = GrantPermissionRule.grant(
+        Manifest.permission.BLUETOOTH_CONNECT,
+        Manifest.permission.POST_NOTIFICATIONS,
+    )
 
     @Test
     fun appContext_hasCorrectPackageName() {

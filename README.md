@@ -79,8 +79,11 @@ BluetoothMonitorService starts (foreground)
 # Unit tests
 ./gradlew test
 
-# Instrumented tests (requires connected device or emulator)
+# Instrumented E2E tests (requires connected device or emulator)
 ./gradlew connectedAndroidTest
+
+# Capture the four store-listing screenshots from the connected device/emulator
+bundle exec fastlane screenshots
 
 # Debug build
 ./gradlew assembleDebug
