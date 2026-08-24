@@ -1,25 +1,27 @@
-BeatBridge automatically resumes music playback the moment your chosen Bluetooth device connects — your car speakers, headphones, or any paired device.
+Make Bluetooth music playback feel automatic.
+
+BeatBridge resumes music when the Bluetooth device you choose connects. Use it with your car, headphones, speakers, or any paired Bluetooth device, then carry on listening in the media app you already use.
 
 HOW IT WORKS
 
-Select one paired Bluetooth device from the list. BeatBridge starts a lightweight foreground service that listens for that device to connect. When it does, BeatBridge sends a standard media play event to Android, resuming whatever you were last listening to in Spotify, YouTube Music, Pocket Casts, or any other media app.
+Choose a paired Bluetooth device and enable monitoring. When that device connects, BeatBridge sends Android's standard media play command to the active media session. Compatible music, podcast, and audiobook apps can then resume playback.
 
-FEATURES
+KEY FEATURES
 
-• One-tap setup — pick your device and you're done
-• Works with any media player that responds to Android media key events
-• Persistent — keeps watching even after the app is closed
-• No polling — wakes only on Bluetooth connection events, so battery impact is minimal
-• Fully offline — no internet access, no accounts, no tracking
+• Auto-play music when a selected Bluetooth device connects
+• Works with Android media controls used by many music, podcast, and audiobook apps
+• Choose between automatic playback or an “Ask on connect” notification
+• Open your media app or audio settings directly from the connection notification
+• Create a per-device equalizer profile
+• Keep monitoring active in the background with a lightweight foreground service
+• Designed for efficient Bluetooth connection events, without constant polling
+
+PRIVATE BY DESIGN
+
+BeatBridge works offline. It has no accounts, ads, analytics, or network access. Your selected devices and preferences stay on your device.
 
 PERMISSIONS
 
-• Bluetooth — to read your list of paired devices and detect when one connects
-• Foreground Service — to keep the monitor running in the background
-• Notifications — to display the persistent "Watching for…" status notification (Android 13+)
+Bluetooth access lets BeatBridge list paired devices and detect connections. A foreground service keeps monitoring active in the background, and notifications show its connection status and optional actions.
 
-No location access. No storage access. No network access.
-
-OPEN SOURCE
-
-BeatBridge is free and open-source software licensed under the GNU General Public License v3. Source code is available on GitHub.
+BeatBridge is open-source software licensed under GPLv3.
