@@ -1,10 +1,11 @@
-name: CI
+name: Build and Release
 
 on:
   push:
-    branches: [main, master]
+    branches: [main]
   pull_request:
-    branches: [main, master]
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
   build-and-test:
@@ -245,8 +246,7 @@ jobs:
           git add version.properties CHANGELOG.md app/src/main/assets/changelogs/ fastlane/metadata/android/en-US/images/phoneScreenshots/
           git commit -m "Bump to $VERSION [release-bump]"
           git tag ${{ steps.version.outputs.tag }}
-          git push origin HEAD:master
-          git push origin ${{ steps.version.outputs.tag }}
+          git push --atomic origin HEAD:main "refs/tags/${{ steps.version.outputs.tag }}"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
