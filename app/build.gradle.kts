@@ -24,10 +24,7 @@ android {
         testInstrumentationRunnerArguments["grantAll"] = "true"
     }
 
-    val keyPropsFile = sequenceOf(
-        rootProject.file("key.properties"),
-        File(System.getProperty("user.home"), "flexify/android/key.properties")
-    ).firstOrNull { it.exists() }
+    val keyPropsFile = rootProject.file("key.properties").takeIf { it.exists() }
     val keyProps = Properties().also { props ->
         if (keyPropsFile != null) keyPropsFile.inputStream().use { props.load(it) }
     }

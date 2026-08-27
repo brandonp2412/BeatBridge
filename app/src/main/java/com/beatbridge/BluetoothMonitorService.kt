@@ -24,8 +24,10 @@ class BluetoothMonitorService : Service() {
 
     private val handler = Handler(Looper.getMainLooper())
     private var equalizer: Equalizer? = null
+    private var equalizerDeviceAddress: String? = null
 
     private val bluetoothReceiver = object : BroadcastReceiver() {
+        @SuppressLint("MissingPermission")
         override fun onReceive(context: Context, intent: Intent) {
             val device: BluetoothDevice? = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
                 intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE, BluetoothDevice::class.java)
@@ -36,7 +38,11 @@ class BluetoothMonitorService : Service() {
 
             when (intent.action) {
                 BluetoothDevice.ACTION_ACL_CONNECTED -> device?.let { handleDeviceConnected(it) }
-                BluetoothDevice.ACTION_ACL_DISCONNECTED -> releaseEqualizer()
+                BluetoothDevice.ACTION_ACL_DISCONNECTED -> {
+                    if (device == null || device.address == equalizerDeviceAddress) {
+                        releaseEqualizer()
+                    }
+                }
             }
         }
     }
@@ -89,25 +95,28 @@ class BluetoothMonitorService : Service() {
     }
 
     private fun applyEqualizer(prefs: SharedPreferences, address: String) {
+        releaseEqualizer()
+
         val raw = prefs.getString("${MainActivity.PREF_DEVICE_EQ_PREFIX}$address", null) ?: return
         val levels = raw.split(",").mapNotNull { it.toShortOrNull() }
         if (levels.isEmpty()) return
         try {
-            equalizer?.release()
             val eq = Equalizer(0, 0)
             eq.enabled = true
             for (i in 0 until minOf(levels.size, eq.numberOfBands.toInt())) {
                 eq.setBandLevel(i.toShort(), levels[i])
             }
             equalizer = eq
+            equalizerDeviceAddress = address
         } catch (_: Exception) {
-            equalizer = null
+            releaseEqualizer()
         }
     }
 
     private fun releaseEqualizer() {
         equalizer?.release()
         equalizer = null
+        equalizerDeviceAddress = null
     }
 
     @SuppressLint("MissingPermission")

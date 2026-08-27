@@ -79,10 +79,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(Intent.ACTION_VIEW, "https://github.com/sponsors/brandonp2412".toUri()))
         }
 
-        val selectedDevices = prefs.getStringSet(PREF_SELECTED_DEVICES, null)
-        if (selectedDevices?.isNotEmpty() == true || prefs.getBoolean(PREF_ANY_DEVICE, false)) {
-            startMonitorService()
-        }
+        syncMonitorService()
     }
 
     private fun loadMusicApps() {
@@ -163,7 +160,7 @@ class MainActivity : AppCompatActivity() {
             prefs.edit { putBoolean(PREF_ANY_DEVICE, isChecked) }
             updateDeviceSectionEnabled(!isChecked)
             updateStatusLabel()
-            startMonitorService()
+            syncMonitorService()
         }
     }
 
@@ -207,7 +204,7 @@ class MainActivity : AppCompatActivity() {
         prefs.edit { putStringSet(PREF_SELECTED_DEVICES, current) }
         deviceAdapter.updateSelections(current)
         updateStatusLabel()
-        startMonitorService()
+        syncMonitorService()
     }
 
     private fun onAppSelected(app: MusicApp) {
@@ -292,8 +289,15 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun startMonitorService() {
-        startForegroundService(Intent(this, BluetoothMonitorService::class.java))
+    private fun syncMonitorService() {
+        val selectedAddresses = prefs.getStringSet(PREF_SELECTED_DEVICES, emptySet()) ?: emptySet()
+        val shouldMonitor = prefs.getBoolean(PREF_ANY_DEVICE, false) || selectedAddresses.isNotEmpty()
+        val serviceIntent = Intent(this, BluetoothMonitorService::class.java)
+        if (shouldMonitor) {
+            startForegroundService(serviceIntent)
+        } else {
+            stopService(serviceIntent)
+        }
     }
 
     companion object {
