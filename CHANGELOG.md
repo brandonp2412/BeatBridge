@@ -3,6 +3,11 @@
 All notable changes to BeatBridge are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.1] - 2026-08-27
+
+### Changed
+- ci: move release pipeline to main
+
 ## [1.0.44] - 2026-08-27
 
 ### Changed
