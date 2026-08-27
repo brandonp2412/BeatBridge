@@ -9,6 +9,7 @@ on:
 jobs:
   build-and-test:
     name: Build & Unit Test
+    if: github.event_name != 'push' || !contains(github.event.head_commit.message, '[release-bump]')
     runs-on: ubuntu-latest
 
     steps:
@@ -48,6 +49,7 @@ jobs:
 
   instrumented-e2e:
     name: E2E & Screenshots
+    if: github.event_name != 'push' || !contains(github.event.head_commit.message, '[release-bump]')
     runs-on: ubuntu-latest
 
     steps:
@@ -151,6 +153,7 @@ jobs:
             grep -v "^Merge " | \
             grep -v "^Bump " | \
             grep -v "\[skip-ci\]" | \
+            grep -v "\[release-bump\]" | \
             grep -v "^ci:" | \
             grep -v "^chore:" | \
             grep -v "^test:" | \
@@ -194,7 +197,7 @@ jobs:
           VERSION=$(grep ^versionName version.properties | cut -d '=' -f2 | tr -d '\r')
           DATE=$(date +%Y-%m-%d)
           LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || git rev-list --max-parents=0 HEAD)
-          COMMITS=$(git log "${LAST_TAG}..HEAD" --pretty=format:"- %s" | grep -v '\[skip-ci\]' || true)
+          COMMITS=$(git log "${LAST_TAG}..HEAD" --pretty=format:"- %s" | grep -v '\[skip-ci\]' | grep -v '\[release-bump\]' || true)
           if [ -n "$COMMITS" ]; then
             NEW_SECTION="## [${VERSION}] - ${DATE}\n\n### Changed\n${COMMITS}\n"
             awk -v new="$NEW_SECTION" '/^## \[/{if(!done){print new; done=1}} {print}' CHANGELOG.md > CHANGELOG.tmp
@@ -240,7 +243,7 @@ jobs:
           git config --local user.name "GitHub Action"
           VERSION=$(grep ^versionName version.properties | cut -d '=' -f2 | tr -d '\r')
           git add version.properties CHANGELOG.md app/src/main/assets/changelogs/ fastlane/metadata/android/en-US/images/phoneScreenshots/
-          git commit -m "Bump to $VERSION [skip-ci]"
+          git commit -m "Bump to $VERSION [release-bump]"
           git tag ${{ steps.version.outputs.tag }}
           git push origin HEAD:master
           git push origin ${{ steps.version.outputs.tag }}
