@@ -7,39 +7,36 @@ on:
     branches: [main]
   workflow_dispatch:
 
+concurrency:
+  group: build-release-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   build-and-test:
     name: Build & Unit Test
     if: github.event_name != 'push' || !contains(github.event.head_commit.message, '[release-bump]')
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout source
         uses: actions/checkout@v7
-
       - name: Set up JDK 17
         uses: actions/setup-java@v5
         with:
           java-version: "17"
           distribution: "temurin"
           cache: gradle
-
       - name: Grant Gradle wrapper execute permission
         run: chmod +x gradlew
-
       - name: Run unit tests
         run: ./gradlew test --stacktrace
-
       - name: Build debug APK
         run: ./gradlew assembleDebug --stacktrace
-
       - name: Upload debug APK
         uses: actions/upload-artifact@v7
         with:
           name: debug-apk-${{ github.sha }}
           path: app/build/outputs/apk/debug/app-debug.apk
           retention-days: 7
-
       - name: Upload unit test results
         if: always()
         uses: actions/upload-artifact@v7
@@ -52,27 +49,22 @@ jobs:
     name: E2E & Screenshots
     if: github.event_name != 'push' || !contains(github.event.head_commit.message, '[release-bump]')
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout source
         uses: actions/checkout@v7
-
       - name: Set up JDK 17
         uses: actions/setup-java@v5
         with:
           java-version: "17"
           distribution: "temurin"
           cache: gradle
-
       - name: Grant Gradle wrapper execute permission
         run: chmod +x gradlew
-
       - name: Enable KVM
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
-
       - name: Run instrumented E2E tests and capture screenshots
         timeout-minutes: 15
         uses: reactivecircus/android-emulator-runner@v2
@@ -84,7 +76,6 @@ jobs:
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -no-audio -no-boot-anim -camera-back none
           script: bash .github/scripts/run-e2e.sh
-
       - name: Upload E2E test results
         if: always()
         uses: actions/upload-artifact@v7
@@ -93,7 +84,6 @@ jobs:
           path: artifacts/e2e/
           if-no-files-found: error
           retention-days: 7
-
       - name: Upload screenshots
         if: always()
         uses: actions/upload-artifact@v7
@@ -107,48 +97,56 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     needs: [build-and-test, instrumented-e2e]
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && !contains(github.event.head_commit.message, '[release-bump]')
     permissions:
       contents: write
     outputs:
       tag: ${{ steps.version.outputs.tag }}
-
     steps:
       - name: Checkout source with release history
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
-
       - name: Set up JDK 17
         uses: actions/setup-java@v5
         with:
           java-version: "17"
           distribution: "temurin"
           cache: gradle
-
       - name: Grant Gradle wrapper execute permission
         run: chmod +x gradlew
-
+      - name: Remove invalid migration release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh release view v1.0.1 >/dev/null 2>&1; then
+            gh release delete v1.0.1 --yes --cleanup-tag
+            git fetch --prune --tags
+          fi
       - name: Compute version
         id: version
         run: |
           BASE=$(grep '^versionBase=' version.properties | cut -d= -f2 | tr -d '\r')
-          PATCH=${{ github.run_number }}
+          CURRENT_CODE=$(grep '^versionCode=' version.properties | cut -d= -f2 | tr -d '\r')
+          LATEST_TAG_CODE=$(git tag --list "v${BASE}.*" | sed "s/^v${BASE}\.//" | grep -E '^[0-9]+$' | sort -n | tail -1)
+          LATEST_TAG_CODE=${LATEST_TAG_CODE:-0}
+          if [ "$CURRENT_CODE" -gt "$LATEST_TAG_CODE" ]; then
+            PATCH=$((CURRENT_CODE + 1))
+          else
+            PATCH=$((LATEST_TAG_CODE + 1))
+          fi
           VERSION="${BASE}.${PATCH}"
           echo "versionBase=${BASE}" > version.properties
           echo "versionName=${VERSION}" >> version.properties
           echo "versionCode=${PATCH}" >> version.properties
           echo "tag=v${VERSION}" >> "$GITHUB_OUTPUT"
-
       - name: Generate changelog
         run: |
           TIMESTAMP=$(date +%s)
           ASSET_DIR="app/src/main/assets/changelogs"
           mkdir -p "$ASSET_DIR"
-
           LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
           RANGE="${LAST_TAG:+$LAST_TAG..HEAD}"
-
           git --no-pager log --pretty=format:'%s' ${RANGE:-HEAD} | \
             sort -u | \
             grep -v "^Merge " | \
@@ -162,40 +160,32 @@ jobs:
             grep -v "^style:" | \
             grep -v "^docs:" | \
             grep -v "^build:" | \
-            grep -v "^Fix lint" | \
-            grep -v "^Fix tests" | \
-            grep -v "^Fix formatting" | \
-            grep -v "^Fix ordering" | \
-            grep -v "^Fix git " | \
-            grep -v "^Fix ci" | \
-            grep -v "^Add CLAUDE" | \
-            grep -v "^Add FUNDING" | \
-            grep -v "^Update screenshots" | \
-            grep -v "^Clean up " | \
-            grep -v "^Revert " | \
             head -10 | \
             sed 's/^feat: //' | \
             sed 's/^fix: /Fix /' | \
             sed 's/^perf: //' | \
             sed 's/^/• /' > "$ASSET_DIR/$TIMESTAMP.txt"
-
           if [ ! -s "$ASSET_DIR/$TIMESTAMP.txt" ]; then
             echo "• Bug fixes and improvements" > "$ASSET_DIR/$TIMESTAMP.txt"
           fi
-
           FIRST=$(head -1 "$ASSET_DIR/$TIMESTAMP.txt" | sed 's/[.[\*^$()+?{|]/\\&/g')
           DUP=$(grep -rl "^${FIRST}$" "$ASSET_DIR/" 2>/dev/null | grep -v "$TIMESTAMP.txt" | head -1)
           if [ -n "$DUP" ]; then
-            echo "Skipping duplicate changelog (matches $DUP)"
             rm "$ASSET_DIR/$TIMESTAMP.txt"
           fi
-
       - name: Decode keystore
         run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > app/keystore.jks
-
-      - name: Update changelog
+      - name: Repair migration changelog and add release entry
         run: |
-          VERSION=$(grep ^versionName version.properties | cut -d '=' -f2 | tr -d '\r')
+          if grep -q '^## \[1\.0\.1\] - 2026-08-27$' CHANGELOG.md; then
+            awk '
+              /^## \[1\.0\.1\] - 2026-08-27$/ { skip=1; next }
+              skip && /^## \[/ { skip=0 }
+              !skip { print }
+            ' CHANGELOG.md > CHANGELOG.tmp
+            mv CHANGELOG.tmp CHANGELOG.md
+          fi
+          VERSION=$(grep '^versionName=' version.properties | cut -d= -f2 | tr -d '\r')
           DATE=$(date +%Y-%m-%d)
           LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || git rev-list --max-parents=0 HEAD)
           COMMITS=$(git log "${LAST_TAG}..HEAD" --pretty=format:"- %s" | grep -v '\[skip-ci\]' | grep -v '\[release-bump\]' || true)
@@ -204,20 +194,17 @@ jobs:
             awk -v new="$NEW_SECTION" '/^## \[/{if(!done){print new; done=1}} {print}' CHANGELOG.md > CHANGELOG.tmp
             mv CHANGELOG.tmp CHANGELOG.md
           fi
-
       - name: Download verified E2E screenshots
         uses: actions/download-artifact@v8
         with:
           name: e2e-screenshots-${{ github.sha }}
           path: fastlane/metadata/android/en-US/images/phoneScreenshots
-
       - name: Build release APKs
         run: ./gradlew assembleRelease --stacktrace
         env:
           KEYSTORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-
       - name: Rename APKs with version
         run: |
           TAG="${{ steps.version.outputs.tag }}"
@@ -230,24 +217,21 @@ jobs:
             APK_COUNT=$((APK_COUNT + 1))
           done
           test "$APK_COUNT" -eq 4
-
       - name: Upload release APKs
         uses: actions/upload-artifact@v7
         with:
           name: release-apks
           path: app/build/outputs/apk/release/BeatBridge-*.apk
           if-no-files-found: error
-
       - name: Commit and tag verified release inputs
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          VERSION=$(grep ^versionName version.properties | cut -d '=' -f2 | tr -d '\r')
+          VERSION=$(grep '^versionName=' version.properties | cut -d= -f2 | tr -d '\r')
           git add version.properties CHANGELOG.md app/src/main/assets/changelogs/ fastlane/metadata/android/en-US/images/phoneScreenshots/
           git commit -m "Bump to $VERSION [release-bump]"
-          git tag ${{ steps.version.outputs.tag }}
+          git tag "${{ steps.version.outputs.tag }}"
           git push --atomic origin HEAD:main "refs/tags/${{ steps.version.outputs.tag }}"
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
@@ -271,20 +255,19 @@ jobs:
             See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/${{ steps.version.outputs.tag }}/CHANGELOG.md) for what's new.
 
   virustotal:
+    name: VirusTotal
     needs: release
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && !contains(github.event.head_commit.message, '[release-bump]')
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v7
-
       - name: Download release APKs
         uses: actions/download-artifact@v8
         with:
           name: release-apks
           path: release-apks
-
       - name: VirusTotal Scan
         id: vt
         uses: crazy-max/ghaction-virustotal@v5
@@ -296,7 +279,6 @@ jobs:
             release-apks/BeatBridge-${{ needs.release.outputs.tag }}-armeabi-v7a.apk
             release-apks/BeatBridge-${{ needs.release.outputs.tag }}-x86_64.apk
             release-apks/BeatBridge-${{ needs.release.outputs.tag }}-x86.apk
-
       - name: Append VirusTotal links to release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
