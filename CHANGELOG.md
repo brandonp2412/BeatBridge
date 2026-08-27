@@ -3,6 +3,13 @@
 All notable changes to BeatBridge are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.44] - 2026-08-27
+
+### Changed
+- Harden release pipeline and Bluetooth monitor state
+- Sync Google Play store metadata automatically (#10)
+- Setup automated e2e and screenshot tests
+
 ## [Unreleased]
 
 ### Changed
