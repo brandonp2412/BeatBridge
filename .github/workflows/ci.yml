@@ -13,10 +13,10 @@ jobs:
 
     steps:
       - name: Checkout source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: "17"
           distribution: "temurin"
@@ -32,7 +32,7 @@ jobs:
         run: ./gradlew assembleDebug --stacktrace
 
       - name: Upload debug APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: debug-apk-${{ github.sha }}
           path: app/build/outputs/apk/debug/app-debug.apk
@@ -40,7 +40,7 @@ jobs:
 
       - name: Upload unit test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: unit-test-results-${{ github.sha }}
           path: app/build/reports/tests/
@@ -52,10 +52,10 @@ jobs:
 
     steps:
       - name: Checkout source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: "17"
           distribution: "temurin"
@@ -80,29 +80,11 @@ jobs:
           profile: pixel_2
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -no-audio -no-boot-anim -camera-back none
-          script: |
-            set -o pipefail
-            ./gradlew assembleDebug assembleDebugAndroidTest --stacktrace
-            DEVICE_ABI=$(adb shell getprop ro.product.cpu.abi)
-            APP_APK="app/build/outputs/apk/debug/app-${DEVICE_ABI}-debug.apk"
-            TEST_APK="app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
-            adb install -t -r "$APP_APK"
-            adb install -t -r "$TEST_APK"
-            adb shell pm grant com.beatbridge android.permission.BLUETOOTH_CONNECT
-            adb shell pm grant com.beatbridge android.permission.POST_NOTIFICATIONS
-            mkdir -p artifacts/e2e artifacts/screenshots
-            adb shell am instrument -w \
-              com.beatbridge.test/androidx.test.runner.AndroidJUnitRunner \
-              | tee artifacts/e2e/instrumentation.log
-            adb pull /sdcard/Android/data/com.beatbridge/files/screenshots/. artifacts/screenshots/
-            test -s artifacts/screenshots/01_empty_state.png
-            test -s artifacts/screenshots/02_devices_found.png
-            test -s artifacts/screenshots/03_device_selected.png
-            test -s artifacts/screenshots/04_full_list.png
+          script: bash .github/scripts/run-e2e.sh
 
       - name: Upload E2E test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: e2e-test-results-${{ github.sha }}
           path: artifacts/e2e/
@@ -111,7 +93,7 @@ jobs:
 
       - name: Upload screenshots
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: e2e-screenshots-${{ github.sha }}
           path: artifacts/screenshots/
@@ -129,11 +111,13 @@ jobs:
       tag: ${{ steps.version.outputs.tag }}
 
     steps:
-      - name: Checkout source
-        uses: actions/checkout@v4
+      - name: Checkout source with release history
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: "17"
           distribution: "temurin"
@@ -195,7 +179,6 @@ jobs:
             echo "• Bug fixes and improvements" > "$ASSET_DIR/$TIMESTAMP.txt"
           fi
 
-          # Deduplicate: skip if first line already exists in another file
           FIRST=$(head -1 "$ASSET_DIR/$TIMESTAMP.txt" | sed 's/[.[\*^$()+?{|]/\\&/g')
           DUP=$(grep -rl "^${FIRST}$" "$ASSET_DIR/" 2>/dev/null | grep -v "$TIMESTAMP.txt" | head -1)
           if [ -n "$DUP" ]; then
@@ -219,21 +202,10 @@ jobs:
           fi
 
       - name: Download verified E2E screenshots
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: e2e-screenshots-${{ github.sha }}
           path: fastlane/metadata/android/en-US/images/phoneScreenshots
-
-      - name: Commit and push new version
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          VERSION=$(grep ^versionName version.properties | cut -d '=' -f2 | tr -d '\r')
-          git add version.properties CHANGELOG.md app/src/main/assets/changelogs/ fastlane/metadata/android/en-US/images/phoneScreenshots/
-          git commit -m "Bump to $VERSION [skip-ci]"
-          git tag ${{ steps.version.outputs.tag }}
-          git push origin master
-          git push origin ${{ steps.version.outputs.tag }}
 
       - name: Build release APKs
         run: ./gradlew assembleRelease --stacktrace
@@ -246,16 +218,32 @@ jobs:
         run: |
           TAG="${{ steps.version.outputs.tag }}"
           OUTDIR="app/build/outputs/apk/release"
+          APK_COUNT=0
           for APK in "$OUTDIR"/app-*-release.apk; do
+            test -f "$APK"
             ABI=$(basename "$APK" | sed 's/app-\(.*\)-release\.apk/\1/')
             cp "$APK" "$OUTDIR/BeatBridge-${TAG}-${ABI}.apk"
+            APK_COUNT=$((APK_COUNT + 1))
           done
+          test "$APK_COUNT" -eq 4
 
       - name: Upload release APKs
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: release-apks
           path: app/build/outputs/apk/release/BeatBridge-*.apk
+          if-no-files-found: error
+
+      - name: Commit and tag verified release inputs
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          VERSION=$(grep ^versionName version.properties | cut -d '=' -f2 | tr -d '\r')
+          git add version.properties CHANGELOG.md app/src/main/assets/changelogs/ fastlane/metadata/android/en-US/images/phoneScreenshots/
+          git commit -m "Bump to $VERSION [skip-ci]"
+          git tag ${{ steps.version.outputs.tag }}
+          git push origin HEAD:master
+          git push origin ${{ steps.version.outputs.tag }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -286,10 +274,10 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Download release APKs
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: release-apks
           path: release-apks
