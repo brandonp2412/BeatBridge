@@ -1,6 +1,7 @@
 package com.beatbridge
 
 import android.annotation.SuppressLint
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -12,6 +13,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.media.AudioManager
 import android.media.audiofx.Equalizer
 import android.os.Handler
@@ -60,6 +62,11 @@ class BluetoothMonitorService : Service() {
     }
 
     private fun isAudioDevice(device: BluetoothDevice): Boolean {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S &&
+            checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return false
+        }
         val major = device.bluetoothClass?.majorDeviceClass ?: return false
         return major == BluetoothClass.Device.Major.AUDIO_VIDEO
     }

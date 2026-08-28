@@ -92,11 +92,17 @@ android {
         includeInApk = false
         includeInBundle = false
     }
+
 }
 
 // ABI-specific versionCodes: base * 100 + suffix (x86_64=1, armeabi-v7a=2, arm64-v8a=3, x86=4)
 // This matches the VercodeOperation in fdroiddata so F-Droid serves the right APK per device.
 private val abiVersionCodes = mapOf("x86_64" to 1, "armeabi-v7a" to 2, "arm64-v8a" to 3, "x86" to 4)
+
+// Do not embed the checkout's Git revision; it makes release APKs differ
+// when the same source is built from different repository states.
+tasks.matching { it.name.startsWith("extract") && it.name.endsWith("VersionControlInfo") }
+    .configureEach { enabled = false }
 
 androidComponents {
     onVariants { variant ->
