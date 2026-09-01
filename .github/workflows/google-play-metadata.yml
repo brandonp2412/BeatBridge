@@ -2,7 +2,7 @@ name: Sync Google Play listing
 
 on:
   push:
-    branches: [main]
+    branches: [master]
     paths:
       - "fastlane/metadata/android/**"
       - "fastlane/Fastfile"
