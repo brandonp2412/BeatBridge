@@ -325,24 +325,3 @@ jobs:
           VT_SECTION+=$'\n</details>'
           CURRENT_BODY=$(gh release view "$VERSION" --json body -q .body)
           gh release edit "$VERSION" --notes "${CURRENT_BODY}${VT_SECTION}"
-
-  cleanup-fdroid-release-claims:
-    name: Clean up historical release claims
-    if: github.event_name == 'push' && contains(github.event.head_commit.message, '[release-metadata-fix]')
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Remove self-asserted F-Droid verification wording
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_REPO: ${{ github.repository }}
-        run: |
-          gh api --paginate "repos/${GH_REPO}/releases?per_page=100" --jq '.[].id' | while read -r release_id; do
-            body=$(gh api "repos/${GH_REPO}/releases/${release_id}" --jq '.body // ""')
-            updated=${body//'| **F-Droid** | Verified build from source, signed by F-Droid *(recommended)* |'/'| **F-Droid** | Install from the F-Droid repository |'}
-            if [ "$updated" != "$body" ]; then
-              gh api --method PATCH "repos/${GH_REPO}/releases/${release_id}" -f body="$updated" >/dev/null
-              echo "Updated release ${release_id}"
-            fi
-          done
