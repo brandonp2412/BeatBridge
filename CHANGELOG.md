@@ -3,6 +3,11 @@
 All notable changes to BeatBridge are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.47] - 2026-09-03
+
+### Changed
+- ci: harden GitHub Actions
+
 ## [1.0.46] - 2026-09-01
 
 ### Changed
