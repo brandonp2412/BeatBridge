@@ -328,6 +328,7 @@ jobs:
       - name: Append VirusTotal links to release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
           VERSION: ${{ needs.release.outputs.tag }}
           ANALYSIS: ${{ steps.vt.outputs.analysis }}
         run: |
@@ -339,5 +340,5 @@ jobs:
             VT_SECTION+="- [${filename}](${url})"$'\n'
           done
           VT_SECTION+=$'\n</details>'
-          CURRENT_BODY=$(gh release view "$VERSION" --json body -q .body)
-          gh release edit "$VERSION" --notes "${CURRENT_BODY}${VT_SECTION}"
+          CURRENT_BODY=$(gh release view "$VERSION" --repo "$REPO" --json body -q .body)
+          gh release edit "$VERSION" --repo "$REPO" --notes "${CURRENT_BODY}${VT_SECTION}"
