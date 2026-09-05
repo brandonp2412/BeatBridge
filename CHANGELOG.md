@@ -3,6 +3,15 @@
 All notable changes to BeatBridge are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.48] - 2026-09-05
+
+### Changed
+- ci: migrate release pipeline to main
+- ci: target main branch for Play metadata sync
+- chore: reconcile master history into main
+- ci: fix hardened VirusTotal release update [skip ci]
+- ci: fix release version continuity
+
 ## [1.0.47] - 2026-09-03
 
 ### Changed
