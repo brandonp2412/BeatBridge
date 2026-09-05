@@ -2,44 +2,52 @@ name: Build and Release
 
 on:
   push:
-    branches: [main]
+    branches: [master]
   pull_request:
-    branches: [main]
+    branches: [master]
   workflow_dispatch:
 
-concurrency:
-  group: build-release-${{ github.ref }}
-  cancel-in-progress: false
+permissions:
+  contents: read
 
 jobs:
   build-and-test:
     name: Build & Unit Test
     if: github.event_name != 'push' || !contains(github.event.head_commit.message, '[release-bump]')
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout source
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
       - name: Set up JDK 17
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
         with:
           java-version: "17"
           distribution: "temurin"
           cache: gradle
+
       - name: Grant Gradle wrapper execute permission
         run: chmod +x gradlew
+
       - name: Run unit tests
         run: ./gradlew test --stacktrace
+
       - name: Build debug APK
         run: ./gradlew assembleDebug --stacktrace
+
       - name: Upload debug APK
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: debug-apk-${{ github.sha }}
           path: app/build/outputs/apk/debug/app-debug.apk
           retention-days: 7
+
       - name: Upload unit test results
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: unit-test-results-${{ github.sha }}
           path: app/build/reports/tests/
@@ -49,25 +57,32 @@ jobs:
     name: E2E & Screenshots
     if: github.event_name != 'push' || !contains(github.event.head_commit.message, '[release-bump]')
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout source
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
       - name: Set up JDK 17
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
         with:
           java-version: "17"
           distribution: "temurin"
           cache: gradle
+
       - name: Grant Gradle wrapper execute permission
         run: chmod +x gradlew
+
       - name: Enable KVM
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
+
       - name: Run instrumented E2E tests and capture screenshots
         timeout-minutes: 15
-        uses: reactivecircus/android-emulator-runner@v2
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2
         with:
           api-level: 35
           target: google_apis
@@ -76,17 +91,19 @@ jobs:
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -no-audio -no-boot-anim -camera-back none
           script: bash .github/scripts/run-e2e.sh
+
       - name: Upload E2E test results
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: e2e-test-results-${{ github.sha }}
           path: artifacts/e2e/
           if-no-files-found: error
           retention-days: 7
+
       - name: Upload screenshots
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: e2e-screenshots-${{ github.sha }}
           path: artifacts/screenshots/
@@ -102,27 +119,23 @@ jobs:
       contents: write
     outputs:
       tag: ${{ steps.version.outputs.tag }}
+
     steps:
       - name: Checkout source with release history
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
+          persist-credentials: false
+
       - name: Set up JDK 17
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
         with:
           java-version: "17"
           distribution: "temurin"
-          cache: gradle
+
       - name: Grant Gradle wrapper execute permission
         run: chmod +x gradlew
-      - name: Remove invalid migration release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          if gh release view v1.0.1 >/dev/null 2>&1; then
-            gh release delete v1.0.1 --yes --cleanup-tag
-            git fetch --prune --tags
-          fi
+
       - name: Compute version
         id: version
         run: |
@@ -140,13 +153,16 @@ jobs:
           echo "versionName=${VERSION}" >> version.properties
           echo "versionCode=${PATCH}" >> version.properties
           echo "tag=v${VERSION}" >> "$GITHUB_OUTPUT"
+
       - name: Generate changelog
         run: |
           TIMESTAMP=$(date +%s)
           ASSET_DIR="app/src/main/assets/changelogs"
           mkdir -p "$ASSET_DIR"
+
           LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
           RANGE="${LAST_TAG:+$LAST_TAG..HEAD}"
+
           git --no-pager log --pretty=format:'%s' ${RANGE:-HEAD} | \
             sort -u | \
             grep -v "^Merge " | \
@@ -160,32 +176,42 @@ jobs:
             grep -v "^style:" | \
             grep -v "^docs:" | \
             grep -v "^build:" | \
+            grep -v "^Fix lint" | \
+            grep -v "^Fix tests" | \
+            grep -v "^Fix formatting" | \
+            grep -v "^Fix ordering" | \
+            grep -v "^Fix git " | \
+            grep -v "^Fix ci" | \
+            grep -v "^Add CLAUDE" | \
+            grep -v "^Add FUNDING" | \
+            grep -v "^Update screenshots" | \
+            grep -v "^Clean up " | \
+            grep -v "^Revert " | \
             head -10 | \
             sed 's/^feat: //' | \
             sed 's/^fix: /Fix /' | \
             sed 's/^perf: //' | \
             sed 's/^/• /' > "$ASSET_DIR/$TIMESTAMP.txt"
+
           if [ ! -s "$ASSET_DIR/$TIMESTAMP.txt" ]; then
             echo "• Bug fixes and improvements" > "$ASSET_DIR/$TIMESTAMP.txt"
           fi
+
           FIRST=$(head -1 "$ASSET_DIR/$TIMESTAMP.txt" | sed 's/[.[\*^$()+?{|]/\\&/g')
           DUP=$(grep -rl "^${FIRST}$" "$ASSET_DIR/" 2>/dev/null | grep -v "$TIMESTAMP.txt" | head -1)
           if [ -n "$DUP" ]; then
+            echo "Skipping duplicate changelog (matches $DUP)"
             rm "$ASSET_DIR/$TIMESTAMP.txt"
           fi
+
       - name: Decode keystore
-        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > app/keystore.jks
-      - name: Repair migration changelog and add release entry
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > app/keystore.jks
+
+      - name: Update changelog
         run: |
-          if grep -q '^## \[1\.0\.1\] - 2026-08-27$' CHANGELOG.md; then
-            awk '
-              /^## \[1\.0\.1\] - 2026-08-27$/ { skip=1; next }
-              skip && /^## \[/ { skip=0 }
-              !skip { print }
-            ' CHANGELOG.md > CHANGELOG.tmp
-            mv CHANGELOG.tmp CHANGELOG.md
-          fi
-          VERSION=$(grep '^versionName=' version.properties | cut -d= -f2 | tr -d '\r')
+          VERSION=$(grep ^versionName version.properties | cut -d '=' -f2 | tr -d '\r')
           DATE=$(date +%Y-%m-%d)
           LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || git rev-list --max-parents=0 HEAD)
           COMMITS=$(git log "${LAST_TAG}..HEAD" --pretty=format:"- %s" | grep -v '\[skip-ci\]' | grep -v '\[release-bump\]' || true)
@@ -194,46 +220,66 @@ jobs:
             awk -v new="$NEW_SECTION" '/^## \[/{if(!done){print new; done=1}} {print}' CHANGELOG.md > CHANGELOG.tmp
             mv CHANGELOG.tmp CHANGELOG.md
           fi
+
       - name: Download verified E2E screenshots
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           name: e2e-screenshots-${{ github.sha }}
           path: fastlane/metadata/android/en-US/images/phoneScreenshots
-      - name: Build release APKs
-        run: ./gradlew assembleRelease --stacktrace
+
+      - name: Prepare release commit and tag
+        env:
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          VERSION=$(grep ^versionName version.properties | cut -d '=' -f2 | tr -d '\r')
+          git add version.properties CHANGELOG.md app/src/main/assets/changelogs/ fastlane/metadata/android/en-US/images/phoneScreenshots/
+          git commit -m "Bump to $VERSION [release-bump]"
+          git tag "$RELEASE_TAG"
+
+      - name: Build release APKs from tagged commit
         env:
           KEYSTORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-      - name: Rename APKs with version
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
         run: |
-          TAG="${{ steps.version.outputs.tag }}"
+          test "$(git rev-parse HEAD)" = "$(git rev-list -n 1 "$RELEASE_TAG")"
+          test -z "$(git status --porcelain --untracked-files=no)"
+          ./gradlew assembleRelease --stacktrace
+
+      - name: Rename APKs with version
+        env:
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+        run: |
           OUTDIR="app/build/outputs/apk/release"
           APK_COUNT=0
           for APK in "$OUTDIR"/app-*-release.apk; do
             test -f "$APK"
             ABI=$(basename "$APK" | sed 's/app-\(.*\)-release\.apk/\1/')
-            cp "$APK" "$OUTDIR/BeatBridge-${TAG}-${ABI}.apk"
+            cp "$APK" "$OUTDIR/BeatBridge-${RELEASE_TAG}-${ABI}.apk"
             APK_COUNT=$((APK_COUNT + 1))
           done
           test "$APK_COUNT" -eq 4
+
       - name: Upload release APKs
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: release-apks
           path: app/build/outputs/apk/release/BeatBridge-*.apk
           if-no-files-found: error
-      - name: Commit and tag verified release inputs
+
+      - name: Publish verified release commit and tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          VERSION=$(grep '^versionName=' version.properties | cut -d= -f2 | tr -d '\r')
-          git add version.properties CHANGELOG.md app/src/main/assets/changelogs/ fastlane/metadata/android/en-US/images/phoneScreenshots/
-          git commit -m "Bump to $VERSION [release-bump]"
-          git tag "${{ steps.version.outputs.tag }}"
-          git push --atomic origin HEAD:main "refs/tags/${{ steps.version.outputs.tag }}"
+          gh auth setup-git
+          git push --atomic origin HEAD:master "refs/tags/${RELEASE_TAG}"
+
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v3
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3
         with:
           tag_name: ${{ steps.version.outputs.tag }}
           name: BeatBridge ${{ steps.version.outputs.tag }}
@@ -248,29 +294,28 @@ jobs:
 
             | Method | Notes |
             |--------|-------|
-            | **F-Droid** | Verified build from source, signed by F-Droid *(recommended)* |
+            | **F-Droid** | Install from the F-Droid repository |
             | **APK below** | Signed — built directly from this commit |
             | **Build yourself** | `git clone`, checkout this tag, `./gradlew assembleRelease` |
 
             See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/${{ steps.version.outputs.tag }}/CHANGELOG.md) for what's new.
 
   virustotal:
-    name: VirusTotal
     needs: release
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && !contains(github.event.head_commit.message, '[release-bump]')
+    if: github.event_name == 'push'
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v7
       - name: Download release APKs
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           name: release-apks
           path: release-apks
+
       - name: VirusTotal Scan
         id: vt
-        uses: crazy-max/ghaction-virustotal@v5
+        uses: crazy-max/ghaction-virustotal@936d8c5c00afe97d3d9a1af26d017cfdf26800a2 # v5
         with:
           vt_api_key: ${{ secrets.VT_API_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -279,9 +324,11 @@ jobs:
             release-apks/BeatBridge-${{ needs.release.outputs.tag }}-armeabi-v7a.apk
             release-apks/BeatBridge-${{ needs.release.outputs.tag }}-x86_64.apk
             release-apks/BeatBridge-${{ needs.release.outputs.tag }}-x86.apk
+
       - name: Append VirusTotal links to release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
           VERSION: ${{ needs.release.outputs.tag }}
           ANALYSIS: ${{ steps.vt.outputs.analysis }}
         run: |
@@ -293,5 +340,5 @@ jobs:
             VT_SECTION+="- [${filename}](${url})"$'\n'
           done
           VT_SECTION+=$'\n</details>'
-          CURRENT_BODY=$(gh release view "$VERSION" --json body -q .body)
-          gh release edit "$VERSION" --notes "${CURRENT_BODY}${VT_SECTION}"
+          CURRENT_BODY=$(gh release view "$VERSION" --repo "$REPO" --json body -q .body)
+          gh release edit "$VERSION" --repo "$REPO" --notes "${CURRENT_BODY}${VT_SECTION}"
