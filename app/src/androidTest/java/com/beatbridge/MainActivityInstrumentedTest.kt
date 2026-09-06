@@ -6,7 +6,7 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
@@ -47,33 +47,19 @@ class MainActivityInstrumentedTest {
             .hasSystemFeature(PackageManager.FEATURE_BLUETOOTH)
         assumeTrue("Skipped: device has no Bluetooth hardware", hasBluetooth)
 
-        ActivityScenario.launch(MainActivity::class.java).use { scenario ->
-            // Scenario reaching RESUMED means the activity did not crash on startup.
-            scenario.onActivity { /* no-op — just confirm we got here */ }
-        }
+        ActivityScenario.launch(MainActivity::class.java).use { }
     }
 
     @Test
-    fun statusTextView_isDisplayed() {
+    fun defaultStatus_isDisplayed() {
         val hasBluetooth = context.packageManager
             .hasSystemFeature(PackageManager.FEATURE_BLUETOOTH)
         assumeTrue("Skipped: device has no Bluetooth hardware", hasBluetooth)
+        context.getSharedPreferences(MainActivity.PREFS_NAME, 0).edit().clear().commit()
 
         ActivityScenario.launch(MainActivity::class.java).use {
-            onView(withId(R.id.tv_status)).check(matches(isDisplayed()))
-        }
-    }
-
-    @Test
-    fun deviceRecyclerView_isPresent() {
-        val hasBluetooth = context.packageManager
-            .hasSystemFeature(PackageManager.FEATURE_BLUETOOTH)
-        assumeTrue("Skipped: device has no Bluetooth hardware", hasBluetooth)
-
-        ActivityScenario.launch(MainActivity::class.java).use {
-            // The RecyclerView is always in the layout; visibility depends on
-            // whether paired devices exist, but the view itself must be present.
-            onView(withId(R.id.rv_devices)) // throws if view is not in hierarchy
+            onView(withText("Tap a device below to activate auto-play"))
+                .check(matches(isDisplayed()))
         }
     }
 }

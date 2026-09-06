@@ -49,8 +49,6 @@ class ScreenshotTest {
         File(context.getExternalFilesDir(null), "screenshots").also { it.mkdirs() }
     }
 
-    // ── Scenarios ─────────────────────────────────────────────────────────────
-
     @Test
     fun screenshot_01_empty_state() {
         capture(
@@ -104,8 +102,6 @@ class ScreenshotTest {
         )
     }
 
-    // ── Engine ────────────────────────────────────────────────────────────────
-
     private fun capture(
         filename: String,
         devices: List<Pair<String, String>>,
@@ -151,7 +147,6 @@ class ScreenshotTest {
                 } else {
                     tvEmpty.visibility   = View.GONE
                     rvDevices.visibility = View.VISIBLE
-                    // Swap in the fake adapter so we display our custom device list
                     rvDevices.adapter    = FakeDeviceAdapter(devices, selectedAddress)
                     tvStatus.text = if (selectedName != null) "Watching: $selectedName"
                                     else "Tap a device below to activate auto-play"
