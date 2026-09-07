@@ -3,6 +3,11 @@
 All notable changes to BeatBridge are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.50] - 2026-09-07
+
+### Changed
+- Flatten device connection filtering
+
 ## [1.0.49] - 2026-09-06
 
 ### Changed
