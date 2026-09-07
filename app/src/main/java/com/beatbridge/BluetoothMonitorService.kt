@@ -74,9 +74,8 @@ class BluetoothMonitorService : Service() {
     private fun handleDeviceConnected(device: BluetoothDevice) {
         val prefs = getSharedPreferences(MainActivity.PREFS_NAME, MODE_PRIVATE)
         val anyDevice = prefs.getBoolean(MainActivity.PREF_ANY_DEVICE, false)
-        if (anyDevice) {
-            if (!isAudioDevice(device)) return
-        } else {
+        if (anyDevice && !isAudioDevice(device)) return
+        if (!anyDevice) {
             val selectedAddresses = prefs.getStringSet(MainActivity.PREF_SELECTED_DEVICES, emptySet()) ?: emptySet()
             if (selectedAddresses.isEmpty() || device.address !in selectedAddresses) return
         }
