@@ -3,6 +3,11 @@
 All notable changes to BeatBridge are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.51] - 2026-09-08
+
+### Changed
+- Remove redundant fastlane comments
+
 ## [1.0.50] - 2026-09-07
 
 ### Changed
