@@ -113,7 +113,6 @@ class ScreenshotTest {
             context.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH)
         )
 
-        // Pre-seed prefs so the header renders the right text on first draw
         context.getSharedPreferences(MainActivity.PREFS_NAME, Context.MODE_PRIVATE)
             .edit()
             .putStringSet(MainActivity.PREF_SELECTED_DEVICES, setOfNotNull(selectedAddress))
@@ -124,7 +123,6 @@ class ScreenshotTest {
 
         ActivityScenario.launch(MainActivity::class.java).use { scenario ->
             scenario.onActivity { activity ->
-                // Show activity over the lock screen without needing to unlock
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
                     activity.setShowWhenLocked(true)
                     activity.setTurnScreenOn(true)
