@@ -1,0 +1,1 @@
+• Remove redundant screenshot test comments
