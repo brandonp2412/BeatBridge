@@ -214,20 +214,21 @@ class MainActivity : AppCompatActivity() {
             prefs.edit { putStringSet(PREF_SELECTED_APPS, current) }
             appAdapter.updateSelections(current)
             Toast.makeText(this, "Removed ${app.appName}", Toast.LENGTH_SHORT).show()
-        } else {
-            if (!Settings.canDrawOverlays(this)) {
-                val intent = Intent(
-                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                    "package:${packageName}".toUri()
-                )
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-            }
-            current.add(app.packageName)
-            prefs.edit { putStringSet(PREF_SELECTED_APPS, current) }
-            appAdapter.updateSelections(current)
-            Toast.makeText(this, "Will open ${app.appName} on connect", Toast.LENGTH_SHORT).show()
+            return
         }
+
+        if (!Settings.canDrawOverlays(this)) {
+            val intent = Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                "package:${packageName}".toUri()
+            )
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
+        current.add(app.packageName)
+        prefs.edit { putStringSet(PREF_SELECTED_APPS, current) }
+        appAdapter.updateSelections(current)
+        Toast.makeText(this, "Will open ${app.appName} on connect", Toast.LENGTH_SHORT).show()
     }
 
     private fun checkPermissionsAndLoad() {
