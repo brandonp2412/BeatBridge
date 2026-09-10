@@ -276,6 +276,8 @@ class BluetoothMonitorService : Service() {
             )
             .build()
 
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int = START_STICKY
+
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onDestroy() {
