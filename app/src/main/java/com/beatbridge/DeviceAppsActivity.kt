@@ -89,8 +89,7 @@ class DeviceAppsActivity : AppCompatActivity() {
                 val label = resolveInfo.loadLabel(packageManager).toString()
                 if (pkg == packageName) null else MusicApp(pkg, label)
             }
-            .sortedBy { it.appName }
-        appList.addAll(found)
+        appList.addAll(normalizeMusicApps(found))
     }
 
     private fun setupRecyclerView() {

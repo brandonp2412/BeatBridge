@@ -113,6 +113,23 @@ class MainActivityPrefsTest {
     }
 
     @Test
+    fun appPickerDeduplicatesPackagesAndSortsNames() {
+        val apps = listOf(
+            MusicApp("com.example.two", "Zulu"),
+            MusicApp("com.example.one", "alpha"),
+            MusicApp("com.example.two", "Duplicate launcher entry"),
+        )
+
+        assertEquals(
+            listOf(
+                MusicApp("com.example.one", "alpha"),
+                MusicApp("com.example.two", "Zulu"),
+            ),
+            normalizeMusicApps(apps),
+        )
+    }
+
+    @Test
     fun prefKeys_areDistinct() {
         val keys = setOf(
             MainActivity.PREF_SELECTED_DEVICES,

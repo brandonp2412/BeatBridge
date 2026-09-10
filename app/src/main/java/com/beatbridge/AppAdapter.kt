@@ -9,6 +9,9 @@ import com.beatbridge.databinding.ItemAppBinding
 
 data class MusicApp(val packageName: String, val appName: String)
 
+internal fun normalizeMusicApps(apps: Iterable<MusicApp>): List<MusicApp> =
+    apps.distinctBy { it.packageName }.sortedBy { it.appName.lowercase() }
+
 class AppAdapter(
     private val apps: List<MusicApp>,
     private var selectedPackages: Set<String>,

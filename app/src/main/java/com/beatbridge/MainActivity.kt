@@ -113,9 +113,8 @@ class MainActivity : AppCompatActivity() {
                 val label = resolveInfo.loadLabel(packageManager).toString()
                 if (pkg == packageName) null else MusicApp(pkg, label)
             }
-            .sortedBy { it.appName }
 
-        musicAppList.addAll(found)
+        musicAppList.addAll(normalizeMusicApps(found))
 
         val isEmpty = musicAppList.isEmpty()
         binding.tvAppsEmpty.visibility = if (isEmpty) View.VISIBLE else View.GONE
