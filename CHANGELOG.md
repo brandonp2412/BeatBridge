@@ -3,6 +3,16 @@
 All notable changes to BeatBridge are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.55] - 2026-09-10
+
+### Changed
+- Fix background app launches on modern Android
+
+## [1.0.54] - 2026-09-10
+
+### Changed
+- Require overlay permission before app auto-launch
+
 ## [1.0.53] - 2026-09-09
 
 ### Changed
