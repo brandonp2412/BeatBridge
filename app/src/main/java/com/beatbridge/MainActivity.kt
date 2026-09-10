@@ -36,8 +36,8 @@ class MainActivity : AppCompatActivity() {
 
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        if (permissions.all { it.value }) {
+    ) {
+        if (hasBluetoothPermissions()) {
             loadPairedDevices()
         } else {
             Toast.makeText(
@@ -258,21 +258,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkPermissionsAndLoad() {
-        val required = buildRequiredPermissions()
-        val allGranted = required.all {
-            ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
+        if (hasBluetoothPermissions()) {
+            loadPairedDevices()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) !=
+                    PackageManager.PERMISSION_GRANTED
+            ) {
+                permissionLauncher.launch(arrayOf(Manifest.permission.POST_NOTIFICATIONS))
+            }
+            return
         }
-        if (allGranted) loadPairedDevices() else permissionLauncher.launch(required)
+        permissionLauncher.launch(buildRequiredPermissions())
     }
 
-    private fun buildRequiredPermissions(): Array<String> {
-        val perms = mutableListOf<String>()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            perms.add(Manifest.permission.BLUETOOTH_CONNECT)
-        } else {
-            perms.add(Manifest.permission.BLUETOOTH)
-            perms.add(Manifest.permission.BLUETOOTH_ADMIN)
+    private fun hasBluetoothPermissions(): Boolean =
+        requiredBluetoothPermissions(Build.VERSION.SDK_INT).all {
+            ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
         }
+
+    private fun buildRequiredPermissions(): Array<String> {
+        val perms = requiredBluetoothPermissions(Build.VERSION.SDK_INT).toMutableList()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             perms.add(Manifest.permission.POST_NOTIFICATIONS)
         }
@@ -336,5 +341,12 @@ class MainActivity : AppCompatActivity() {
         const val PREF_DEVICE_APPS_PREFIX = "device_apps_"
         const val PREF_DEVICE_ASK_PREFIX = "device_ask_"
         const val PREF_DEVICE_EQ_PREFIX = "device_eq_"
+
+        internal fun requiredBluetoothPermissions(sdkInt: Int): List<String> =
+            if (sdkInt >= Build.VERSION_CODES.S) {
+                listOf(Manifest.permission.BLUETOOTH_CONNECT)
+            } else {
+                listOf(Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN)
+            }
     }
 }

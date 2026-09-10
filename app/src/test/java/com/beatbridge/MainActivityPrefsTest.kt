@@ -1,5 +1,7 @@
 package com.beatbridge
 
+import android.Manifest
+import android.os.Build
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -33,6 +35,23 @@ class MainActivityPrefsTest {
     @Test
     fun prefDeviceEqPrefix_isCorrect() {
         assertEquals("device_eq_", MainActivity.PREF_DEVICE_EQ_PREFIX)
+    }
+
+    @Test
+    fun android13BluetoothRequirements_doNotIncludeNotificationPermission() {
+        val permissions = MainActivity.requiredBluetoothPermissions(Build.VERSION_CODES.TIRAMISU)
+
+        assertEquals(listOf(Manifest.permission.BLUETOOTH_CONNECT), permissions)
+    }
+
+    @Test
+    fun preAndroid12BluetoothRequirements_includeLegacyPermissions() {
+        val permissions = MainActivity.requiredBluetoothPermissions(Build.VERSION_CODES.R)
+
+        assertEquals(
+            listOf(Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN),
+            permissions
+        )
     }
 
     @Test
