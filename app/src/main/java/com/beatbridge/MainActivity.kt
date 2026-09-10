@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     private val musicAppList = mutableListOf<MusicApp>()
     private lateinit var deviceAdapter: DeviceAdapter
     private lateinit var appAdapter: AppAdapter
+    private var pendingOverlayApp: MusicApp? = null
 
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -42,6 +43,22 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(
                 this,
                 "Bluetooth permission is required to list paired devices",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    private val overlayPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        val app = pendingOverlayApp ?: return@registerForActivityResult
+        pendingOverlayApp = null
+        if (Settings.canDrawOverlays(this)) {
+            addSelectedApp(app)
+        } else {
+            Toast.makeText(
+                this,
+                "Display over other apps permission is required for automatic app launch",
                 Toast.LENGTH_LONG
             ).show()
         }
@@ -218,13 +235,22 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (!Settings.canDrawOverlays(this)) {
-            val intent = Intent(
-                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                "package:${packageName}".toUri()
+            pendingOverlayApp = app
+            overlayPermissionLauncher.launch(
+                Intent(
+                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    "package:${packageName}".toUri()
+                )
             )
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
+            return
         }
+        addSelectedApp(app)
+    }
+
+    private fun addSelectedApp(app: MusicApp) {
+        val current = LinkedHashSet(
+            prefs.getStringSet(PREF_SELECTED_APPS, emptySet()) ?: emptySet()
+        )
         current.add(app.packageName)
         prefs.edit { putStringSet(PREF_SELECTED_APPS, current) }
         appAdapter.updateSelections(current)
