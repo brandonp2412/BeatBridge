@@ -1,0 +1,1 @@
+• Guard Bluetooth monitor startup permission
