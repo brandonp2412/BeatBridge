@@ -3,6 +3,11 @@
 All notable changes to BeatBridge are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.60] - 2026-09-10
+
+### Changed
+- Fix per-device app overrides
+
 ## [1.0.59] - 2026-09-10
 
 ### Changed
