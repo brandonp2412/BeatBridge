@@ -55,6 +55,42 @@ class MainActivityPrefsTest {
     }
 
     @Test
+    fun monitoringDoesNotStartWithoutBluetoothPermission() {
+        assertEquals(
+            false,
+            MainActivity.shouldMonitor(
+                hasBluetoothPermissions = false,
+                anyDevice = true,
+                selectedAddresses = setOf("AA:BB:CC:DD:EE:FF"),
+            )
+        )
+    }
+
+    @Test
+    fun monitoringStartsForConfiguredDeviceWithPermission() {
+        assertEquals(
+            true,
+            MainActivity.shouldMonitor(
+                hasBluetoothPermissions = true,
+                anyDevice = false,
+                selectedAddresses = setOf("AA:BB:CC:DD:EE:FF"),
+            )
+        )
+    }
+
+    @Test
+    fun monitoringStaysStoppedWhenNothingIsConfigured() {
+        assertEquals(
+            false,
+            MainActivity.shouldMonitor(
+                hasBluetoothPermissions = true,
+                anyDevice = false,
+                selectedAddresses = emptySet(),
+            )
+        )
+    }
+
+    @Test
     fun prefKeys_areDistinct() {
         val keys = setOf(
             MainActivity.PREF_SELECTED_DEVICES,

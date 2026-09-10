@@ -39,7 +39,9 @@ class MainActivity : AppCompatActivity() {
     ) {
         if (hasBluetoothPermissions()) {
             loadPairedDevices()
+            syncMonitorService()
         } else {
+            syncMonitorService()
             Toast.makeText(
                 this,
                 "Bluetooth permission is required to list paired devices",
@@ -323,7 +325,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun syncMonitorService() {
         val selectedAddresses = prefs.getStringSet(PREF_SELECTED_DEVICES, emptySet()) ?: emptySet()
-        val shouldMonitor = prefs.getBoolean(PREF_ANY_DEVICE, false) || selectedAddresses.isNotEmpty()
+        val shouldMonitor = shouldMonitor(
+            hasBluetoothPermissions = hasBluetoothPermissions(),
+            anyDevice = prefs.getBoolean(PREF_ANY_DEVICE, false),
+            selectedAddresses = selectedAddresses,
+        )
         val serviceIntent = Intent(this, BluetoothMonitorService::class.java)
         if (shouldMonitor) {
             startForegroundService(serviceIntent)
@@ -348,5 +354,11 @@ class MainActivity : AppCompatActivity() {
             } else {
                 listOf(Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN)
             }
+
+        internal fun shouldMonitor(
+            hasBluetoothPermissions: Boolean,
+            anyDevice: Boolean,
+            selectedAddresses: Set<String>,
+        ): Boolean = hasBluetoothPermissions && (anyDevice || selectedAddresses.isNotEmpty())
     }
 }
