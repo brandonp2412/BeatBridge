@@ -2,6 +2,7 @@ package com.beatbridge
 
 import android.annotation.SuppressLint
 import android.Manifest
+import android.app.ActivityOptions
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -180,14 +181,45 @@ class BluetoothMonitorService : Service() {
                 triggerMediaPlay()
                 return
             }
-            val launchIntent = packageManager.getLaunchIntentForPackage(packages[index])
-            if (launchIntent != null) {
-                launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(launchIntent)
-            }
+            launchApp(packages[index])
             handler.postDelayed({ step(index + 1) }, delayMs)
         }
         step(0)
+    }
+
+    private fun launchApp(packageName: String): Boolean {
+        val launchIntent = packageManager.getLaunchIntentForPackage(packageName) ?: return false
+        launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+        return try {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                val backgroundStartMode = if (android.os.Build.VERSION.SDK_INT >= 36) {
+                    ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOW_ALWAYS
+                } else {
+                    @Suppress("DEPRECATION")
+                    ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED
+                }
+                val creatorOptions = ActivityOptions.makeBasic().apply {
+                    pendingIntentCreatorBackgroundActivityStartMode = backgroundStartMode
+                }
+                val pendingIntent = PendingIntent.getActivity(
+                    this,
+                    packageName.hashCode(),
+                    launchIntent,
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+                    creatorOptions.toBundle()
+                )
+                val senderOptions = ActivityOptions.makeBasic().apply {
+                    pendingIntentBackgroundActivityStartMode = backgroundStartMode
+                }
+                pendingIntent.send(senderOptions.toBundle())
+            } else {
+                startActivity(launchIntent)
+            }
+            true
+        } catch (_: Exception) {
+            false
+        }
     }
 
     private fun triggerMediaPlay() {
