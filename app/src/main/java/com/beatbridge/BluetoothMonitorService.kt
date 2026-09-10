@@ -85,7 +85,8 @@ class BluetoothMonitorService : Service() {
 
         val deviceKey = "${MainActivity.PREF_DEVICE_APPS_PREFIX}${device.address}"
         val deviceApps = prefs.getStringSet(deviceKey, null)
-        val appPackages = (deviceApps ?: prefs.getStringSet(MainActivity.PREF_SELECTED_APPS, emptySet()) ?: emptySet()).toList()
+        val globalApps = prefs.getStringSet(MainActivity.PREF_SELECTED_APPS, emptySet()) ?: emptySet()
+        val appPackages = MainActivity.effectiveAppSelection(deviceApps, globalApps).toList()
         val delayMs = prefs.getInt(MainActivity.PREF_LAUNCH_DELAY, 1) * 1000L
 
         val askKey = "${MainActivity.PREF_DEVICE_ASK_PREFIX}${device.address}"

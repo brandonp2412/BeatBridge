@@ -91,6 +91,28 @@ class MainActivityPrefsTest {
     }
 
     @Test
+    fun deviceAppSelectionInheritsGlobalAppsWithoutOverride() {
+        assertEquals(
+            setOf("com.spotify.music"),
+            MainActivity.effectiveAppSelection(
+                deviceApps = null,
+                globalApps = setOf("com.spotify.music"),
+            )
+        )
+    }
+
+    @Test
+    fun explicitEmptyDeviceAppSelectionDoesNotFallBackToGlobalApps() {
+        assertEquals(
+            emptySet<String>(),
+            MainActivity.effectiveAppSelection(
+                deviceApps = emptySet(),
+                globalApps = setOf("com.spotify.music"),
+            )
+        )
+    }
+
+    @Test
     fun prefKeys_areDistinct() {
         val keys = setOf(
             MainActivity.PREF_SELECTED_DEVICES,

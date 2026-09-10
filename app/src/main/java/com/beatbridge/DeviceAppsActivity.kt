@@ -94,10 +94,9 @@ class DeviceAppsActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        val savedApps = prefs.getStringSet(prefKey, emptySet()) ?: emptySet()
         appAdapter = AppAdapter(
             apps = appList,
-            selectedPackages = savedApps,
+            selectedPackages = selectedAppsForDevice(),
             onSelect = { app -> toggleApp(app) }
         )
         binding.rvApps.apply {
@@ -107,8 +106,14 @@ class DeviceAppsActivity : AppCompatActivity() {
         }
     }
 
+    private fun selectedAppsForDevice(): LinkedHashSet<String> {
+        val deviceApps = prefs.getStringSet(prefKey, null)
+        val globalApps = prefs.getStringSet(MainActivity.PREF_SELECTED_APPS, emptySet()) ?: emptySet()
+        return LinkedHashSet(MainActivity.effectiveAppSelection(deviceApps, globalApps))
+    }
+
     private fun toggleApp(app: MusicApp) {
-        val current = LinkedHashSet(prefs.getStringSet(prefKey, emptySet()) ?: emptySet())
+        val current = selectedAppsForDevice()
         if (app.packageName in current) {
             current.remove(app.packageName)
             saveSelections(current)
@@ -129,17 +134,15 @@ class DeviceAppsActivity : AppCompatActivity() {
     }
 
     private fun addSelectedApp(app: MusicApp) {
-        val current = LinkedHashSet(prefs.getStringSet(prefKey, emptySet()) ?: emptySet())
+        val current = selectedAppsForDevice()
         current.add(app.packageName)
         saveSelections(current)
     }
 
     private fun saveSelections(current: Set<String>) {
-        if (current.isEmpty()) {
-            prefs.edit { remove(prefKey) }
-        } else {
-            prefs.edit { putStringSet(prefKey, current) }
-        }
+        // Store even an empty set: absence means "inherit global apps", while an
+        // explicit empty set means this device should launch no configured apps.
+        prefs.edit { putStringSet(prefKey, current) }
         appAdapter.updateSelections(current)
     }
 

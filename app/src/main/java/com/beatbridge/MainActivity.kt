@@ -360,5 +360,10 @@ class MainActivity : AppCompatActivity() {
             anyDevice: Boolean,
             selectedAddresses: Set<String>,
         ): Boolean = hasBluetoothPermissions && (anyDevice || selectedAddresses.isNotEmpty())
+
+        internal fun effectiveAppSelection(
+            deviceApps: Set<String>?,
+            globalApps: Set<String>,
+        ): Set<String> = deviceApps ?: globalApps
     }
 }
