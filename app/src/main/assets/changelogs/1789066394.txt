@@ -1,0 +1,1 @@
+• Fix duplicate app picker entries
