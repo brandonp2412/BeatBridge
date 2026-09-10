@@ -3,10 +3,14 @@ package com.beatbridge
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.beatbridge.databinding.ActivityDeviceAppsBinding
@@ -18,6 +22,23 @@ class DeviceAppsActivity : AppCompatActivity() {
     private lateinit var appAdapter: AppAdapter
     private lateinit var prefKey: String
     private val appList = mutableListOf<MusicApp>()
+    private var pendingOverlayApp: MusicApp? = null
+
+    private val overlayPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        val app = pendingOverlayApp ?: return@registerForActivityResult
+        pendingOverlayApp = null
+        if (Settings.canDrawOverlays(this)) {
+            addSelectedApp(app)
+        } else {
+            Toast.makeText(
+                this,
+                "Display over other apps permission is required for automatic app launch",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,9 +111,30 @@ class DeviceAppsActivity : AppCompatActivity() {
         val current = LinkedHashSet(prefs.getStringSet(prefKey, emptySet()) ?: emptySet())
         if (app.packageName in current) {
             current.remove(app.packageName)
-        } else {
-            current.add(app.packageName)
+            saveSelections(current)
+            return
         }
+
+        if (!Settings.canDrawOverlays(this)) {
+            pendingOverlayApp = app
+            overlayPermissionLauncher.launch(
+                Intent(
+                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    "package:${packageName}".toUri()
+                )
+            )
+            return
+        }
+        addSelectedApp(app)
+    }
+
+    private fun addSelectedApp(app: MusicApp) {
+        val current = LinkedHashSet(prefs.getStringSet(prefKey, emptySet()) ?: emptySet())
+        current.add(app.packageName)
+        saveSelections(current)
+    }
+
+    private fun saveSelections(current: Set<String>) {
         if (current.isEmpty()) {
             prefs.edit { remove(prefKey) }
         } else {
