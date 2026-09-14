@@ -2,9 +2,12 @@ package com.beatbridge
 
 import android.companion.CompanionDeviceService
 import android.companion.DevicePresenceEvent
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 
+@RequiresApi(Build.VERSION_CODES.S)
 class BeatBridgeCompanionService : CompanionDeviceService() {
 
     @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
@@ -17,6 +20,7 @@ class BeatBridgeCompanionService : CompanionDeviceService() {
         dispatchConnection(address, connected = false)
     }
 
+    @RequiresApi(36)
     override fun onDevicePresenceEvent(event: DevicePresenceEvent) {
         val address = CompanionDeviceSupport.addressForAssociationId(this, event.associationId)
         if (address == null) {

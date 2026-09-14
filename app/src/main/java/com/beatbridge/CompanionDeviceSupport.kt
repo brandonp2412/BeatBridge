@@ -102,7 +102,7 @@ object CompanionDeviceSupport {
     }
 
     fun startObserving(context: Context, address: String): Boolean {
-        if (!isSupported(context) || !isAssociated(context, address)) return false
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || !isSupported(context) || !isAssociated(context, address)) return false
         val manager = context.getSystemService(CompanionDeviceManager::class.java)
         return try {
             if (Build.VERSION.SDK_INT >= 36) {
@@ -125,7 +125,7 @@ object CompanionDeviceSupport {
     }
 
     fun removeAssociation(context: Context, address: String) {
-        if (!isSupported(context)) return
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || !isSupported(context)) return
         val manager = context.getSystemService(CompanionDeviceManager::class.java)
         try {
             if (Build.VERSION.SDK_INT >= 36) {
