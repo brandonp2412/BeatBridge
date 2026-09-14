@@ -15,6 +15,14 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <!-- Companion-device privileges keep selected Bluetooth devices observable even if OEM
+         background management kills BeatBridge's normal monitor process. -->
+    <uses-permission android:name="android.permission.REQUEST_COMPANION_RUN_IN_BACKGROUND" />
+    <uses-permission android:name="android.permission.REQUEST_OBSERVE_COMPANION_DEVICE_PRESENCE" />
+    <uses-feature
+        android:name="android.software.companion_device_setup"
+        android:required="false" />
+
     <!-- Used to launch your media player -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
@@ -80,6 +88,17 @@
             android:name=".BluetoothMonitorService"
             android:foregroundServiceType="connectedDevice"
             android:exported="false" />
+
+        <!-- Android's companion-device service is a second wake-up path for associated devices.
+             The system can bind this even when the normal BeatBridge process is not running. -->
+        <service
+            android:name=".BeatBridgeCompanionService"
+            android:exported="true"
+            android:permission="android.permission.BIND_COMPANION_DEVICE_SERVICE">
+            <intent-filter>
+                <action android:name="android.companion.CompanionDeviceService" />
+            </intent-filter>
+        </service>
 
         <receiver android:name=".BootReceiver"
             android:exported="true">
