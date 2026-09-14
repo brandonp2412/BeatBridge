@@ -9,6 +9,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.bluetooth.BluetoothClass
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -20,6 +21,8 @@ import android.media.audiofx.Equalizer
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.os.SystemClock
+import android.util.Log
 import android.view.KeyEvent
 import androidx.core.app.NotificationCompat
 
@@ -28,6 +31,7 @@ class BluetoothMonitorService : Service() {
     private val handler = Handler(Looper.getMainLooper())
     private var equalizer: Equalizer? = null
     private var equalizerDeviceAddress: String? = null
+    private val lastHandledConnections = mutableMapOf<String, Long>()
 
     private val bluetoothReceiver = object : BroadcastReceiver() {
         @SuppressLint("MissingPermission")
@@ -40,8 +44,15 @@ class BluetoothMonitorService : Service() {
             }
 
             when (intent.action) {
-                BluetoothDevice.ACTION_ACL_CONNECTED -> device?.let { handleDeviceConnected(it) }
+                BluetoothDevice.ACTION_ACL_CONNECTED -> device?.let {
+                    Log.i(TAG, "ACL connected: ${it.address}")
+                    maybeHandleDeviceConnected(it)
+                }
                 BluetoothDevice.ACTION_ACL_DISCONNECTED -> {
+                    device?.let {
+                        Log.i(TAG, "ACL disconnected: ${it.address}")
+                        lastHandledConnections.remove(it.address)
+                    }
                     if (device == null || device.address == equalizerDeviceAddress) {
                         releaseEqualizer()
                     }
@@ -60,6 +71,7 @@ class BluetoothMonitorService : Service() {
             addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
         }
         registerReceiver(bluetoothReceiver, filter)
+        Log.i(TAG, "Monitor service created")
     }
 
     private fun isAudioDevice(device: BluetoothDevice): Boolean {
@@ -72,6 +84,17 @@ class BluetoothMonitorService : Service() {
         return major == BluetoothClass.Device.Major.AUDIO_VIDEO
     }
 
+    private fun maybeHandleDeviceConnected(device: BluetoothDevice) {
+        val now = SystemClock.elapsedRealtime()
+        val previous = lastHandledConnections[device.address]
+        if (isDuplicateConnection(previous, now)) {
+            Log.i(TAG, "Ignoring duplicate connection callback for ${device.address}")
+            return
+        }
+        lastHandledConnections[device.address] = now
+        handleDeviceConnected(device)
+    }
+
     private fun handleDeviceConnected(device: BluetoothDevice) {
         val prefs = getSharedPreferences(MainActivity.PREFS_NAME, MODE_PRIVATE)
         val anyDevice = prefs.getBoolean(MainActivity.PREF_ANY_DEVICE, false)
@@ -81,6 +104,7 @@ class BluetoothMonitorService : Service() {
             if (selectedAddresses.isEmpty() || device.address !in selectedAddresses) return
         }
 
+        Log.i(TAG, "Handling configured device connection: ${device.address}")
         applyEqualizer(prefs, device.address)
 
         val deviceKey = "${MainActivity.PREF_DEVICE_APPS_PREFIX}${device.address}"
@@ -189,7 +213,10 @@ class BluetoothMonitorService : Service() {
     }
 
     private fun launchApp(packageName: String): Boolean {
-        val launchIntent = packageManager.getLaunchIntentForPackage(packageName) ?: return false
+        val launchIntent = packageManager.getLaunchIntentForPackage(packageName) ?: run {
+            Log.w(TAG, "No launch intent for $packageName")
+            return false
+        }
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
         return try {
@@ -217,8 +244,10 @@ class BluetoothMonitorService : Service() {
             } else {
                 startActivity(launchIntent)
             }
+            Log.i(TAG, "Launch requested for $packageName")
             true
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            Log.w(TAG, "Launch failed for $packageName", e)
             false
         }
     }
@@ -227,6 +256,7 @@ class BluetoothMonitorService : Service() {
         val audioManager = getSystemService(AudioManager::class.java)
         audioManager.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY))
         audioManager.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PLAY))
+        Log.i(TAG, "MEDIA_PLAY dispatched")
     }
 
     private fun createNotificationChannel() {
@@ -277,7 +307,43 @@ class BluetoothMonitorService : Service() {
             )
             .build()
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int = START_STICKY
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        when (intent?.action) {
+            ACTION_COMPANION_CONNECTED -> {
+                val address = intent.getStringExtra(EXTRA_DEVICE_ADDRESS)
+                if (!address.isNullOrBlank()) {
+                    Log.i(TAG, "Companion service reported connected: $address")
+                    handleCompanionConnection(address)
+                }
+            }
+            ACTION_COMPANION_DISCONNECTED -> {
+                val address = intent.getStringExtra(EXTRA_DEVICE_ADDRESS)
+                if (!address.isNullOrBlank()) {
+                    Log.i(TAG, "Companion service reported disconnected: $address")
+                    lastHandledConnections.remove(address)
+                    if (address == equalizerDeviceAddress) releaseEqualizer()
+                }
+            }
+        }
+        return START_STICKY
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun handleCompanionConnection(address: String) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S &&
+            checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
+        ) {
+            Log.w(TAG, "Ignoring companion callback without BLUETOOTH_CONNECT")
+            return
+        }
+        try {
+            val bluetoothManager = getSystemService(BluetoothManager::class.java)
+            val device = bluetoothManager.adapter?.getRemoteDevice(address) ?: return
+            maybeHandleDeviceConnected(device)
+        } catch (e: RuntimeException) {
+            Log.w(TAG, "Unable to resolve companion device $address", e)
+        }
+    }
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -286,13 +352,31 @@ class BluetoothMonitorService : Service() {
         handler.removeCallbacksAndMessages(null)
         releaseEqualizer()
         unregisterReceiver(bluetoothReceiver)
+        Log.i(TAG, "Monitor service destroyed")
     }
 
     companion object {
+        private const val TAG = "BeatBridge"
         private const val CHANNEL_ID = "beatbridge_monitor"
         private const val LAUNCH_CHANNEL_ID = "beatbridge_launch"
         private const val ACTIONS_CHANNEL_ID = "beatbridge_device_actions"
         private const val NOTIFICATION_ID = 1
         const val ACTIONS_NOTIFICATION_ID = 2
+
+        private const val ACTION_COMPANION_CONNECTED = "com.beatbridge.action.COMPANION_CONNECTED"
+        private const val ACTION_COMPANION_DISCONNECTED = "com.beatbridge.action.COMPANION_DISCONNECTED"
+        private const val EXTRA_DEVICE_ADDRESS = "device_address"
+        internal const val CONNECTION_DEDUPE_MS = 3_000L
+
+        fun companionConnectionIntent(context: Context, address: String, connected: Boolean): Intent =
+            Intent(context, BluetoothMonitorService::class.java)
+                .setAction(if (connected) ACTION_COMPANION_CONNECTED else ACTION_COMPANION_DISCONNECTED)
+                .putExtra(EXTRA_DEVICE_ADDRESS, address)
+
+        internal fun isDuplicateConnection(
+            lastHandledAt: Long?,
+            now: Long,
+            windowMs: Long = CONNECTION_DEDUPE_MS,
+        ): Boolean = lastHandledAt != null && now - lastHandledAt in 0 until windowMs
     }
 }
