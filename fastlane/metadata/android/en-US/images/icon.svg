@@ -1,21 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#7C4DFF"/>
-      <stop offset="100%" stop-color="#6200EE"/>
-    </linearGradient>
-  </defs>
-
-  <!-- Background square (F-Droid / Play Store apply their own shape mask) -->
-  <rect width="512" height="512" fill="url(#bg)"/>
-
-  <!-- Music note — scaled from 108x108 viewport, centered in 512x512 -->
-  <!-- Original path viewport: 108x108, note spans x:34–70, y:24–72 -->
-  <!-- Scale ≈ 3.5 → note size ~126×168px, centered at (256,256) -->
-  <g transform="translate(193, 168) scale(3.5)">
-    <path
-      fill="#FFFFFF"
-      d="M45,30 L70,24 L70,44 L65,45.5 L65,32 L50,36 L50,64
-         Q50,72 42,72 Q34,72 34,64 Q34,56 42,56 Q46,56 50,58 L50,30 Z"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="512" height="512">
+  <rect width="108" height="108" fill="#0D0D1A"/>
+  <path
+    d="M28 54 C34 54 35 42 40 42 C45 42 45 68 50 68 C55 68 55 34 60 34 C65 34 65 62 70 62 C75 62 76 49 82 49"
+    fill="none"
+    stroke="#FFFFFF"
+    stroke-width="6"
+    stroke-linecap="round"
+    stroke-linejoin="round"/>
+  <circle cx="28" cy="54" r="4" fill="#18FFFF"/>
+  <circle cx="82" cy="49" r="4" fill="#A878FF"/>
 </svg>
