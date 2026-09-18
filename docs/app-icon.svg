@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="512" height="512" role="img" aria-label="BeatBridge app icon">
+  <rect width="108" height="108" rx="24" fill="#0D0D1A"/>
+  <path
+    d="M28 54 C34 54 35 42 40 42 C45 42 45 68 50 68 C55 68 55 34 60 34 C65 34 65 62 70 62 C75 62 76 49 82 49"
+    fill="none"
+    stroke="#FFFFFF"
+    stroke-width="6"
+    stroke-linecap="round"
+    stroke-linejoin="round"/>
+  <circle cx="28" cy="54" r="4" fill="#18FFFF"/>
+  <circle cx="82" cy="49" r="4" fill="#A878FF"/>
+</svg>
