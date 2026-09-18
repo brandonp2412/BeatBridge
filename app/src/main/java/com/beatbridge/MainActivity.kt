@@ -199,7 +199,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateDelayLabel(seconds: Int) {
-        binding.tvDelayLabel.text = "Launch delay: ${seconds}s"
+        binding.tvDelayLabel.text = "Launch delay · ${seconds}s"
     }
 
     private fun updateDeviceSectionEnabled(enabled: Boolean) {
@@ -298,19 +298,25 @@ class MainActivity : AppCompatActivity() {
         val isEmpty = deviceList.isEmpty()
         binding.tvEmpty.visibility = if (isEmpty) View.VISIBLE else View.GONE
         binding.rvDevices.visibility = if (isEmpty) View.GONE else View.VISIBLE
+        updateStatusLabel()
     }
 
     private fun updateStatusLabel() {
         val selectedAddresses = prefs.getStringSet(PREF_SELECTED_DEVICES, emptySet()) ?: emptySet()
+        val selectedNames = selectedAddresses.mapNotNull { address ->
+            deviceList
+                .find { it.address == address }
+                ?.name
+                ?.takeIf { it.isNotBlank() }
+        }
+
         binding.tvStatus.text = when {
-            prefs.getBoolean(PREF_ANY_DEVICE, false) -> "Auto-playing on any Bluetooth connection"
-            selectedAddresses.isNotEmpty() -> {
-                val names = selectedAddresses.map { addr ->
-                    deviceList.find { it.address == addr }?.name?.ifEmpty { addr } ?: addr
-                }
-                "Watching: ${names.joinToString(", ")}"
-            }
-            else -> "Tap a device below to activate auto-play"
+            prefs.getBoolean(PREF_ANY_DEVICE, false) -> "Ready for any Bluetooth connection"
+            selectedAddresses.size == 1 && selectedNames.size == 1 ->
+                "Watching ${selectedNames.first()}"
+            selectedAddresses.size == 1 -> "Watching 1 selected device"
+            selectedAddresses.size > 1 -> "Watching ${selectedAddresses.size} selected devices"
+            else -> "Choose a Bluetooth device to start"
         }
     }
 

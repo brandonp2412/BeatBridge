@@ -1,14 +1,18 @@
 <resources>
-    <style name="Theme.BeatBridge" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.BeatBridge" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/bb_primary</item>
-        <item name="colorPrimaryVariant">@color/bb_primary_dark</item>
         <item name="colorOnPrimary">@color/bb_on_primary</item>
+        <item name="colorPrimaryContainer">@color/bb_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/bb_on_primary_container</item>
         <item name="colorSecondary">@color/bb_primary</item>
         <item name="colorSurface">@color/bb_surface</item>
+        <item name="colorSurfaceVariant">@color/bb_surface_variant</item>
         <item name="colorOnSurface">@color/bb_on_surface</item>
-        <item name="android:windowBackground">@color/bb_surface</item>
-        <item name="android:statusBarColor">@color/bb_surface</item>
-        <item name="android:navigationBarColor">@color/bb_surface</item>
+        <item name="colorOutline">@color/bb_outline</item>
+        <item name="android:windowBackground">@color/bb_background</item>
+        <item name="android:statusBarColor">@color/bb_background</item>
+        <item name="android:navigationBarColor">@color/bb_background</item>
         <item name="android:windowLightStatusBar">@bool/bb_light_status_bar</item>
+        <item name="android:windowActionModeOverlay">true</item>
     </style>
 </resources>

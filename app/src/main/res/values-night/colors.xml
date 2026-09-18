@@ -1,11 +1,18 @@
 <resources>
-    <color name="bb_primary">#FFBB86FC</color>
-    <color name="bb_primary_dark">#FF6200EE</color>
-    <color name="bb_on_primary">#FF000000</color>
-    <color name="bb_surface">#FF121212</color>
-    <color name="bb_surface_variant">#FF1E1E1E</color>
-    <color name="bb_on_surface">#FFFFFFFF</color>
-    <color name="bb_on_surface_dim">#99FFFFFF</color>
-    <color name="bb_divider">#1FFFFFFF</color>
-    <color name="bb_selected_fill">#26BB86FC</color>
+    <color name="bb_primary">#FFD0BCFF</color>
+    <color name="bb_primary_dark">#FFB69DF8</color>
+    <color name="bb_on_primary">#FF381E72</color>
+    <color name="bb_primary_container">#FF4F378B</color>
+    <color name="bb_on_primary_container">#FFEADDFF</color>
+    <color name="bb_on_primary_container_dim">#CCEADDFF</color>
+    <color name="bb_primary_container_divider">#33EADDFF</color>
+    <color name="bb_background">#FF141218</color>
+    <color name="bb_surface">#FF1D1B20</color>
+    <color name="bb_surface_variant">#FF2B2930</color>
+    <color name="bb_on_surface">#FFE6E1E5</color>
+    <color name="bb_on_surface_dim">#B3E6E1E5</color>
+    <color name="bb_outline">#FF938F99</color>
+    <color name="bb_outline_variant">#FF49454F</color>
+    <color name="bb_divider">#1FE6E1E5</color>
+    <color name="bb_selected_fill">#1FD0BCFF</color>
 </resources>

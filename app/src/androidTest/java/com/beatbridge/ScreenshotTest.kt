@@ -141,13 +141,13 @@ class ScreenshotTest {
                 if (devices.isEmpty()) {
                     rvDevices.visibility = View.GONE
                     tvEmpty.visibility   = View.VISIBLE
-                    tvStatus.text        = "Tap a device below to activate auto-play"
+                    tvStatus.text        = "Choose a Bluetooth device to start"
                 } else {
                     tvEmpty.visibility   = View.GONE
                     rvDevices.visibility = View.VISIBLE
                     rvDevices.adapter    = FakeDeviceAdapter(devices, selectedAddress)
-                    tvStatus.text = if (selectedName != null) "Watching: $selectedName"
-                                    else "Tap a device below to activate auto-play"
+                    tvStatus.text = if (selectedName != null) "Watching $selectedName"
+                                    else "Choose a Bluetooth device to start"
                 }
             }
 

@@ -58,7 +58,7 @@ class MainActivityInstrumentedTest {
         context.getSharedPreferences(MainActivity.PREFS_NAME, 0).edit().clear().commit()
 
         ActivityScenario.launch(MainActivity::class.java).use {
-            onView(withText("Tap a device below to activate auto-play"))
+            onView(withText("Choose a Bluetooth device to start"))
                 .check(matches(isDisplayed()))
         }
     }
