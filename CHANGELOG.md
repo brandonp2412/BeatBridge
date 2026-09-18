@@ -3,6 +3,11 @@
 All notable changes to BeatBridge are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.64] - 2026-09-18
+
+### Changed
+- Use pulse icon on main
+
 ## [1.0.63] - 2026-09-18
 
 ### Changed
