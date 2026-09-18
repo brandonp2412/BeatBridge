@@ -1,0 +1,2 @@
+• Remove slop from release bodies
+• Update README.md

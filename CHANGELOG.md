@@ -3,6 +3,14 @@
 All notable changes to BeatBridge are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.66] - 2026-09-18
+
+### Changed
+- docs: make README copy more natural
+- Update README.md
+- docs: improve user-facing README assets
+- Remove slop from release bodies
+
 ## [1.0.65] - 2026-09-18
 
 ### Changed
