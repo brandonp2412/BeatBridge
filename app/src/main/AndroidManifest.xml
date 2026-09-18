@@ -29,10 +29,6 @@
     <!-- Needed to auto start the monitoring service on reboot -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
-    <!-- Needed to list all installed apps for the music app picker -->
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
-        tools:ignore="PackageVisibilityPolicy,QueryAllPackagesPermission" />
-
     <!-- Needed to apply per-device equalizer profiles -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 

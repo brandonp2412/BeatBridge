@@ -103,7 +103,27 @@ def main():
     )
     print(f"Updated {args.track} track to {release_name} ({args.status})")
 
-    request_json("POST", f"{base}/edits/{edit}:validate", json_headers, json={})
+    validate_url = f"{base}/edits/{edit}:validate"
+    validation = requests.post(validate_url, headers=json_headers, json={}, timeout=120)
+    if (
+        not validation.ok
+        and args.status != "draft"
+        and validation.status_code == 400
+        and "Only releases with status draft may be created on draft app"
+        in validation.text
+    ):
+        track["releases"][0]["status"] = "draft"
+        request_json(
+            "PUT",
+            f"{base}/edits/{edit}/tracks/{args.track}",
+            json_headers,
+            json=track,
+        )
+        print("App is still a Play draft; keeping the initial release in draft status")
+        validation = requests.post(validate_url, headers=json_headers, json={}, timeout=120)
+
+    if not validation.ok:
+        fail(validation, "POST " + validate_url)
     print("Edit validation passed")
 
     result = request_json("POST", f"{base}/edits/{edit}:commit", json_headers, json={})
