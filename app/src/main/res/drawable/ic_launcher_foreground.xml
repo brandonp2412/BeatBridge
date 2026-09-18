@@ -5,45 +5,20 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!--
-        Single eighth-note (quaver) centred in the 108×108 canvas.
-        Safe zone: 18–90 on each axis. The note sits comfortably inside it.
-
-        Anatomy:
-          • Notehead: filled ellipse at bottom-left, tilted slightly
-          • Stem:     vertical rectangle up the right side of the notehead
-          • Flag:     curved path from the top of the stem sweeping right then down
-    -->
-
-    <!-- Notehead (ellipse approximated with a circle-ish rounded rect) -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="
-            M44,76
-            a10,7 -20 1,0 20,0
-            a10,7 -20 1,0 -20,0
-            Z" />
+        android:fillColor="@android:color/transparent"
+        android:pathData="M28,54 C34,54 35,42 40,42 C45,42 45,68 50,68 C55,68 55,34 60,34 C65,34 65,62 70,62 C75,62 76,49 82,49"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="6"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
 
-    <!-- Stem -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="
-            M60,76
-            L60,34
-            L64,34
-            L64,76
-            Z" />
+        android:fillColor="#18FFFF"
+        android:pathData="M28,50 a4,4 0,1 0,0,8 a4,4 0,1 0,0,-8" />
 
-    <!-- Flag — a gentle swoop from top of stem -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="
-            M64,34
-            C72,36 76,42 74,50
-            C72,58 66,60 64,58
-            L64,54
-            C66,56 70,54 71,48
-            C72,42 69,38 64,38
-            Z" />
+        android:fillColor="#A878FF"
+        android:pathData="M82,45 a4,4 0,1 0,0,8 a4,4 0,1 0,0,-8" />
 
 </vector>
