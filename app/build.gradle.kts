@@ -12,7 +12,7 @@ val baseVersionCode = (versionProps["versionCode"] as String?)?.toInt() ?: 1
 val playStoreBuild = providers.gradleProperty("playStore")
     .map(String::toBoolean)
     .getOrElse(false)
-val playStoreVersionCode = baseVersionCode * 100 + 50
+val playStoreVersionCode = baseVersionCode * 100 + 51
 
 android {
     namespace = "com.beatbridge"

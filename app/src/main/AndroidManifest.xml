@@ -32,6 +32,12 @@
     <!-- Needed to apply per-device equalizer profiles -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
+    <!-- Core app-picker functionality enumerates launchable apps so users can choose
+         arbitrary apps to open when a selected Bluetooth device connects. -->
+    <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="PackageVisibilityPolicy,QueryAllPackagesPermission" />
+
     <queries>
         <intent>
             <action android:name="android.intent.action.MAIN" />
