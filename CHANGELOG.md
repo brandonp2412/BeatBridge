@@ -3,6 +3,11 @@
 All notable changes to BeatBridge are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.62] - 2026-09-18
+
+### Changed
+- Refresh main screen visual hierarchy
+
 ## [1.0.61] - 2026-09-10
 
 ### Changed
