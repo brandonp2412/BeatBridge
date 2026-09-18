@@ -3,8 +3,8 @@
 
   <h1>BeatBridge</h1>
 
-  <p><strong>Auto-play music when your Bluetooth car, headphones, or speakers connect.</strong></p>
-  <p>Pick a device once. BeatBridge handles the rest.</p>
+  <p><strong>Start playing automatically when your Bluetooth device connects.</strong></p>
+  <p>Choose a car, speaker, or pair of headphones and BeatBridge will resume your media when it connects.</p>
 
   <p>
     <a href="https://f-droid.org/packages/com.beatbridge"><img src="docs/get-it-on-fdroid.png" alt="Get it on F-Droid" height="72"/></a>
@@ -12,20 +12,20 @@
   </p>
 </div>
 
-## Just connect and listen
+## What it does
 
-BeatBridge watches for the Bluetooth device you choose. When it connects, BeatBridge sends Android's standard media play command so your music, podcast, or audiobook can resume in the app you already use.
+Pick a Bluetooth device. When it connects, BeatBridge sends a normal Android play command to whatever media app you were using.
 
-No accounts, ads, analytics, or internet access.
+That's it. No account, no ads, no analytics, and no internet connection required.
 
 ## Features
 
-- **Automatic playback** when a selected Bluetooth device connects
-- **Works with your existing media apps** through standard Android media controls
-- **Ask on connect** when you want to choose what happens instead
-- **Per-device equalizer profiles** for different cars, headphones, or speakers
-- **Background monitoring** without constant Bluetooth polling
-- **Private by design** with your devices and preferences kept on your phone
+- Start playback when a selected Bluetooth device connects
+- Works with music, podcast, and audiobook apps that support Android media controls
+- Use **Ask on connect** if you'd rather choose what happens each time
+- Save a different equalizer profile for each device
+- Keeps working in the background after you close the app
+- Stores your settings on your phone
 
 ## Screenshots
 
