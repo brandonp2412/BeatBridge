@@ -285,20 +285,6 @@ jobs:
           name: BeatBridge ${{ steps.version.outputs.tag }}
           generate_release_notes: true
           files: app/build/outputs/apk/release/BeatBridge-*.apk
-          body: |
-            ## BeatBridge ${{ steps.version.outputs.tag }}
-
-            Auto-play music when your Bluetooth device connects.
-
-            ### Install options
-
-            | Method | Notes |
-            |--------|-------|
-            | **F-Droid** | Install from the F-Droid repository |
-            | **APK below** | Signed — built directly from this commit |
-            | **Build yourself** | `git clone`, checkout this tag, `./gradlew assembleRelease` |
-
-            See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/${{ steps.version.outputs.tag }}/CHANGELOG.md) for what's new.
 
   virustotal:
     needs: release
