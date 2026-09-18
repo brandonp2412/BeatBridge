@@ -15,6 +15,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var deviceAdapter: DeviceAdapter
     private lateinit var appAdapter: AppAdapter
     private var pendingOverlayApp: MusicApp? = null
+    private var pendingCompanionAddress: String? = null
 
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -61,6 +63,26 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(
                 this,
                 "Display over other apps permission is required for automatic app launch",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    private val companionAssociationLauncher = registerForActivityResult(
+        ActivityResultContracts.StartIntentSenderForResult()
+    ) { result ->
+        val address = pendingCompanionAddress ?: return@registerForActivityResult
+        pendingCompanionAddress = null
+        if (result.resultCode == RESULT_OK && CompanionDeviceSupport.finishAssociation(this, address)) {
+            Toast.makeText(
+                this,
+                "Background connection reliability enabled",
+                Toast.LENGTH_SHORT
+            ).show()
+        } else {
+            Toast.makeText(
+                this,
+                "Companion setup skipped; regular monitoring is still active",
                 Toast.LENGTH_LONG
             ).show()
         }
@@ -214,15 +236,47 @@ class MainActivity : AppCompatActivity() {
         val displayName = device.name.ifEmpty { device.address }
         if (device.address in current) {
             current.remove(device.address)
+            CompanionDeviceSupport.removeAssociation(this, device.address)
             Toast.makeText(this, "Removed: $displayName", Toast.LENGTH_SHORT).show()
         } else {
             current.add(device.address)
             Toast.makeText(this, "Added: $displayName", Toast.LENGTH_SHORT).show()
+            requestCompanionAssociation(device)
         }
         prefs.edit { putStringSet(PREF_SELECTED_DEVICES, current) }
         deviceAdapter.updateSelections(current)
         updateStatusLabel()
         syncMonitorService()
+    }
+
+    private fun requestCompanionAssociation(device: BtDevice) {
+        if (!CompanionDeviceSupport.isSupported(this) || pendingCompanionAddress != null) return
+        CompanionDeviceSupport.requestAssociation(
+            activity = this,
+            address = device.address,
+            onAssociationPending = { intentSender ->
+                pendingCompanionAddress = device.address
+                companionAssociationLauncher.launch(
+                    IntentSenderRequest.Builder(intentSender).build()
+                )
+            },
+            onAssociationReady = {
+                Toast.makeText(
+                    this,
+                    "Background connection reliability enabled",
+                    Toast.LENGTH_SHORT
+                ).show()
+            },
+            onFailure = { error ->
+                if (!error.isNullOrBlank()) {
+                    Toast.makeText(
+                        this,
+                        "Companion setup unavailable: $error",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            },
+        )
     }
 
     private fun onAppSelected(app: MusicApp) {
@@ -294,6 +348,13 @@ class MainActivity : AppCompatActivity() {
                 .sortedBy { it.name.ifEmpty { it.address } }
         )
         deviceAdapter.filter(binding.etDeviceSearch.text.toString())
+
+        val selectedAddresses = prefs.getStringSet(PREF_SELECTED_DEVICES, emptySet()) ?: emptySet()
+        selectedAddresses.forEach { address ->
+            if (CompanionDeviceSupport.isAssociated(this, address)) {
+                CompanionDeviceSupport.startObserving(this, address)
+            }
+        }
 
         val isEmpty = deviceList.isEmpty()
         binding.tvEmpty.visibility = if (isEmpty) View.VISIBLE else View.GONE
