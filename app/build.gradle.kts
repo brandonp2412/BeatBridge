@@ -8,6 +8,10 @@ val versionProps = Properties().also { props ->
     val f = rootProject.file("version.properties")
     if (f.exists()) props.load(f.inputStream())
 }
+val baseVersionCode = (versionProps["versionCode"] as String?)?.toInt() ?: 1
+val playStoreBuild = providers.gradleProperty("playStore")
+    .map(String::toBoolean)
+    .getOrElse(false)
 
 android {
     namespace = "com.beatbridge"
@@ -17,7 +21,7 @@ android {
         applicationId = "com.beatbridge"
         minSdk = 26
         targetSdk = 36
-        versionCode = (versionProps["versionCode"] as String?)?.toInt() ?: 1
+        versionCode = if (playStoreBuild) baseVersionCode * 100 else baseVersionCode
         versionName = (versionProps["versionName"] as String?) ?: "1.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // Lets emulator-based CI exercise the UI without system permission dialogs.
@@ -101,13 +105,12 @@ private val abiVersionCodes = mapOf("x86_64" to 1, "armeabi-v7a" to 2, "arm64-v8
 
 androidComponents {
     onVariants { variant ->
-        val base = android.defaultConfig.versionCode ?: 1
         variant.outputs.forEach { output ->
             val abi = output.filters.find {
                 it.filterType == com.android.build.api.variant.FilterConfiguration.FilterType.ABI
             }?.identifier
             val suffix = abiVersionCodes[abi] ?: return@forEach
-            output.versionCode.set(base * 100 + suffix)
+            output.versionCode.set(baseVersionCode * 100 + suffix)
         }
     }
 }
