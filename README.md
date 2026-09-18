@@ -7,12 +7,8 @@
   <p>Pick a device once. BeatBridge handles the rest.</p>
 
   <p>
-    <a href="https://f-droid.org/packages/com.beatbridge">
-      <img src="docs/get-it-on-fdroid.png" alt="Get it on F-Droid" height="72"/>
-    </a>
-    <a href="https://github.com/brandonp2412/BeatBridge/releases">
-      <img src="docs/get-it-on-github.svg" alt="Get it on GitHub" height="72"/>
-    </a>
+    <a href="https://f-droid.org/packages/com.beatbridge"><img src="docs/get-it-on-fdroid.png" alt="Get it on F-Droid" height="72"/></a>
+    <a href="https://github.com/brandonp2412/BeatBridge/releases"><img src="docs/get-it-on-github.svg" alt="Get it on GitHub" height="72"/></a>
   </p>
 </div>
 
