@@ -3,6 +3,24 @@
 All notable changes to BeatBridge are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.63] - 2026-09-18
+
+### Changed
+- Merge companion-device reliability fix
+- Revert "ci: add temporary signed branch build"
+- ci: add temporary signed branch build
+- fix: guard companion APIs by platform level
+- fix: use Android 16 companion presence events
+- chore: remove temporary validation note
+- test: cover duplicate companion connection events
+- feat: declare companion-device wake privileges
+- feat: associate selected devices for reliable wakeups
+- feat: handle companion device wakeups in monitor service
+- feat: revive monitor from companion presence
+- fix: keep companion support compatible with Android 12+
+- feat: add companion device association support
+- chore: add issue 15 validation note
+
 ## [1.0.62] - 2026-09-18
 
 ### Changed

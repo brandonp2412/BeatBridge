@@ -1,0 +1,8 @@
+• add companion device association support
+• associate selected devices for reliable wakeups
+• declare companion-device wake privileges
+• handle companion device wakeups in monitor service
+• revive monitor from companion presence
+• Fix guard companion APIs by platform level
+• Fix keep companion support compatible with Android 12+
+• Fix use Android 16 companion presence events
