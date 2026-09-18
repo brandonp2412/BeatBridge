@@ -2,6 +2,15 @@ name: Publish Google Play
 
 on:
   workflow_dispatch:
+    inputs:
+      release_status:
+        description: Google Play release status
+        required: true
+        default: completed
+        type: choice
+        options:
+          - completed
+          - draft
 
 permissions:
   contents: read
@@ -63,4 +72,4 @@ jobs:
           python3 scripts/publish_google_play.py \
             --aab app/build/outputs/bundle/release/app-release.aab \
             --track production \
-            --status completed
+            --status "${{ inputs.release_status }}"
