@@ -3,6 +3,12 @@
 All notable changes to BeatBridge are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.69] - 2026-09-23
+
+### Changed
+- Merge pull request #18 from brandonp2412/prompta-beatbridge-translations-20260924
+- feat(l10n): add Arabic Hindi Vietnamese and Traditional Chinese
+
 ## [1.0.68] - 2026-09-23
 
 ### Changed

@@ -1,0 +1,1 @@
+• feat(l10n): add Arabic Hindi Vietnamese and Traditional Chinese
