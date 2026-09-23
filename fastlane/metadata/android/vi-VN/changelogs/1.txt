@@ -1,0 +1,6 @@
+Bản phát hành đầu tiên.
+
+• Chọn bất kỳ thiết bị Bluetooth đã ghép đôi nào làm trình kích hoạt tự động phát
+• foreground service giám sát các sự kiện kết nối thiết bị
+• Tự động tiếp tục phát trong ứng dụng đa phương tiện đang hoạt động khi kết nối
+• Hỗ trợ Android 8.0 đến Android 15

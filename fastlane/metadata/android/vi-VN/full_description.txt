@@ -1,0 +1,27 @@
+Biến việc phát nhạc qua Bluetooth thành tự động.
+
+BeatBridge tiếp tục phát nhạc khi thiết bị Bluetooth bạn chọn kết nối. Dùng ứng dụng với ô tô, tai nghe, loa hoặc bất kỳ thiết bị Bluetooth đã ghép đôi nào, rồi tiếp tục nghe trong ứng dụng đa phương tiện bạn vẫn sử dụng.
+
+CÁCH HOẠT ĐỘNG
+
+Chọn một thiết bị Bluetooth đã ghép đôi và bật giám sát. Khi thiết bị đó kết nối, BeatBridge gửi lệnh phát đa phương tiện tiêu chuẩn của Android đến phiên đa phương tiện đang hoạt động. Các ứng dụng nhạc, podcast và sách nói tương thích sau đó có thể tiếp tục phát.
+
+TÍNH NĂNG CHÍNH
+
+• Tự động phát nhạc khi thiết bị Bluetooth đã chọn kết nối
+• Hoạt động với các điều khiển đa phương tiện Android được nhiều ứng dụng nhạc, podcast và sách nói sử dụng
+• Chọn phát tự động hoặc thông báo “Hỏi khi kết nối”
+• Mở ứng dụng đa phương tiện hoặc cài đặt âm thanh trực tiếp từ thông báo kết nối
+• Tạo cấu hình bộ cân bằng riêng cho từng thiết bị
+• Duy trì giám sát trong nền bằng foreground service gọn nhẹ
+• Được thiết kế để xử lý hiệu quả sự kiện kết nối Bluetooth mà không cần polling liên tục
+
+RIÊNG TƯ NGAY TỪ THIẾT KẾ
+
+BeatBridge hoạt động ngoại tuyến. Ứng dụng không có tài khoản, quảng cáo, phân tích hay truy cập mạng. Thiết bị và tùy chọn bạn chọn luôn ở trên thiết bị của bạn.
+
+QUYỀN
+
+Quyền truy cập Bluetooth cho phép BeatBridge liệt kê thiết bị đã ghép đôi và phát hiện kết nối. foreground service duy trì giám sát trong nền, còn thông báo hiển thị trạng thái kết nối và các thao tác tùy chọn.
+
+BeatBridge là phần mềm mã nguồn mở được cấp phép theo GPLv3.
