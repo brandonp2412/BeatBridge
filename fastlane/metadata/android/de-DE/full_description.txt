@@ -1,0 +1,27 @@
+Musikwiedergabe über Bluetooth automatisch starten.
+
+BeatBridge setzt die Wiedergabe fort, sobald sich das von dir ausgewählte Bluetooth-Gerät verbindet. Nutze es mit deinem Auto, Kopfhörern, Lautsprechern oder jedem anderen gekoppelten Bluetooth-Gerät und höre anschließend einfach in deiner gewohnten Medien-App weiter.
+
+SO FUNKTIONIERT ES
+
+Wähle ein gekoppeltes Bluetooth-Gerät aus und aktiviere die Überwachung. Wenn sich dieses Gerät verbindet, sendet BeatBridge den standardmäßigen Android-Medienbefehl zur Wiedergabe an die aktive Mediensitzung. Kompatible Musik-, Podcast- und Hörbuch-Apps können dann die Wiedergabe fortsetzen.
+
+WICHTIGE FUNKTIONEN
+
+• Musik automatisch abspielen, wenn sich ein ausgewähltes Bluetooth-Gerät verbindet
+• Funktioniert mit den Android-Mediensteuerungen vieler Musik-, Podcast- und Hörbuch-Apps
+• Wahl zwischen automatischer Wiedergabe und einer „Beim Verbinden fragen“-Benachrichtigung
+• Medien-App oder Audioeinstellungen direkt über die Verbindungsbenachrichtigung öffnen
+• Equalizer-Profil für jedes Gerät erstellen
+• Überwachung mit einem schlanken Vordergrunddienst im Hintergrund aktiv halten
+• Für effiziente Bluetooth-Verbindungsereignisse ohne ständige Abfragen entwickelt
+
+DATENSCHUTZ VON GRUND AUF
+
+BeatBridge funktioniert offline. Es gibt keine Konten, Werbung, Analysen oder Netzwerkzugriffe. Ausgewählte Geräte und Einstellungen bleiben auf deinem Gerät.
+
+BERECHTIGUNGEN
+
+Der Bluetooth-Zugriff ermöglicht BeatBridge, gekoppelte Geräte aufzulisten und Verbindungen zu erkennen. Ein Vordergrunddienst hält die Überwachung im Hintergrund aktiv; Benachrichtigungen zeigen den Verbindungsstatus und optionale Aktionen.
+
+BeatBridge ist Open-Source-Software unter der GPLv3-Lizenz.

@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
             syncMonitorService()
             Toast.makeText(
                 this,
-                "Bluetooth permission is required to list paired devices",
+                getString(R.string.bluetooth_permission_required),
                 Toast.LENGTH_LONG
             ).show()
         }
@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             Toast.makeText(
                 this,
-                "Display over other apps permission is required for automatic app launch",
+                getString(R.string.overlay_permission_required),
                 Toast.LENGTH_LONG
             ).show()
         }
@@ -76,13 +76,13 @@ class MainActivity : AppCompatActivity() {
         if (result.resultCode == RESULT_OK && CompanionDeviceSupport.finishAssociation(this, address)) {
             Toast.makeText(
                 this,
-                "Background connection reliability enabled",
+                getString(R.string.background_reliability_enabled),
                 Toast.LENGTH_SHORT
             ).show()
         } else {
             Toast.makeText(
                 this,
-                "Companion setup skipped; regular monitoring is still active",
+                getString(R.string.companion_setup_skipped),
                 Toast.LENGTH_LONG
             ).show()
         }
@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity() {
 
         val bluetoothManager = getSystemService(BluetoothManager::class.java)
         bluetoothAdapter = bluetoothManager.adapter ?: run {
-            Toast.makeText(this, "Bluetooth is not supported on this device", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.bluetooth_not_supported), Toast.LENGTH_LONG).show()
             finish()
             return
         }
@@ -221,7 +221,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateDelayLabel(seconds: Int) {
-        binding.tvDelayLabel.text = "Launch delay · ${seconds}s"
+        binding.tvDelayLabel.text = getString(R.string.launch_delay, seconds)
     }
 
     private fun updateDeviceSectionEnabled(enabled: Boolean) {
@@ -237,10 +237,10 @@ class MainActivity : AppCompatActivity() {
         if (device.address in current) {
             current.remove(device.address)
             CompanionDeviceSupport.removeAssociation(this, device.address)
-            Toast.makeText(this, "Removed: $displayName", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.removed_item, displayName), Toast.LENGTH_SHORT).show()
         } else {
             current.add(device.address)
-            Toast.makeText(this, "Added: $displayName", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.added_item, displayName), Toast.LENGTH_SHORT).show()
             requestCompanionAssociation(device)
         }
         prefs.edit { putStringSet(PREF_SELECTED_DEVICES, current) }
@@ -263,7 +263,7 @@ class MainActivity : AppCompatActivity() {
             onAssociationReady = {
                 Toast.makeText(
                     this,
-                    "Background connection reliability enabled",
+                    getString(R.string.background_reliability_enabled),
                     Toast.LENGTH_SHORT
                 ).show()
             },
@@ -271,7 +271,7 @@ class MainActivity : AppCompatActivity() {
                 if (!error.isNullOrBlank()) {
                     Toast.makeText(
                         this,
-                        "Companion setup unavailable: $error",
+                        getString(R.string.companion_setup_unavailable, error),
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -285,7 +285,7 @@ class MainActivity : AppCompatActivity() {
             current.remove(app.packageName)
             prefs.edit { putStringSet(PREF_SELECTED_APPS, current) }
             appAdapter.updateSelections(current)
-            Toast.makeText(this, "Removed ${app.appName}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.removed_app, app.appName), Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -309,7 +309,7 @@ class MainActivity : AppCompatActivity() {
         current.add(app.packageName)
         prefs.edit { putStringSet(PREF_SELECTED_APPS, current) }
         appAdapter.updateSelections(current)
-        Toast.makeText(this, "Will open ${app.appName} on connect", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.will_open_on_connect, app.appName), Toast.LENGTH_SHORT).show()
     }
 
     private fun checkPermissionsAndLoad() {

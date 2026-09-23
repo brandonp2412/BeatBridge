@@ -1,0 +1,6 @@
+Première version.
+
+• Sélectionnez n’importe quel appareil Bluetooth associé comme déclencheur de lecture automatique
+• Un service de premier plan surveille les connexions de l’appareil
+• Reprend automatiquement la lecture dans l’application multimédia active à la connexion
+• Prend en charge Android 8.0 à Android 15

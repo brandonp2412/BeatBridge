@@ -1,0 +1,27 @@
+Bluetooth müzik oynatmayı otomatik hale getirin.
+
+BeatBridge, seçtiğiniz Bluetooth cihazı bağlandığında müziği devam ettirir. Aracınız, kulaklığınız, hoparlörünüz veya eşleştirilmiş herhangi bir Bluetooth cihazıyla kullanın ve zaten kullandığınız medya uygulamasında dinlemeye devam edin.
+
+NASIL ÇALIŞIR
+
+Eşleştirilmiş bir Bluetooth cihazı seçin ve izlemeyi etkinleştirin. Cihaz bağlandığında BeatBridge, Android’in standart medya oynatma komutunu etkin medya oturumuna gönderir. Uyumlu müzik, podcast ve sesli kitap uygulamaları oynatmayı devam ettirebilir.
+
+TEMEL ÖZELLİKLER
+
+• Seçilen Bluetooth cihazı bağlandığında müziği otomatik oynatır
+• Birçok müzik, podcast ve sesli kitap uygulamasının kullandığı Android medya denetimleriyle çalışır
+• Otomatik oynatma veya “Bağlantıda sor” bildirimi arasında seçim yapın
+• Bağlantı bildiriminden medya uygulamanızı veya ses ayarlarını doğrudan açın
+• Her cihaz için ayrı ekolayzır profili oluşturun
+• Hafif bir foreground service ile arka plan izlemeyi etkin tutun
+• Sürekli sorgulama yapmadan Bluetooth bağlantı olaylarını verimli şekilde işler
+
+GİZLİLİK ODAKLI TASARIM
+
+BeatBridge çevrimdışı çalışır. Hesap, reklam, analiz veya ağ erişimi yoktur. Seçtiğiniz cihazlar ve tercihler yalnızca cihazınızda kalır.
+
+İZİNLER
+
+Bluetooth erişimi BeatBridge’in eşleştirilmiş cihazları listelemesini ve bağlantıları algılamasını sağlar. Foreground service arka plan izlemeyi etkin tutar; bildirimler bağlantı durumunu ve isteğe bağlı işlemleri gösterir.
+
+BeatBridge, GPLv3 lisanslı açık kaynaklı yazılımdır.

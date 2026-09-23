@@ -1,0 +1,6 @@
+Rilis awal.
+
+• Pilih perangkat Bluetooth tersanding apa pun sebagai pemicu putar otomatis
+• Layanan foreground memantau peristiwa koneksi perangkat
+• Otomatis melanjutkan pemutaran di aplikasi media aktif saat terhubung
+• Mendukung Android 8.0 hingga Android 15

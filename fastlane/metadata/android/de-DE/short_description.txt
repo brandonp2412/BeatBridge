@@ -1,0 +1,1 @@
+Musik automatisch starten, wenn Auto, Kopfhörer oder Lautsprecher verbinden.

@@ -1,0 +1,6 @@
+Eerste release.
+
+• Selecteer elk gekoppeld Bluetooth-apparaat als trigger voor automatisch afspelen
+• Foreground service bewaakt verbindingsgebeurtenissen van apparaten
+• Hervat automatisch het afspelen in de actieve media-app bij verbinding
+• Ondersteunt Android 8.0 tot en met Android 15

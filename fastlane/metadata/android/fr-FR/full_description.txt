@@ -1,0 +1,27 @@
+Automatisez la lecture de musique en Bluetooth.
+
+BeatBridge reprend la musique lorsque l’appareil Bluetooth de votre choix se connecte. Utilisez-le avec votre voiture, votre casque, vos enceintes ou tout autre appareil Bluetooth associé, puis continuez à écouter dans l’application multimédia que vous utilisez déjà.
+
+FONCTIONNEMENT
+
+Choisissez un appareil Bluetooth associé et activez la surveillance. Lorsque cet appareil se connecte, BeatBridge envoie la commande multimédia standard de lecture d’Android à la session multimédia active. Les applications compatibles de musique, podcasts et livres audio peuvent alors reprendre la lecture.
+
+FONCTIONNALITÉS PRINCIPALES
+
+• Lecture automatique de la musique lorsqu’un appareil Bluetooth sélectionné se connecte
+• Fonctionne avec les commandes multimédias Android utilisées par de nombreuses applications de musique, podcasts et livres audio
+• Choix entre lecture automatique et notification « Demander à la connexion »
+• Ouvrez votre application multimédia ou les réglages audio directement depuis la notification de connexion
+• Créez un profil d’égaliseur par appareil
+• Maintenez la surveillance active en arrière-plan grâce à un service de premier plan léger
+• Conçu pour réagir efficacement aux connexions Bluetooth sans interrogation constante
+
+CONFIDENTIALITÉ INTÉGRÉE
+
+BeatBridge fonctionne hors ligne. Il n’utilise ni compte, ni publicité, ni analyse, ni accès réseau. Les appareils sélectionnés et vos préférences restent sur votre appareil.
+
+AUTORISATIONS
+
+L’accès Bluetooth permet à BeatBridge de lister les appareils associés et de détecter les connexions. Un service de premier plan maintient la surveillance en arrière-plan, tandis que les notifications affichent l’état de la connexion et les actions facultatives.
+
+BeatBridge est un logiciel open source sous licence GPLv3.

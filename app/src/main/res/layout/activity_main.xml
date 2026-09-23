@@ -33,7 +33,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:letterSpacing="-0.02"
-                    android:text="BeatBridge"
+                    android:text="@string/app_name"
                     android:textColor="@color/bb_on_surface"
                     android:textSize="26sp"
                     android:textStyle="bold" />
@@ -48,7 +48,7 @@
                     android:minWidth="0dp"
                     android:minHeight="0dp"
                     android:paddingHorizontal="10dp"
-                    android:text="What's new"
+                    android:text="@string/whats_new"
                     android:textAllCaps="false"
                     android:textColor="@color/bb_primary"
                     android:textSize="14sp" />
@@ -59,7 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="Start the right music automatically when Bluetooth connects."
+                android:text="@string/tagline"
                 android:textColor="@color/bb_on_surface_dim"
                 android:textSize="13sp" />
 
@@ -91,7 +91,7 @@
                     android:drawableTint="@color/bb_on_primary_container"
                     android:gravity="center_vertical"
                     android:minHeight="28dp"
-                    android:text="Choose a Bluetooth device to start"
+                    android:text="@string/choose_device"
                     android:textColor="@color/bb_on_primary_container"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -119,7 +119,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Any Bluetooth device"
+                            android:text="@string/any_bluetooth_device"
                             android:textColor="@color/bb_on_primary_container"
                             android:textSize="14sp"
                             android:textStyle="bold" />
@@ -128,7 +128,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="Use these apps for every connection"
+                            android:text="@string/use_apps_every_connection"
                             android:textColor="@color/bb_on_primary_container_dim"
                             android:textSize="12sp" />
 
@@ -173,7 +173,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingHorizontal="18dp"
-                        android:text="Bluetooth devices"
+                        android:text="@string/bluetooth_devices"
                         android:textColor="@color/bb_on_surface"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -183,7 +183,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
                         android:paddingHorizontal="18dp"
-                        android:text="Choose which paired devices should trigger BeatBridge."
+                        android:text="@string/choose_paired_devices"
                         android:textColor="@color/bb_on_surface_dim"
                         android:textSize="12sp" />
 
@@ -195,7 +195,7 @@
                         android:layout_marginHorizontal="14dp"
                         android:layout_marginTop="14dp"
                         android:layout_marginBottom="6dp"
-                        android:hint="Search devices"
+                        android:hint="@string/search_devices"
                         app:boxCornerRadiusBottomEnd="14dp"
                         app:boxCornerRadiusBottomStart="14dp"
                         app:boxCornerRadiusTopEnd="14dp"
@@ -225,8 +225,7 @@
                         android:paddingHorizontal="24dp"
                         android:paddingTop="22dp"
                         android:paddingBottom="20dp"
-                        android:text="No paired devices yet
-Pair one in Android Settings, then return here."
+                        android:text="@string/no_paired_devices"
                         android:textColor="@color/bb_on_surface_dim"
                         android:textSize="13sp"
                         android:visibility="gone" />
@@ -267,7 +266,7 @@ Pair one in Android Settings, then return here."
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="18dp"
-                    android:text="Music apps"
+                    android:text="@string/music_apps"
                     android:textColor="@color/bb_on_surface"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -277,7 +276,7 @@ Pair one in Android Settings, then return here."
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
                     android:paddingHorizontal="18dp"
-                    android:text="Open selected apps and start playback after connecting."
+                    android:text="@string/open_selected_apps"
                     android:textColor="@color/bb_on_surface_dim"
                     android:textSize="12sp" />
 
@@ -287,7 +286,7 @@ Pair one in Android Settings, then return here."
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:paddingHorizontal="18dp"
-                    android:text="Launch delay · 1s"
+                    android:text="@string/launch_delay"
                     android:textColor="@color/bb_on_surface"
                     android:textSize="13sp"
                     android:textStyle="bold" />
@@ -308,7 +307,7 @@ Pair one in Android Settings, then return here."
                     android:layout_marginHorizontal="14dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="6dp"
-                    android:hint="Search apps"
+                    android:hint="@string/search_apps"
                     app:boxCornerRadiusBottomEnd="14dp"
                     app:boxCornerRadiusBottomStart="14dp"
                     app:boxCornerRadiusTopEnd="14dp"
@@ -336,7 +335,7 @@ Pair one in Android Settings, then return here."
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="24dp"
-                    android:text="No apps found."
+                    android:text="@string/no_apps_found"
                     android:textColor="@color/bb_on_surface_dim"
                     android:textSize="13sp"
                     android:visibility="gone" />
@@ -364,7 +363,7 @@ Pair one in Android Settings, then return here."
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
-                android:text="About"
+                android:text="@string/about"
                 android:textColor="@color/bb_on_surface_dim"
                 android:textSize="12sp"
                 android:textStyle="bold" />
@@ -377,7 +376,7 @@ Pair one in Android Settings, then return here."
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center_vertical"
-                android:text="Source code"
+                android:text="@string/source_code"
                 android:textColor="@color/bb_on_surface"
                 android:textSize="14sp" />
 
@@ -389,7 +388,7 @@ Pair one in Android Settings, then return here."
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center_vertical"
-                android:text="Support BeatBridge"
+                android:text="@string/support_beatbridge"
                 android:textColor="@color/bb_on_surface"
                 android:textSize="14sp" />
 

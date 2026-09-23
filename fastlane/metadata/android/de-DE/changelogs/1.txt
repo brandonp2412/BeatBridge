@@ -1,0 +1,6 @@
+Erstveröffentlichung.
+
+• Beliebiges gekoppeltes Bluetooth-Gerät als Auslöser für die automatische Wiedergabe auswählen
+• Vordergrunddienst überwacht Geräteverbindungen
+• Setzt die Wiedergabe in der aktiven Medien-App bei Verbindung automatisch fort
+• Unterstützt Android 8.0 bis Android 15

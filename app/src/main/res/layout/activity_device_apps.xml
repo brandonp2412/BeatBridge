@@ -34,7 +34,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Ask what to do when this device connects"
+            android:text="@string/ask_on_connect"
             android:textColor="@color/bb_on_surface"
             android:textSize="14sp" />
 
@@ -57,14 +57,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Equalizer"
+            android:text="@string/equalizer"
             android:textColor="@color/bb_on_surface"
             android:textSize="14sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sound profile applied when this device connects"
+            android:text="@string/equalizer_profile"
             android:textColor="@color/bb_on_surface_dim"
             android:textSize="12sp" />
 
@@ -75,7 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        android:hint="Search apps…">
+        android:hint="@string/search_apps_ellipsis">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_search"
@@ -94,7 +94,7 @@
         android:layout_height="wrap_content"
         android:paddingHorizontal="20dp"
         android:paddingBottom="8dp"
-        android:text="Leave all unchecked to use the global selection."
+        android:text="@string/leave_unchecked"
         android:textSize="12sp"
         android:textColor="@color/bb_on_surface_dim" />
 
