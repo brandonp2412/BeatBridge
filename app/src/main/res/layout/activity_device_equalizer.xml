@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:padding="24dp"
-        android:text="Equalizer is not supported on this device."
+        android:text="@string/equalizer_unsupported"
         android:textColor="@color/bb_on_surface_dim"
         android:textSize="14sp" />
 
@@ -47,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="8dp"
-                android:text="Applied automatically when this device connects."
+                android:text="@string/equalizer_applied"
                 android:textColor="@color/bb_on_surface_dim"
                 android:textSize="12sp" />
 
@@ -62,7 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Reset to flat" />
+                android:text="@string/reset_flat" />
 
         </LinearLayout>
 

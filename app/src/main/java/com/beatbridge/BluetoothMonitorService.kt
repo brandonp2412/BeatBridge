@@ -155,8 +155,8 @@ class BluetoothMonitorService : Service() {
     private fun showDeviceChoices(device: BluetoothDevice, appPackages: List<String>) {
         val deviceName = device.name ?: device.address
         val builder = NotificationCompat.Builder(this, ACTIONS_CHANNEL_ID)
-            .setContentTitle("$deviceName connected")
-            .setContentText("What do you want to do?")
+            .setContentTitle(getString(R.string.device_connected, deviceName))
+            .setContentText(getString(R.string.what_do_you_want))
             .setSmallIcon(R.drawable.ic_music_note)
             .setAutoCancel(true)
             .setContentIntent(
@@ -167,18 +167,18 @@ class BluetoothMonitorService : Service() {
                 )
             )
 
-        builder.addAction(0, "Play", choicePendingIntent(NotificationActionActivity.ACTION_PLAY, device.address, 1))
+        builder.addAction(0, getString(R.string.play), choicePendingIntent(NotificationActionActivity.ACTION_PLAY, device.address, 1))
 
         if (appPackages.isNotEmpty()) {
             val label = if (appPackages.size == 1) {
-                "Open ${appLabel(appPackages[0])}"
+                getString(R.string.open_app, appLabel(appPackages[0]))
             } else {
-                "Open ${appPackages.size} apps"
+                getString(R.string.open_apps, appPackages.size)
             }
             builder.addAction(0, label, choicePendingIntent(NotificationActionActivity.ACTION_OPEN_APPS, device.address, 2))
         }
 
-        builder.addAction(0, "Audio settings", choicePendingIntent(NotificationActionActivity.ACTION_AUDIO_SETTINGS, device.address, 3))
+        builder.addAction(0, getString(R.string.audio_settings), choicePendingIntent(NotificationActionActivity.ACTION_AUDIO_SETTINGS, device.address, 3))
 
         getSystemService(NotificationManager::class.java).notify(ACTIONS_NOTIFICATION_ID, builder.build())
     }
@@ -262,10 +262,10 @@ class BluetoothMonitorService : Service() {
     private fun createNotificationChannel() {
         val channel = NotificationChannel(
             CHANNEL_ID,
-            "BeatBridge Monitor",
+            getString(R.string.monitor_channel_name),
             NotificationManager.IMPORTANCE_LOW
         ).apply {
-            description = "Running in the background to detect your paired device"
+            description = getString(R.string.monitor_channel_desc)
         }
         getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
     }
@@ -273,10 +273,10 @@ class BluetoothMonitorService : Service() {
     private fun createLaunchNotificationChannel() {
         val channel = NotificationChannel(
             LAUNCH_CHANNEL_ID,
-            "BeatBridge App Launch",
+            getString(R.string.launch_channel_name),
             NotificationManager.IMPORTANCE_HIGH
         ).apply {
-            description = "Briefly shown when launching your music app"
+            description = getString(R.string.launch_channel_desc)
         }
         getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
     }
@@ -284,18 +284,18 @@ class BluetoothMonitorService : Service() {
     private fun createActionsNotificationChannel() {
         val channel = NotificationChannel(
             ACTIONS_CHANNEL_ID,
-            "BeatBridge Device Choices",
+            getString(R.string.choices_channel_name),
             NotificationManager.IMPORTANCE_HIGH
         ).apply {
-            description = "Shown when a device connects so you can pick what happens"
+            description = getString(R.string.choices_channel_desc)
         }
         getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
     }
 
     private fun buildNotification() =
         NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("BeatBridge")
-            .setContentText("Persistent notification")
+            .setContentTitle(getString(R.string.app_name))
+            .setContentText(getString(R.string.persistent_notification))
             .setSmallIcon(R.drawable.ic_music_note)
             .setOngoing(true)
             .setContentIntent(

@@ -34,7 +34,7 @@ class DeviceAppsActivity : AppCompatActivity() {
         } else {
             Toast.makeText(
                 this,
-                "Display over other apps permission is required for automatic app launch",
+                getString(R.string.overlay_permission_required),
                 Toast.LENGTH_LONG
             ).show()
         }
@@ -52,7 +52,7 @@ class DeviceAppsActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = deviceName
-        supportActionBar?.subtitle = "Per-device settings"
+        supportActionBar?.subtitle = getString(R.string.per_device_settings)
 
         prefs = getSharedPreferences(MainActivity.PREFS_NAME, MODE_PRIVATE)
 

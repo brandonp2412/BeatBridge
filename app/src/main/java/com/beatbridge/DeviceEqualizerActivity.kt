@@ -32,7 +32,7 @@ class DeviceEqualizerActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = deviceName
-        supportActionBar?.subtitle = "Equalizer"
+        supportActionBar?.subtitle = getString(R.string.equalizer)
 
         prefs = getSharedPreferences(MainActivity.PREFS_NAME, MODE_PRIVATE)
 

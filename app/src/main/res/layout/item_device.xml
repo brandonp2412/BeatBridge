@@ -42,7 +42,7 @@
         android:layout_height="20dp"
         android:src="@drawable/ic_check"
         android:visibility="invisible"
-        android:contentDescription="Selected" />
+        android:contentDescription="@string/selected" />
 
     <ImageView
         android:id="@+id/iv_tune"
@@ -53,6 +53,6 @@
         android:src="@drawable/ic_tune"
         app:tint="@color/bb_on_surface_dim"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Device app overrides" />
+        android:contentDescription="@string/device_app_overrides" />
 
 </LinearLayout>
