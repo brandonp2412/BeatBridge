@@ -1,0 +1,6 @@
+Versión inicial.
+
+• Selecciona cualquier dispositivo Bluetooth emparejado como activador de reproducción automática
+• Un servicio en primer plano supervisa los eventos de conexión del dispositivo
+• Reanuda automáticamente la reproducción en la aplicación multimedia activa al conectarse
+• Compatible con Android 8.0 hasta Android 15

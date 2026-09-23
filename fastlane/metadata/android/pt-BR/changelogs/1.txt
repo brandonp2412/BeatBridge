@@ -1,0 +1,6 @@
+Lançamento inicial.
+
+• Selecione qualquer dispositivo Bluetooth pareado como gatilho de reprodução automática
+• Serviço em primeiro plano monitora eventos de conexão do dispositivo
+• Retoma automaticamente a reprodução no app de mídia ativo ao conectar
+• Compatível com Android 8.0 até Android 15
