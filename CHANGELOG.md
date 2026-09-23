@@ -3,6 +3,18 @@
 All notable changes to BeatBridge are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.68] - 2026-09-23
+
+### Changed
+- Merge pull request #17 from brandonp2412/prompta-beatbridge-translations-20260924
+- feat(l10n): localize Polish Turkish and Dutch store listings
+- feat(l10n): add Polish Turkish and Dutch
+- feat(l10n): add more localized Play Store listings
+- feat(l10n): add Italian Korean Russian and Indonesian
+- feat(l10n): localize Play Store listing
+- feat(l10n): add Portuguese Japanese and Chinese translations
+- feat(l10n): add core German Spanish and French translations
+
 ## [1.0.67] - 2026-09-23
 
 ### Changed

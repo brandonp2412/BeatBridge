@@ -1,0 +1,7 @@
+• feat(l10n): add Italian Korean Russian and Indonesian
+• feat(l10n): add Polish Turkish and Dutch
+• feat(l10n): add Portuguese Japanese and Chinese translations
+• feat(l10n): add core German Spanish and French translations
+• feat(l10n): add more localized Play Store listings
+• feat(l10n): localize Play Store listing
+• feat(l10n): localize Polish Turkish and Dutch store listings
