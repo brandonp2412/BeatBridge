@@ -1,0 +1,1 @@
+Speel muziek automatisch af zodra auto, koptelefoon of speaker verbinding maakt.

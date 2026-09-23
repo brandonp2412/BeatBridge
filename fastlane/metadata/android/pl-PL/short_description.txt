@@ -1,0 +1,1 @@
+Automatycznie odtwarzaj muzykę po połączeniu auta, słuchawek lub głośnika.

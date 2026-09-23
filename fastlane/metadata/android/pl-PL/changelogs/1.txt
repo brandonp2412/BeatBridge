@@ -1,0 +1,6 @@
+Pierwsze wydanie.
+
+• Wybierz dowolne sparowane urządzenie Bluetooth jako wyzwalacz automatycznego odtwarzania
+• Foreground service monitoruje zdarzenia połączenia urządzeń
+• Automatycznie wznawia odtwarzanie w aktywnej aplikacji multimedialnej po połączeniu
+• Obsługuje Androida od 8.0 do 15

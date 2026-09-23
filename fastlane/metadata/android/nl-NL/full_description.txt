@@ -1,0 +1,27 @@
+Maak muziek afspelen via Bluetooth automatisch.
+
+BeatBridge hervat muziek zodra het Bluetooth-apparaat dat u kiest verbinding maakt. Gebruik het met uw auto, koptelefoon, speakers of elk gekoppeld Bluetooth-apparaat en luister daarna verder in de media-app die u al gebruikt.
+
+HOE HET WERKT
+
+Kies een gekoppeld Bluetooth-apparaat en schakel monitoring in. Wanneer dat apparaat verbinding maakt, stuurt BeatBridge de standaard Android-opdracht voor media afspelen naar de actieve mediasessie. Compatibele muziek-, podcast- en luisterboekapps kunnen daarna het afspelen hervatten.
+
+BELANGRIJKSTE FUNCTIES
+
+• Speelt automatisch muziek af wanneer een geselecteerd Bluetooth-apparaat verbinding maakt
+• Werkt met Android-mediabediening die door veel muziek-, podcast- en luisterboekapps wordt gebruikt
+• Kies tussen automatisch afspelen of een melding ‘Vragen bij verbinden’
+• Open uw media-app of audio-instellingen rechtstreeks vanuit de verbindingsmelding
+• Maak per apparaat een equalizerprofiel
+• Houd monitoring actief op de achtergrond met een lichte foreground service
+• Ontworpen voor efficiënte Bluetooth-verbindingsgebeurtenissen zonder voortdurend pollen
+
+PRIVACY VANAF HET ONTWERP
+
+BeatBridge werkt offline. Er zijn geen accounts, advertenties, analyses of netwerktoegang. Uw geselecteerde apparaten en voorkeuren blijven op uw apparaat.
+
+MACHTIGINGEN
+
+Bluetooth-toegang laat BeatBridge gekoppelde apparaten tonen en verbindingen detecteren. Een foreground service houdt monitoring op de achtergrond actief en meldingen tonen de verbindingsstatus en optionele acties.
+
+BeatBridge is opensourcesoftware onder de GPLv3-licentie.

@@ -1,0 +1,27 @@
+Automatyzuj odtwarzanie muzyki przez Bluetooth.
+
+BeatBridge wznawia muzykę po połączeniu wybranego urządzenia Bluetooth. Używaj go z autem, słuchawkami, głośnikami lub dowolnym sparowanym urządzeniem Bluetooth, a potem słuchaj dalej w używanej już aplikacji multimedialnej.
+
+JAK TO DZIAŁA
+
+Wybierz sparowane urządzenie Bluetooth i włącz monitorowanie. Po połączeniu urządzenia BeatBridge wysyła standardowe polecenie odtwarzania Androida do aktywnej sesji multimedialnej. Zgodne aplikacje do muzyki, podcastów i audiobooków mogą wtedy wznowić odtwarzanie.
+
+NAJWAŻNIEJSZE FUNKCJE
+
+• Automatyczne odtwarzanie muzyki po połączeniu wybranego urządzenia Bluetooth
+• Współpraca ze sterowaniem multimediami Androida używanym przez wiele aplikacji do muzyki, podcastów i audiobooków
+• Wybór między automatycznym odtwarzaniem a powiadomieniem „Zapytaj przy połączeniu”
+• Otwieranie aplikacji multimedialnej lub ustawień dźwięku bezpośrednio z powiadomienia o połączeniu
+• Osobny profil korektora dla każdego urządzenia
+• Monitorowanie w tle przez lekki foreground service
+• Obsługa zdarzeń połączenia Bluetooth bez ciągłego odpytywania
+
+PRYWATNOŚĆ W STANDARDZIE
+
+BeatBridge działa offline. Nie ma kont, reklam, analityki ani dostępu do sieci. Wybrane urządzenia i ustawienia pozostają na Twoim urządzeniu.
+
+UPRAWNIENIA
+
+Dostęp do Bluetooth pozwala BeatBridge wyświetlać sparowane urządzenia i wykrywać połączenia. Foreground service utrzymuje monitorowanie w tle, a powiadomienia pokazują stan połączenia i opcjonalne działania.
+
+BeatBridge jest oprogramowaniem open source na licencji GPLv3.

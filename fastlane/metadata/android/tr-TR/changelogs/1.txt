@@ -1,0 +1,6 @@
+İlk sürüm.
+
+• Herhangi bir eşleştirilmiş Bluetooth cihazını otomatik oynatma tetikleyicisi olarak seçin
+• Foreground service cihaz bağlantı olaylarını izler
+• Bağlantıda etkin medya uygulamasında oynatmayı otomatik sürdürür
+• Android 8.0 ile Android 15 arasını destekler

@@ -1,0 +1,1 @@
+Araç, kulaklık veya hoparlör Bluetooth ile bağlanınca müziği otomatik oynat.
