@@ -1,0 +1,27 @@
+Transformă redarea muzicii prin Bluetooth într-o experiență automată.
+
+BeatBridge reia muzica atunci când se conectează dispozitivul Bluetooth ales de tine. Folosește-l în mașină, cu căști, boxe sau orice dispozitiv Bluetooth asociat, apoi continuă să asculți în aplicația media pe care o folosești deja.
+
+CUM FUNCȚIONEAZĂ
+
+Alege un dispozitiv Bluetooth asociat și activează monitorizarea. Când acel dispozitiv se conectează, BeatBridge trimite comanda media standard de redare Android către sesiunea media activă. Aplicațiile compatibile de muzică, podcasturi și cărți audio pot apoi să reia redarea.
+
+FUNCȚII PRINCIPALE
+
+• Redă automat muzica atunci când se conectează un dispozitiv Bluetooth selectat
+• Funcționează cu comenzile media Android folosite de multe aplicații de muzică, podcasturi și cărți audio
+• Alege între redarea automată și notificarea „Întreabă la conectare”
+• Deschide aplicația media sau setările audio direct din notificarea de conectare
+• Creează un profil de egalizator separat pentru fiecare dispozitiv
+• Menține monitorizarea activă în fundal cu un foreground service ușor
+• Conceput pentru a procesa eficient evenimentele de conectare Bluetooth, fără interogare constantă
+
+CONFIDENȚIALITATE PRIN DESIGN
+
+BeatBridge funcționează offline. Nu are conturi, reclame, analize sau acces la rețea. Dispozitivele și preferințele selectate rămân pe dispozitivul tău.
+
+PERMISIUNI
+
+Accesul Bluetooth permite BeatBridge să afișeze dispozitivele asociate și să detecteze conexiunile. Un foreground service menține monitorizarea activă în fundal, iar notificările arată starea conexiunii și acțiunile opționale.
+
+BeatBridge este software open-source licențiat sub GPLv3.

@@ -1,0 +1,6 @@
+První vydání.
+
+• Vyberte libovolné spárované zařízení Bluetooth jako spouštěč automatického přehrávání
+• Foreground service sleduje události připojení zařízení
+• Po připojení automaticky obnoví přehrávání v aktivní mediální aplikaci
+• Podporuje Android 8.0 až Android 15
