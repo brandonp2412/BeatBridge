@@ -1,0 +1,6 @@
+Versione iniziale.
+
+• Seleziona qualsiasi dispositivo Bluetooth associato come trigger per la riproduzione automatica
+• Il servizio in primo piano monitora gli eventi di connessione del dispositivo
+• Riprende automaticamente la riproduzione nell’app multimediale attiva alla connessione
+• Supporta Android da 8.0 a 15

@@ -1,0 +1,1 @@
+Avvia la musica quando auto, cuffie o altoparlanti Bluetooth si connettono.

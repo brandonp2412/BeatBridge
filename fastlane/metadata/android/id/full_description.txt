@@ -1,0 +1,27 @@
+Buat pemutaran musik Bluetooth berjalan otomatis.
+
+BeatBridge melanjutkan musik saat perangkat Bluetooth yang Anda pilih terhubung. Gunakan dengan mobil, headphone, speaker, atau perangkat Bluetooth tersanding apa pun, lalu lanjutkan mendengarkan di aplikasi media yang sudah Anda gunakan.
+
+CARA KERJA
+
+Pilih perangkat Bluetooth tersanding dan aktifkan pemantauan. Saat perangkat tersebut terhubung, BeatBridge mengirim perintah putar media standar Android ke sesi media aktif. Aplikasi musik, podcast, dan buku audio yang kompatibel kemudian dapat melanjutkan pemutaran.
+
+FITUR UTAMA
+
+• Putar musik otomatis saat perangkat Bluetooth pilihan terhubung
+• Bekerja dengan kontrol media Android yang digunakan banyak aplikasi musik, podcast, dan buku audio
+• Pilih antara pemutaran otomatis atau notifikasi “Tanyakan saat terhubung”
+• Buka aplikasi media atau setelan audio langsung dari notifikasi koneksi
+• Buat profil equalizer untuk tiap perangkat
+• Pertahankan pemantauan latar belakang dengan layanan foreground yang ringan
+• Dirancang untuk menangani peristiwa koneksi Bluetooth secara efisien tanpa polling terus-menerus
+
+PRIVASI SEJAK AWAL
+
+BeatBridge bekerja offline. Tidak ada akun, iklan, analitik, atau akses jaringan. Perangkat pilihan dan preferensi Anda tetap berada di perangkat Anda.
+
+IZIN
+
+Akses Bluetooth memungkinkan BeatBridge menampilkan perangkat tersanding dan mendeteksi koneksi. Layanan foreground mempertahankan pemantauan latar belakang, dan notifikasi menampilkan status koneksi serta tindakan opsional.
+
+BeatBridge adalah perangkat lunak sumber terbuka berlisensi GPLv3.
