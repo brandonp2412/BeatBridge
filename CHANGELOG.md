@@ -3,6 +3,11 @@
 All notable changes to BeatBridge are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.70] - 2026-09-24
+
+### Changed
+- feat(l10n): add Thai Ukrainian Czech and Romanian (#19)
+
 ## [1.0.69] - 2026-09-23
 
 ### Changed

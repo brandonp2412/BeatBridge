@@ -1,0 +1,1 @@
+• feat(l10n): add Thai Ukrainian Czech and Romanian (#19)
