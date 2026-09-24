@@ -3,6 +3,11 @@
 All notable changes to BeatBridge are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.71] - 2026-09-24
+
+### Changed
+- Add in-app language switcher
+
 ## [1.0.70] - 2026-09-24
 
 ### Changed
