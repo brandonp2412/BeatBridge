@@ -18,7 +18,11 @@ import android.widget.Toast
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
+import androidx.core.os.LocaleListCompat
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.util.Locale
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.beatbridge.databinding.ActivityMainBinding
 import androidx.core.content.edit
@@ -108,6 +112,7 @@ class MainActivity : AppCompatActivity() {
         setupSearch()
         setupAnyDeviceToggle()
         setupDelaySlider()
+        setupLanguageSwitcher()
         checkPermissionsAndLoad()
         updateStatusLabel()
         binding.tvWhatsNew.setOnClickListener {
@@ -218,6 +223,52 @@ class MainActivity : AppCompatActivity() {
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
             override fun onStopTrackingTouch(seekBar: SeekBar) {}
         })
+    }
+
+    private fun setupLanguageSwitcher() {
+        updateLanguageSetting()
+        binding.languageSetting.setOnClickListener { showLanguagePicker() }
+    }
+
+    private fun showLanguagePicker() {
+        val selectedTag = AppCompatDelegate.getApplicationLocales().toLanguageTags()
+        val selectedIndex = SUPPORTED_LANGUAGE_TAGS.indexOf(selectedTag)
+            .takeIf { it >= 0 }
+            ?.plus(1)
+            ?: 0
+        val labels = buildList {
+            add(getString(R.string.system_default))
+            addAll(SUPPORTED_LANGUAGE_TAGS.map(::languageLabel))
+        }.toTypedArray()
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.language)
+            .setSingleChoiceItems(labels, selectedIndex) { dialog, which ->
+                val locales = if (which == 0) {
+                    LocaleListCompat.getEmptyLocaleList()
+                } else {
+                    LocaleListCompat.forLanguageTags(SUPPORTED_LANGUAGE_TAGS[which - 1])
+                }
+                dialog.dismiss()
+                AppCompatDelegate.setApplicationLocales(locales)
+            }
+            .show()
+    }
+
+    private fun updateLanguageSetting() {
+        val appLocales = AppCompatDelegate.getApplicationLocales()
+        binding.tvLanguageValue.text = if (appLocales.isEmpty) {
+            getString(R.string.system_default)
+        } else {
+            languageLabel(appLocales.get(0)?.toLanguageTag().orEmpty())
+        }
+    }
+
+    private fun languageLabel(languageTag: String): String {
+        val locale = Locale.forLanguageTag(languageTag)
+        return locale.getDisplayName(locale).replaceFirstChar { character ->
+            if (character.isLowerCase()) character.titlecase(locale) else character.toString()
+        }
     }
 
     private fun updateDelayLabel(seconds: Int) {
@@ -413,6 +464,31 @@ class MainActivity : AppCompatActivity() {
         const val PREF_DEVICE_APPS_PREFIX = "device_apps_"
         const val PREF_DEVICE_ASK_PREFIX = "device_ask_"
         const val PREF_DEVICE_EQ_PREFIX = "device_eq_"
+
+        internal val SUPPORTED_LANGUAGE_TAGS = listOf(
+            "en",
+            "ar",
+            "cs",
+            "de",
+            "es",
+            "fr",
+            "hi",
+            "id",
+            "it",
+            "ja",
+            "ko",
+            "nl",
+            "pl",
+            "pt-BR",
+            "ro",
+            "ru",
+            "th",
+            "tr",
+            "uk",
+            "vi",
+            "zh-CN",
+            "zh-TW",
+        )
 
         internal fun requiredBluetoothPermissions(sdkInt: Int): List<String> =
             if (sdkInt >= Build.VERSION_CODES.S) {

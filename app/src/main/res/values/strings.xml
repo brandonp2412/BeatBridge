@@ -52,4 +52,6 @@
     <string name="choices_channel_name">BeatBridge Device Choices</string>
     <string name="choices_channel_desc">Shown when a device connects so you can pick what happens</string>
     <string name="persistent_notification">Persistent notification</string>
+    <string name="language">Language</string>
+    <string name="system_default">System default</string>
 </resources>

@@ -38,6 +38,41 @@ class MainActivityPrefsTest {
     }
 
     @Test
+    fun supportedLanguageTags_coverEveryShippedLocale() {
+        assertEquals(
+            listOf(
+                "en",
+                "ar",
+                "cs",
+                "de",
+                "es",
+                "fr",
+                "hi",
+                "id",
+                "it",
+                "ja",
+                "ko",
+                "nl",
+                "pl",
+                "pt-BR",
+                "ro",
+                "ru",
+                "th",
+                "tr",
+                "uk",
+                "vi",
+                "zh-CN",
+                "zh-TW",
+            ),
+            MainActivity.SUPPORTED_LANGUAGE_TAGS,
+        )
+        assertEquals(
+            MainActivity.SUPPORTED_LANGUAGE_TAGS.size,
+            MainActivity.SUPPORTED_LANGUAGE_TAGS.toSet().size,
+        )
+    }
+
+    @Test
     fun android13BluetoothRequirements_doNotIncludeNotificationPermission() {
         val permissions = MainActivity.requiredBluetoothPermissions(Build.VERSION_CODES.TIRAMISU)
 
