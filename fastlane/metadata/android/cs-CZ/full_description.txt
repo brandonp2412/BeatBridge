@@ -1,0 +1,27 @@
+Udělejte z přehrávání hudby přes Bluetooth automatickou záležitost.
+
+BeatBridge obnoví hudbu, když se připojí vámi zvolené zařízení Bluetooth. Používejte ho v autě, se sluchátky, reproduktory nebo jakýmkoli spárovaným Bluetooth zařízením a pokračujte v poslechu v mediální aplikaci, kterou už používáte.
+
+JAK TO FUNGUJE
+
+Vyberte spárované zařízení Bluetooth a zapněte sledování. Když se zařízení připojí, BeatBridge odešle standardní příkaz Androidu pro přehrávání do aktivní mediální relace. Kompatibilní aplikace pro hudbu, podcasty a audioknihy pak mohou pokračovat v přehrávání.
+
+HLAVNÍ FUNKCE
+
+• Automatické přehrávání hudby po připojení vybraného zařízení Bluetooth
+• Funguje s ovládáním médií Android používaným mnoha aplikacemi pro hudbu, podcasty a audioknihy
+• Volba mezi automatickým přehráváním a oznámením „Zeptat se při připojení“
+• Otevření mediální aplikace nebo nastavení zvuku přímo z oznámení o připojení
+• Vlastní profil ekvalizéru pro každé zařízení
+• Aktivní sledování na pozadí pomocí lehké foreground service
+• Efektivní zpracování událostí připojení Bluetooth bez neustálého dotazování
+
+SOUKROMÍ UŽ OD NÁVRHU
+
+BeatBridge funguje offline. Nemá účty, reklamy, analytiku ani přístup k síti. Vybraná zařízení a předvolby zůstávají ve vašem zařízení.
+
+OPRÁVNĚNÍ
+
+Přístup k Bluetooth umožňuje BeatBridge zobrazit spárovaná zařízení a rozpoznat připojení. Foreground service udržuje sledování aktivní na pozadí a oznámení zobrazují stav připojení a volitelné akce.
+
+BeatBridge je open-source software licencovaný pod GPLv3.

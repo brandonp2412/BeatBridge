@@ -1,0 +1,6 @@
+Versiunea inițială.
+
+• Selectează orice dispozitiv Bluetooth asociat ca declanșator pentru redarea automată
+• Foreground service monitorizează evenimentele de conectare ale dispozitivului
+• Reia automat redarea în aplicația media activă la conectare
+• Acceptă Android 8.0 până la Android 15

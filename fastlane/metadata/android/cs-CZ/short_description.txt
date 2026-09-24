@@ -1,0 +1,1 @@
+Automaticky spustí hudbu po připojení auta, sluchátek nebo reproduktorů.
