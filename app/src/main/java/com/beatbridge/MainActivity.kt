@@ -428,7 +428,7 @@ class MainActivity : AppCompatActivity() {
                 "Watching ${selectedNames.first()}"
             selectedAddresses.size == 1 -> "Watching 1 selected device"
             selectedAddresses.size > 1 -> "Watching ${selectedAddresses.size} selected devices"
-            else -> "Choose a Bluetooth device to start"
+            else -> getString(R.string.choose_device)
         }
     }
 

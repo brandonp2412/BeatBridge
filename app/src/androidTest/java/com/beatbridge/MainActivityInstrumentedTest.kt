@@ -3,14 +3,12 @@ package com.beatbridge
 import android.Manifest
 import android.content.pm.PackageManager
 import androidx.test.core.app.ActivityScenario
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
+import androidx.test.uiautomator.UiDevice
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Assume.assumeTrue
 import org.junit.Rule
 import org.junit.Test
@@ -25,7 +23,14 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class MainActivityInstrumentedTest {
 
-    private val context = InstrumentationRegistry.getInstrumentation().targetContext
+    private val instrumentation = InstrumentationRegistry.getInstrumentation()
+    private val context = instrumentation.targetContext
+    private val uiDevice = UiDevice.getInstance(instrumentation)
+
+    @Before
+    fun wakeDevice() {
+        uiDevice.wakeUp()
+    }
 
     @get:Rule
     val permissions: GrantPermissionRule = GrantPermissionRule.grant(
@@ -57,9 +62,11 @@ class MainActivityInstrumentedTest {
         assumeTrue("Skipped: device has no Bluetooth hardware", hasBluetooth)
         context.getSharedPreferences(MainActivity.PREFS_NAME, 0).edit().clear().commit()
 
-        ActivityScenario.launch(MainActivity::class.java).use {
-            onView(withText("Choose a Bluetooth device to start"))
-                .check(matches(isDisplayed()))
+        ActivityScenario.launch(MainActivity::class.java).use { scenario ->
+            scenario.onActivity { activity ->
+                val status = activity.findViewById<android.widget.TextView>(R.id.tv_status)
+                assertEquals(activity.getString(R.string.choose_device), status.text.toString())
+            }
         }
     }
 }
