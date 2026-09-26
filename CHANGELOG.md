@@ -3,6 +3,11 @@
 All notable changes to BeatBridge are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.73] - 2026-09-26
+
+### Changed
+- fix: localize default status and stabilize UI test
+
 ## [1.0.72] - 2026-09-25
 
 ### Changed
