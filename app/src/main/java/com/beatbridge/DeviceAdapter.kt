@@ -29,7 +29,7 @@ class DeviceAdapter(
         val device = filtered[position]
         val isSelected = device.address in selectedAddresses
 
-        holder.binding.tvDeviceName.text = device.name.ifEmpty { "Unknown Device" }
+        holder.binding.tvDeviceName.text = device.name.ifEmpty { holder.itemView.context.getString(R.string.unknown_device) }
         holder.binding.tvDeviceAddress.text = device.address
         holder.binding.ivCheck.visibility = if (isSelected) View.VISIBLE else View.INVISIBLE
         holder.itemView.isSelected = isSelected

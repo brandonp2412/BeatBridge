@@ -423,11 +423,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.tvStatus.text = when {
-            prefs.getBoolean(PREF_ANY_DEVICE, false) -> "Ready for any Bluetooth connection"
+            prefs.getBoolean(PREF_ANY_DEVICE, false) -> getString(R.string.ready_any_bluetooth)
             selectedAddresses.size == 1 && selectedNames.size == 1 ->
-                "Watching ${selectedNames.first()}"
-            selectedAddresses.size == 1 -> "Watching 1 selected device"
-            selectedAddresses.size > 1 -> "Watching ${selectedAddresses.size} selected devices"
+                getString(R.string.watching_device, selectedNames.first())
+            selectedAddresses.size == 1 -> getString(R.string.watching_one_device)
+            selectedAddresses.size > 1 ->
+                getString(R.string.watching_devices, selectedAddresses.size)
             else -> getString(R.string.choose_device)
         }
     }

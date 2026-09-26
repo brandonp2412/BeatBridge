@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">BeatBridge</string>
     <string name="whats_new">What\'s new</string>
     <string name="tagline">Start the right music automatically when Bluetooth connects.</string>
@@ -54,4 +54,10 @@
     <string name="persistent_notification">Persistent notification</string>
     <string name="language">Language</string>
     <string name="system_default">System default</string>
+    <string name="ready_any_bluetooth" tools:ignore="MissingTranslation">Ready for any Bluetooth connection</string>
+    <string name="watching_device" tools:ignore="MissingTranslation">Watching %1$s</string>
+    <string name="watching_one_device" tools:ignore="MissingTranslation">Watching 1 selected device</string>
+    <string name="watching_devices" tools:ignore="MissingTranslation">Watching %1$d selected devices</string>
+    <string name="unknown_device" tools:ignore="MissingTranslation">Unknown device</string>
+    <string name="companion_support_unavailable" tools:ignore="MissingTranslation">Companion device support is unavailable on this phone</string>
 </resources>

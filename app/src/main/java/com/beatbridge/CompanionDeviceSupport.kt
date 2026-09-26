@@ -56,7 +56,7 @@ object CompanionDeviceSupport {
         onFailure: (CharSequence?) -> Unit,
     ) {
         if (!isSupported(activity)) {
-            onFailure("Companion device support is unavailable on this phone")
+            onFailure(activity.getString(R.string.companion_support_unavailable))
             return
         }
 
