@@ -52,4 +52,10 @@
     <string name="choices_channel_name">BeatBridge 기기 선택</string>
     <string name="choices_channel_desc">기기가 연결될 때 수행할 작업을 선택하도록 표시됩니다</string>
     <string name="persistent_notification">고정 알림</string>
+    <string name="ready_any_bluetooth">모든 Bluetooth 연결 대기 중</string>
+    <string name="watching_device">%1$s 모니터링 중</string>
+    <string name="watching_one_device">선택한 기기 1개 모니터링 중</string>
+    <string name="watching_devices">선택한 기기 %1$d개 모니터링 중</string>
+    <string name="unknown_device">알 수 없는 기기</string>
+    <string name="companion_support_unavailable">이 휴대전화에서는 컴패니언 기기 지원을 사용할 수 없습니다</string>
 </resources>
