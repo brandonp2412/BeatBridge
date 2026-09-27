@@ -52,4 +52,10 @@
     <string name="choices_channel_name">BeatBridge デバイス操作</string>
     <string name="choices_channel_desc">デバイス接続時に表示され、実行する動作を選べます</string>
     <string name="persistent_notification">常駐通知</string>
+    <string name="ready_any_bluetooth">すべての Bluetooth 接続を待機中</string>
+    <string name="watching_device">%1$s を監視中</string>
+    <string name="watching_one_device">選択したデバイス 1 台を監視中</string>
+    <string name="watching_devices">選択したデバイス %1$d 台を監視中</string>
+    <string name="unknown_device">不明なデバイス</string>
+    <string name="companion_support_unavailable">このスマートフォンではコンパニオンデバイス機能を利用できません</string>
 </resources>
