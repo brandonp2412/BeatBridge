@@ -52,4 +52,10 @@
     <string name="choices_channel_name">BeatBridge-Geräteoptionen</string>
     <string name="choices_channel_desc">Wird beim Verbinden eines Geräts angezeigt, damit du auswählen kannst, was passiert</string>
     <string name="persistent_notification">Dauerhafte Benachrichtigung</string>
+    <string name="ready_any_bluetooth">Bereit für jede Bluetooth-Verbindung</string>
+    <string name="watching_device">%1$s wird überwacht</string>
+    <string name="watching_one_device">1 ausgewähltes Gerät wird überwacht</string>
+    <string name="watching_devices">%1$d ausgewählte Geräte werden überwacht</string>
+    <string name="unknown_device">Unbekanntes Gerät</string>
+    <string name="companion_support_unavailable">Begleitgeräte werden auf diesem Smartphone nicht unterstützt</string>
 </resources>
