@@ -3,6 +3,11 @@
 All notable changes to BeatBridge are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.80] - 2026-09-27
+
+### Changed
+- feat(l10n): complete Hindi localization
+
 ## [1.0.79] - 2026-09-27
 
 ### Changed
