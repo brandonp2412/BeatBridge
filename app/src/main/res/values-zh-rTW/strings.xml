@@ -53,4 +53,10 @@
     <string name="choices_channel_name">BeatBridge 裝置選項</string>
     <string name="choices_channel_desc">裝置連線時顯示，讓你選擇要執行的動作</string>
     <string name="persistent_notification">常駐通知</string>
+    <string name="ready_any_bluetooth">已準備好接收任何 Bluetooth 連線</string>
+    <string name="watching_device">正在監控 %1$s</string>
+    <string name="watching_one_device">正在監控 1 個已選裝置</string>
+    <string name="watching_devices">正在監控 %1$d 個已選裝置</string>
+    <string name="unknown_device">未知裝置</string>
+    <string name="companion_support_unavailable">此手機不支援配套裝置功能</string>
 </resources>
