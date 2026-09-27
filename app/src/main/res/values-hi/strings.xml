@@ -53,4 +53,10 @@ Android सेटिंग्स में एक डिवाइस पेय�
     <string name="choices_channel_name">BeatBridge डिवाइस विकल्प</string>
     <string name="choices_channel_desc">डिवाइस कनेक्ट होने पर दिखता है ताकि आप चुन सकें कि क्या हो</string>
     <string name="persistent_notification">स्थायी सूचना</string>
+    <string name="ready_any_bluetooth">किसी भी Bluetooth कनेक्शन के लिए तैयार</string>
+    <string name="watching_device">%1$s की निगरानी की जा रही है</string>
+    <string name="watching_one_device">1 चयनित डिवाइस की निगरानी की जा रही है</string>
+    <string name="watching_devices">%1$d चयनित डिवाइसों की निगरानी की जा रही है</string>
+    <string name="unknown_device">अज्ञात डिवाइस</string>
+    <string name="companion_support_unavailable">इस फ़ोन पर कंपैनियन डिवाइस समर्थन उपलब्ध नहीं है</string>
 </resources>
