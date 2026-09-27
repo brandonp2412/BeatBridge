@@ -3,6 +3,11 @@
 All notable changes to BeatBridge are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.77] - 2026-09-27
+
+### Changed
+- feat(l10n): complete Korean localization
+
 ## [1.0.76] - 2026-09-27
 
 ### Changed
