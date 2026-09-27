@@ -52,4 +52,10 @@
     <string name="choices_channel_name">BeatBridge 设备选项</string>
     <string name="choices_channel_desc">设备连接时显示，以便选择接下来执行的操作</string>
     <string name="persistent_notification">常驻通知</string>
+    <string name="ready_any_bluetooth">已准备好响应任意蓝牙连接</string>
+    <string name="watching_device">正在监控 %1$s</string>
+    <string name="watching_one_device">正在监控 1 个已选设备</string>
+    <string name="watching_devices">正在监控 %1$d 个已选设备</string>
+    <string name="unknown_device">未知设备</string>
+    <string name="companion_support_unavailable">此手机不支持配套设备功能</string>
 </resources>
