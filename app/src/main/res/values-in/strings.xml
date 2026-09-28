@@ -52,4 +52,10 @@
     <string name="choices_channel_name">Pilihan Perangkat BeatBridge</string>
     <string name="choices_channel_desc">Ditampilkan saat perangkat terhubung agar Anda dapat memilih tindakan</string>
     <string name="persistent_notification">Notifikasi tetap</string>
+    <string name="ready_any_bluetooth">Siap untuk koneksi Bluetooth apa pun</string>
+    <string name="watching_device">Memantau %1$s</string>
+    <string name="watching_one_device">Memantau 1 perangkat yang dipilih</string>
+    <string name="watching_devices">Memantau %1$d perangkat yang dipilih</string>
+    <string name="unknown_device">Perangkat tidak dikenal</string>
+    <string name="companion_support_unavailable">Dukungan perangkat pendamping tidak tersedia di ponsel ini</string>
 </resources>
