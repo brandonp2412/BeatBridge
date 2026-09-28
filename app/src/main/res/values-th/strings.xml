@@ -52,4 +52,10 @@
     <string name="choices_channel_name">ตัวเลือกอุปกรณ์ BeatBridge</string>
     <string name="choices_channel_desc">แสดงเมื่ออุปกรณ์เชื่อมต่อเพื่อให้คุณเลือกสิ่งที่จะเกิดขึ้น</string>
     <string name="persistent_notification">การแจ้งเตือนแบบถาวร</string>
+    <string name="ready_any_bluetooth">พร้อมสำหรับการเชื่อมต่อ Bluetooth ทุกอุปกรณ์</string>
+    <string name="watching_device">กำลังตรวจสอบ %1$s</string>
+    <string name="watching_one_device">กำลังตรวจสอบอุปกรณ์ที่เลือก 1 เครื่อง</string>
+    <string name="watching_devices">กำลังตรวจสอบอุปกรณ์ที่เลือก %1$d เครื่อง</string>
+    <string name="unknown_device">อุปกรณ์ที่ไม่รู้จัก</string>
+    <string name="companion_support_unavailable">โทรศัพท์เครื่องนี้ไม่รองรับอุปกรณ์คู่หู</string>
 </resources>
