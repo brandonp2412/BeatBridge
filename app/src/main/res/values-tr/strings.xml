@@ -52,4 +52,10 @@
     <string name="choices_channel_name">BeatBridge Cihaz Seçenekleri</string>
     <string name="choices_channel_desc">Bir cihaz bağlandığında ne olacağını seçmeniz için gösterilir</string>
     <string name="persistent_notification">Kalıcı bildirim</string>
+    <string name="ready_any_bluetooth">Herhangi bir Bluetooth bağlantısı için hazır</string>
+    <string name="watching_device">%1$s izleniyor</string>
+    <string name="watching_one_device">Seçili 1 cihaz izleniyor</string>
+    <string name="watching_devices">Seçili %1$d cihaz izleniyor</string>
+    <string name="unknown_device">Bilinmeyen cihaz</string>
+    <string name="companion_support_unavailable">Yardımcı cihaz desteği bu telefonda kullanılamıyor</string>
 </resources>
