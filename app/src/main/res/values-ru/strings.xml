@@ -11,7 +11,7 @@
     <string name="no_paired_devices">Пока нет сопряжённых устройств\nСопрягите устройство в настройках Android и вернитесь сюда.</string>
     <string name="music_apps">Музыкальные приложения</string>
     <string name="open_selected_apps">Открывать выбранные приложения и начинать воспроизведение после подключения.</string>
-    <string name="launch_delay">Задержка запуска · %1$ds</string>
+    <string name="launch_delay">Задержка запуска · %1$d с</string>
     <string name="search_apps">Поиск приложений</string>
     <string name="no_apps_found">Приложения не найдены.</string>
     <string name="about">О приложении</string>
@@ -33,8 +33,8 @@
     <string name="bluetooth_permission_required">Для отображения сопряжённых устройств требуется разрешение Bluetooth</string>
     <string name="overlay_permission_required">Для автоматического запуска приложений требуется разрешение на отображение поверх других приложений</string>
     <string name="background_reliability_enabled">Надёжность фонового подключения включена</string>
-    <string name="companion_setup_skipped">Настройка companion пропущена; обычный мониторинг остаётся активным</string>
-    <string name="companion_setup_unavailable">Настройка companion недоступна: %1$s</string>
+    <string name="companion_setup_skipped">Настройка устройства-компаньона пропущена; обычный мониторинг остаётся активным</string>
+    <string name="companion_setup_unavailable">Настройка устройства-компаньона недоступна: %1$s</string>
     <string name="removed_item">Удалено: %1$s</string>
     <string name="added_item">Добавлено: %1$s</string>
     <string name="removed_app">Удалено приложение %1$s</string>
@@ -52,4 +52,10 @@
     <string name="choices_channel_name">Выбор действий BeatBridge</string>
     <string name="choices_channel_desc">Показывается при подключении устройства, чтобы вы могли выбрать действие</string>
     <string name="persistent_notification">Постоянное уведомление</string>
+    <string name="ready_any_bluetooth">Готово к любому Bluetooth-подключению</string>
+    <string name="watching_device">Отслеживается %1$s</string>
+    <string name="watching_one_device">Выбрано 1 устройство для отслеживания</string>
+    <string name="watching_devices">Выбрано устройств для отслеживания: %1$d</string>
+    <string name="unknown_device">Неизвестное устройство</string>
+    <string name="companion_support_unavailable">Поддержка устройств-компаньонов недоступна на этом телефоне</string>
 </resources>
