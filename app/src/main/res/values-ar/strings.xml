@@ -53,4 +53,10 @@
     <string name="choices_channel_name">خيارات أجهزة BeatBridge</string>
     <string name="choices_channel_desc">يظهر عند اتصال جهاز لكي تختار ما يحدث</string>
     <string name="persistent_notification">إشعار دائم</string>
+    <string name="ready_any_bluetooth">جاهز لأي اتصال Bluetooth</string>
+    <string name="watching_device">تتم مراقبة %1$s</string>
+    <string name="watching_one_device">تتم مراقبة جهاز واحد محدد</string>
+    <string name="watching_devices">تتم مراقبة %1$d من الأجهزة المحددة</string>
+    <string name="unknown_device">جهاز غير معروف</string>
+    <string name="companion_support_unavailable">دعم الجهاز المصاحب غير متاح على هذا الهاتف</string>
 </resources>
