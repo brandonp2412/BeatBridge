@@ -43,6 +43,7 @@ class MainActivityPrefsTest {
             listOf(
                 "en",
                 "ar",
+                "bn",
                 "cs",
                 "de",
                 "es",

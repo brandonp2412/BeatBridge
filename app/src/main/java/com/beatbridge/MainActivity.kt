@@ -469,6 +469,7 @@ class MainActivity : AppCompatActivity() {
         internal val SUPPORTED_LANGUAGE_TAGS = listOf(
             "en",
             "ar",
+            "bn",
             "cs",
             "de",
             "es",
