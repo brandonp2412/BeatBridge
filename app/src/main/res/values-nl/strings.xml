@@ -52,4 +52,10 @@
     <string name="choices_channel_name">BeatBridge-apparaatkeuzes</string>
     <string name="choices_channel_desc">Wordt getoond wanneer een apparaat verbinding maakt zodat u kunt kiezen wat er gebeurt</string>
     <string name="persistent_notification">Permanente melding</string>
+    <string name="ready_any_bluetooth">Gereed voor elke Bluetooth-verbinding</string>
+    <string name="watching_device">%1$s wordt bewaakt</string>
+    <string name="watching_one_device">1 geselecteerd apparaat wordt bewaakt</string>
+    <string name="watching_devices">%1$d geselecteerde apparaten worden bewaakt</string>
+    <string name="unknown_device">Onbekend apparaat</string>
+    <string name="companion_support_unavailable">Ondersteuning voor gekoppelde apparaten is niet beschikbaar op deze telefoon</string>
 </resources>
