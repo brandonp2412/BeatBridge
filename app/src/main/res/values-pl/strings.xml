@@ -52,4 +52,10 @@
     <string name="choices_channel_name">Wybór działania BeatBridge</string>
     <string name="choices_channel_desc">Wyświetlane po połączeniu urządzenia, aby można było wybrać działanie</string>
     <string name="persistent_notification">Stałe powiadomienie</string>
+    <string name="ready_any_bluetooth">Gotowy na każde połączenie Bluetooth</string>
+    <string name="watching_device">Monitorowanie: %1$s</string>
+    <string name="watching_one_device">Monitorowanie 1 wybranego urządzenia</string>
+    <string name="watching_devices">Monitorowanie wybranych urządzeń: %1$d</string>
+    <string name="unknown_device">Nieznane urządzenie</string>
+    <string name="companion_support_unavailable">Obsługa urządzenia towarzyszącego jest niedostępna na tym telefonie</string>
 </resources>

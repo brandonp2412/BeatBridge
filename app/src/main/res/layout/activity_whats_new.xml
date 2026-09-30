@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/bb_surface_variant"
-        app:title="What's New"
+        app:title="@string/whats_new"
         app:titleTextColor="@color/bb_on_surface"
         app:navigationIcon="?attr/homeAsUpIndicator" />
 
