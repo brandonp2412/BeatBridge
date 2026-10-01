@@ -58,6 +58,7 @@ class MainActivityPrefsTest {
                 "nl",
                 "pl",
                 "pt-BR",
+                "pt-PT",
                 "ro",
                 "ru",
                 "th",
