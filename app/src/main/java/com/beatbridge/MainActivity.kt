@@ -487,6 +487,7 @@ class MainActivity : AppCompatActivity() {
             "th",
             "tr",
             "uk",
+            "ur",
             "vi",
             "zh-CN",
             "zh-TW",
