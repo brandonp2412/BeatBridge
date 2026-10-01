@@ -52,4 +52,10 @@
     <string name="choices_channel_name">Вибір дій BeatBridge</string>
     <string name="choices_channel_desc">Відображається під час підключення пристрою, щоб ви могли вибрати дію</string>
     <string name="persistent_notification">Постійне сповіщення</string>
+    <string name="ready_any_bluetooth">Готово до будь-якого підключення Bluetooth</string>
+    <string name="watching_device">Відстеження: %1$s</string>
+    <string name="watching_one_device">Відстежується 1 вибраний пристрій</string>
+    <string name="watching_devices">Відстежуються вибрані пристрої: %1$d</string>
+    <string name="unknown_device">Невідомий пристрій</string>
+    <string name="companion_support_unavailable">Підтримка супутніх пристроїв недоступна на цьому телефоні</string>
 </resources>
