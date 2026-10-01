@@ -1,0 +1,6 @@
+Keluaran awal.
+
+• Pilih mana-mana peranti Bluetooth yang dipasangkan sebagai pencetus main automatik
+• Perkhidmatan latar depan memantau peristiwa sambungan peranti
+• Menyambung semula main balik secara automatik dalam aplikasi media aktif apabila bersambung
+• Menyokong Android 8.0 hingga Android 15

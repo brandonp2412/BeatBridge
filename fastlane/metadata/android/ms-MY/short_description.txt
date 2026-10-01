@@ -1,0 +1,1 @@
+Mainkan muzik secara automatik apabila peranti Bluetooth anda bersambung.

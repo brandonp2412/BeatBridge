@@ -1,0 +1,27 @@
+Jadikan main balik muzik Bluetooth berlaku secara automatik.
+
+BeatBridge menyambung semula muzik apabila peranti Bluetooth yang anda pilih bersambung. Gunakannya dengan kereta, fon kepala, pembesar suara atau mana-mana peranti Bluetooth yang dipasangkan, kemudian teruskan mendengar dalam aplikasi media yang anda sudah gunakan.
+
+CARA IA BERFUNGSI
+
+Pilih peranti Bluetooth yang dipasangkan dan dayakan pemantauan. Apabila peranti itu bersambung, BeatBridge menghantar arahan main media standard Android kepada sesi media yang aktif. Aplikasi muzik, podcast dan buku audio yang serasi kemudian boleh menyambung semula main balik.
+
+CIRI UTAMA
+
+• Mainkan muzik secara automatik apabila peranti Bluetooth yang dipilih bersambung
+• Berfungsi dengan kawalan media Android yang digunakan oleh banyak aplikasi muzik, podcast dan buku audio
+• Pilih antara main balik automatik atau pemberitahuan “Tanya apabila bersambung”
+• Buka aplikasi media atau tetapan audio anda terus daripada pemberitahuan sambungan
+• Cipta profil penyama mengikut peranti
+• Kekalkan pemantauan aktif di latar belakang dengan perkhidmatan latar depan yang ringan
+• Direka untuk mengendalikan peristiwa sambungan Bluetooth dengan cekap tanpa tinjauan berterusan
+
+PRIVASI SEJAK REKA BENTUK
+
+BeatBridge berfungsi di luar talian. Ia tidak mempunyai akaun, iklan, analitik atau akses rangkaian. Peranti yang dipilih dan pilihan anda kekal pada peranti anda.
+
+KEBENARAN
+
+Akses Bluetooth membolehkan BeatBridge menyenaraikan peranti yang dipasangkan dan mengesan sambungan. Perkhidmatan latar depan memastikan pemantauan aktif di latar belakang, manakala pemberitahuan menunjukkan status sambungan dan tindakan pilihan.
+
+BeatBridge ialah perisian sumber terbuka yang dilesenkan di bawah GPLv3.

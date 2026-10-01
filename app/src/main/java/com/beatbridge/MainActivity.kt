@@ -485,6 +485,7 @@ class MainActivity : AppCompatActivity() {
             "it",
             "ja",
             "ko",
+            "ms",
             "nl",
             "pl",
             "pt-BR",
