@@ -364,31 +364,35 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkPermissionsAndLoad() {
+        val shouldPromptNotifications = shouldPromptNotificationPermission(
+            sdkInt = Build.VERSION.SDK_INT,
+            isGranted = Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
+                PackageManager.PERMISSION_GRANTED,
+            wasPrompted = prefs.getBoolean(PREF_NOTIFICATION_PERMISSION_PROMPTED, false),
+        )
+
         if (hasBluetoothPermissions()) {
             loadPairedDevices()
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-                ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) !=
-                    PackageManager.PERMISSION_GRANTED
-            ) {
+            if (shouldPromptNotifications) {
+                prefs.edit { putBoolean(PREF_NOTIFICATION_PERMISSION_PROMPTED, true) }
                 permissionLauncher.launch(arrayOf(Manifest.permission.POST_NOTIFICATIONS))
             }
             return
         }
-        permissionLauncher.launch(buildRequiredPermissions())
+
+        val permissions = requiredBluetoothPermissions(Build.VERSION.SDK_INT).toMutableList()
+        if (shouldPromptNotifications) {
+            prefs.edit { putBoolean(PREF_NOTIFICATION_PERMISSION_PROMPTED, true) }
+            permissions.add(Manifest.permission.POST_NOTIFICATIONS)
+        }
+        permissionLauncher.launch(permissions.toTypedArray())
     }
 
     private fun hasBluetoothPermissions(): Boolean =
         requiredBluetoothPermissions(Build.VERSION.SDK_INT).all {
             ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
         }
-
-    private fun buildRequiredPermissions(): Array<String> {
-        val perms = requiredBluetoothPermissions(Build.VERSION.SDK_INT).toMutableList()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            perms.add(Manifest.permission.POST_NOTIFICATIONS)
-        }
-        return perms.toTypedArray()
-    }
 
     @SuppressLint("MissingPermission")
     private fun loadPairedDevices() {
@@ -465,6 +469,7 @@ class MainActivity : AppCompatActivity() {
         const val PREF_DEVICE_APPS_PREFIX = "device_apps_"
         const val PREF_DEVICE_ASK_PREFIX = "device_ask_"
         const val PREF_DEVICE_EQ_PREFIX = "device_eq_"
+        const val PREF_NOTIFICATION_PERMISSION_PROMPTED = "notification_permission_prompted"
 
         internal val SUPPORTED_LANGUAGE_TAGS = listOf(
             "en",
@@ -500,6 +505,13 @@ class MainActivity : AppCompatActivity() {
             } else {
                 listOf(Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN)
             }
+
+        internal fun shouldPromptNotificationPermission(
+            sdkInt: Int,
+            isGranted: Boolean,
+            wasPrompted: Boolean,
+        ): Boolean =
+            sdkInt >= Build.VERSION_CODES.TIRAMISU && !isGranted && !wasPrompted
 
         internal fun shouldMonitor(
             hasBluetoothPermissions: Boolean,

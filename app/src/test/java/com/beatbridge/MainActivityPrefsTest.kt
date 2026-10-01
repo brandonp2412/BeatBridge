@@ -83,6 +83,42 @@ class MainActivityPrefsTest {
     }
 
     @Test
+    fun notificationPermissionPrompt_isOnlyShownOnceOnAndroid13Plus() {
+        assertEquals(
+            true,
+            MainActivity.shouldPromptNotificationPermission(
+                sdkInt = Build.VERSION_CODES.TIRAMISU,
+                isGranted = false,
+                wasPrompted = false,
+            )
+        )
+        assertEquals(
+            false,
+            MainActivity.shouldPromptNotificationPermission(
+                sdkInt = Build.VERSION_CODES.TIRAMISU,
+                isGranted = false,
+                wasPrompted = true,
+            )
+        )
+        assertEquals(
+            false,
+            MainActivity.shouldPromptNotificationPermission(
+                sdkInt = Build.VERSION_CODES.TIRAMISU,
+                isGranted = true,
+                wasPrompted = false,
+            )
+        )
+        assertEquals(
+            false,
+            MainActivity.shouldPromptNotificationPermission(
+                sdkInt = Build.VERSION_CODES.S,
+                isGranted = false,
+                wasPrompted = false,
+            )
+        )
+    }
+
+    @Test
     fun preAndroid12BluetoothRequirements_includeLegacyPermissions() {
         val permissions = MainActivity.requiredBluetoothPermissions(Build.VERSION_CODES.R)
 
@@ -176,11 +212,12 @@ class MainActivityPrefsTest {
             MainActivity.PREF_LAUNCH_DELAY,
             MainActivity.PREF_DEVICE_APPS_PREFIX,
             MainActivity.PREF_DEVICE_ASK_PREFIX,
-            MainActivity.PREF_DEVICE_EQ_PREFIX
+            MainActivity.PREF_DEVICE_EQ_PREFIX,
+            MainActivity.PREF_NOTIFICATION_PERMISSION_PROMPTED,
         )
         assertEquals(
             "Preference keys must be unique to avoid collisions in SharedPreferences",
-            7, keys.size
+            8, keys.size
         )
     }
 }
