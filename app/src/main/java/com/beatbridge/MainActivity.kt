@@ -473,6 +473,7 @@ class MainActivity : AppCompatActivity() {
             "cs",
             "de",
             "es",
+            "fa",
             "fr",
             "hi",
             "id",

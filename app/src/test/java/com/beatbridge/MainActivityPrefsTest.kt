@@ -47,6 +47,7 @@ class MainActivityPrefsTest {
                 "cs",
                 "de",
                 "es",
+                "fa",
                 "fr",
                 "hi",
                 "id",
