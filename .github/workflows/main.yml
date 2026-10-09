@@ -67,8 +67,10 @@ jobs:
           echo "should_release=true" >> "$GITHUB_OUTPUT"
 
   build-and-test:
+    needs: release-gate
+    if: ${{ !cancelled() && (github.event_name != 'schedule' || needs.release-gate.outputs.should_release == 'true') && (github.event_name != 'push' || !contains(github.event.head_commit.message, '[release-bump]')) }}
     name: Build & Unit Test
-    if: github.event_name != 'push' || !contains(github.event.head_commit.message, '[release-bump]')
+
     runs-on: ubuntu-latest
 
     steps:
@@ -109,8 +111,10 @@ jobs:
           retention-days: 7
 
   instrumented-e2e:
+    needs: release-gate
+    if: ${{ !cancelled() && (github.event_name != 'schedule' || needs.release-gate.outputs.should_release == 'true') && (github.event_name != 'push' || !contains(github.event.head_commit.message, '[release-bump]')) }}
     name: E2E & Screenshots
-    if: github.event_name != 'push' || !contains(github.event.head_commit.message, '[release-bump]')
+
     runs-on: ubuntu-latest
 
     steps:
