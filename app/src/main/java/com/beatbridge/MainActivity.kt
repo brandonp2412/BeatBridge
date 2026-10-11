@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
@@ -119,13 +120,21 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, WhatsNewActivity::class.java))
         }
         binding.tvSourceCode.setOnClickListener {
-            startActivity(Intent(Intent.ACTION_VIEW, "https://github.com/brandonp2412/BeatBridge".toUri()))
+            openExternalLink("https://github.com/brandonp2412/BeatBridge")
         }
         binding.tvDonate.setOnClickListener {
-            startActivity(Intent(Intent.ACTION_VIEW, "https://github.com/sponsors/brandonp2412".toUri()))
+            openExternalLink("https://github.com/sponsors/brandonp2412")
         }
 
         syncMonitorService()
+    }
+
+    private fun openExternalLink(url: String) {
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
+        } catch (_: ActivityNotFoundException) {
+            Toast.makeText(this, R.string.external_link_unavailable, Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun loadMusicApps() {

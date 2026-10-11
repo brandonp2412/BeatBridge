@@ -60,4 +60,5 @@
     <string name="watching_devices" tools:ignore="MissingTranslation">Watching %1$d selected devices</string>
     <string name="unknown_device" tools:ignore="MissingTranslation">Unknown device</string>
     <string name="companion_support_unavailable" tools:ignore="MissingTranslation">Companion device support is unavailable on this phone</string>
+    <string name="external_link_unavailable" tools:ignore="MissingTranslation">No application available to open this link</string>
 </resources>
