@@ -49,3 +49,6 @@ $RECYCLE.BIN/
 *.keystore
 keystore.properties
 key.properties
+
+# Local Serena agent state
+.serena/
