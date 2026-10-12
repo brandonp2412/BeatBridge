@@ -3,6 +3,29 @@
 All notable changes to BeatBridge are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.81] - 2026-10-12
+
+### Changed
+- Merge remote-tracking branch 'origin/main' into integrate/play-audit-beatbridge-20261011
+- fix(android): avoid crashes when no browser handles links
+- fix(ci): respect fortnightly release gate for checks
+- feat(l10n): complete European Portuguese localization
+- feat(l10n): complete Ukrainian localization
+- feat(l10n): complete Malay localization
+- fix: avoid repeated notification permission prompts
+- feat(l10n): complete Persian localization
+- feat(l10n): complete Urdu localization
+- feat(l10n): complete Bengali localization
+- feat(l10n): complete Italian localization
+- feat(l10n): complete Dutch localization
+- feat(l10n): complete Polish localization
+- feat(l10n): complete Thai localization
+- feat(l10n): complete Turkish localization
+- feat(l10n): complete Indonesian localization
+- feat(l10n): complete Russian localization
+- feat(l10n): complete Arabic localization
+- ci: release on a fortnightly cadence
+
 ## [1.0.80] - 2026-09-27
 
 ### Changed

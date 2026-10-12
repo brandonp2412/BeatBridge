@@ -1,0 +1,10 @@
+• feat(l10n): complete Arabic localization
+• feat(l10n): complete Bengali localization
+• feat(l10n): complete Dutch localization
+• feat(l10n): complete European Portuguese localization
+• feat(l10n): complete Indonesian localization
+• feat(l10n): complete Italian localization
+• feat(l10n): complete Malay localization
+• feat(l10n): complete Persian localization
+• feat(l10n): complete Polish localization
+• feat(l10n): complete Russian localization
