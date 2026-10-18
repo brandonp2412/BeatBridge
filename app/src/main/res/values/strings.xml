@@ -1,6 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">BeatBridge</string>
     <string name="whats_new">What\'s new</string>
+    <string name="new_version_available" tools:ignore="MissingTranslation">New version %1$s</string>
     <string name="tagline">Start the right music automatically when Bluetooth connects.</string>
     <string name="choose_device">Choose a Bluetooth device to start</string>
     <string name="any_bluetooth_device">Any Bluetooth device</string>
