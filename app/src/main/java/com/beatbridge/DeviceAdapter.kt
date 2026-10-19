@@ -13,7 +13,7 @@ class DeviceAdapter(
     private val devices: List<BtDevice>,
     private var selectedAddresses: Set<String>,
     private val onSelect: (BtDevice) -> Unit,
-    private val onConfigure: (BtDevice) -> Unit = {}
+    private val onConfigure: (BtDevice) -> Unit
 ) : RecyclerView.Adapter<DeviceAdapter.ViewHolder>() {
 
     private var filtered = devices.toMutableList()
