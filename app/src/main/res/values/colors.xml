@@ -1,6 +1,5 @@
 <resources>
     <color name="bb_primary">#FF6750A4</color>
-    <color name="bb_primary_dark">#FF4F378B</color>
     <color name="bb_on_primary">#FFFFFFFF</color>
     <color name="bb_primary_container">#FFEADDFF</color>
     <color name="bb_on_primary_container">#FF21005D</color>
@@ -15,11 +14,4 @@
     <color name="bb_outline_variant">#FFE7E0EC</color>
     <color name="bb_divider">#1F1D1B20</color>
     <color name="bb_selected_fill">#146750A4</color>
-    <color name="purple_200">#FFD0BCFF</color>
-    <color name="purple_500">#FF6750A4</color>
-    <color name="purple_700">#FF4F378B</color>
-    <color name="teal_200">#FFCCC2DC</color>
-    <color name="teal_700">#FF625B71</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
 </resources>
