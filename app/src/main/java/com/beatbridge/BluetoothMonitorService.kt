@@ -212,14 +212,14 @@ class BluetoothMonitorService : Service() {
         step(0)
     }
 
-    private fun launchApp(packageName: String): Boolean {
+    private fun launchApp(packageName: String) {
         val launchIntent = packageManager.getLaunchIntentForPackage(packageName) ?: run {
             Log.w(TAG, "No launch intent for $packageName")
-            return false
+            return
         }
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
-        return try {
+        try {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                 val backgroundStartMode = if (android.os.Build.VERSION.SDK_INT >= 36) {
                     ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOW_ALWAYS
@@ -245,10 +245,8 @@ class BluetoothMonitorService : Service() {
                 startActivity(launchIntent)
             }
             Log.i(TAG, "Launch requested for $packageName")
-            true
         } catch (e: Exception) {
             Log.w(TAG, "Launch failed for $packageName", e)
-            false
         }
     }
 
