@@ -48,8 +48,6 @@ Android সেটিংসে একটি ডিভাইস পেয়ার
     <string name="audio_settings">অডিও সেটিংস</string>
     <string name="monitor_channel_name">BeatBridge মনিটর</string>
     <string name="monitor_channel_desc">আপনার পেয়ার করা ডিভাইস শনাক্ত করতে ব্যাকগ্রাউন্ডে চলছে</string>
-    <string name="launch_channel_name">BeatBridge অ্যাপ চালু</string>
-    <string name="launch_channel_desc">আপনার মিউজিক অ্যাপ চালু করার সময় অল্প সময়ের জন্য দেখানো হয়</string>
     <string name="choices_channel_name">BeatBridge ডিভাইস পছন্দ</string>
     <string name="choices_channel_desc">ডিভাইস সংযুক্ত হলে দেখানো হয়, যাতে আপনি কী হবে তা বেছে নিতে পারেন</string>
     <string name="persistent_notification">স্থায়ী বিজ্ঞপ্তি</string>

@@ -48,8 +48,6 @@ Android سیٹنگز میں ایک ڈیوائس پیئر کریں، پھر یہ�
     <string name="audio_settings">آڈیو سیٹنگز</string>
     <string name="monitor_channel_name">BeatBridge مانیٹر</string>
     <string name="monitor_channel_desc">آپ کی پیئر کی گئی ڈیوائس کا پتہ لگانے کے لیے پس منظر میں چل رہا ہے</string>
-    <string name="launch_channel_name">BeatBridge ایپ لانچ</string>
-    <string name="launch_channel_desc">آپ کی موسیقی کی ایپ لانچ کرتے وقت مختصر طور پر دکھایا جاتا ہے</string>
     <string name="choices_channel_name">BeatBridge ڈیوائس انتخاب</string>
     <string name="choices_channel_desc">ڈیوائس منسلک ہونے پر دکھایا جاتا ہے تاکہ آپ منتخب کر سکیں کہ کیا ہو</string>
     <string name="persistent_notification">مستقل اطلاع</string>

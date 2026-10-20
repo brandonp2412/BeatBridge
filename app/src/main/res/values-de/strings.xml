@@ -47,8 +47,6 @@
     <string name="audio_settings">Audioeinstellungen</string>
     <string name="monitor_channel_name">BeatBridge-Überwachung</string>
     <string name="monitor_channel_desc">Läuft im Hintergrund, um dein gekoppeltes Gerät zu erkennen</string>
-    <string name="launch_channel_name">BeatBridge-App-Start</string>
-    <string name="launch_channel_desc">Wird beim Starten deiner Musik-App kurz angezeigt</string>
     <string name="choices_channel_name">BeatBridge-Geräteoptionen</string>
     <string name="choices_channel_desc">Wird beim Verbinden eines Geräts angezeigt, damit du auswählen kannst, was passiert</string>
     <string name="persistent_notification">Dauerhafte Benachrichtigung</string>

@@ -47,8 +47,6 @@
     <string name="audio_settings">오디오 설정</string>
     <string name="monitor_channel_name">BeatBridge 모니터</string>
     <string name="monitor_channel_desc">페어링된 기기를 감지하기 위해 백그라운드에서 실행됩니다</string>
-    <string name="launch_channel_name">BeatBridge 앱 실행</string>
-    <string name="launch_channel_desc">음악 앱을 실행할 때 잠시 표시됩니다</string>
     <string name="choices_channel_name">BeatBridge 기기 선택</string>
     <string name="choices_channel_desc">기기가 연결될 때 수행할 작업을 선택하도록 표시됩니다</string>
     <string name="persistent_notification">고정 알림</string>

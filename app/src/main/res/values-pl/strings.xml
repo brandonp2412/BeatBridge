@@ -47,8 +47,6 @@
     <string name="audio_settings">Ustawienia dźwięku</string>
     <string name="monitor_channel_name">Monitor BeatBridge</string>
     <string name="monitor_channel_desc">Działa w tle, aby wykrywać sparowane urządzenie</string>
-    <string name="launch_channel_name">Uruchamianie aplikacji BeatBridge</string>
-    <string name="launch_channel_desc">Wyświetlane krótko podczas uruchamiania aplikacji muzycznej</string>
     <string name="choices_channel_name">Wybór działania BeatBridge</string>
     <string name="choices_channel_desc">Wyświetlane po połączeniu urządzenia, aby można było wybrać działanie</string>
     <string name="persistent_notification">Stałe powiadomienie</string>

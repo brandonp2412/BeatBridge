@@ -47,8 +47,6 @@
     <string name="audio_settings">Ses ayarları</string>
     <string name="monitor_channel_name">BeatBridge İzleyici</string>
     <string name="monitor_channel_desc">Eşleştirilmiş cihazınızı algılamak için arka planda çalışır</string>
-    <string name="launch_channel_name">BeatBridge Uygulama Başlatma</string>
-    <string name="launch_channel_desc">Müzik uygulamanız başlatılırken kısa süre gösterilir</string>
     <string name="choices_channel_name">BeatBridge Cihaz Seçenekleri</string>
     <string name="choices_channel_desc">Bir cihaz bağlandığında ne olacağını seçmeniz için gösterilir</string>
     <string name="persistent_notification">Kalıcı bildirim</string>

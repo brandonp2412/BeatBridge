@@ -48,8 +48,6 @@
     <string name="audio_settings">音訊設定</string>
     <string name="monitor_channel_name">BeatBridge 監控</string>
     <string name="monitor_channel_desc">在背景執行以偵測已配對的裝置</string>
-    <string name="launch_channel_name">BeatBridge 應用程式啟動</string>
-    <string name="launch_channel_desc">啟動音樂應用程式時短暫顯示</string>
     <string name="choices_channel_name">BeatBridge 裝置選項</string>
     <string name="choices_channel_desc">裝置連線時顯示，讓你選擇要執行的動作</string>
     <string name="persistent_notification">常駐通知</string>

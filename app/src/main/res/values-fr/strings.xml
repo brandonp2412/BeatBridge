@@ -47,8 +47,6 @@
     <string name="audio_settings">Paramètres audio</string>
     <string name="monitor_channel_name">Surveillance BeatBridge</string>
     <string name="monitor_channel_desc">Fonctionne en arrière-plan pour détecter votre appareil jumelé</string>
-    <string name="launch_channel_name">Lancement d’application BeatBridge</string>
-    <string name="launch_channel_desc">S’affiche brièvement lors du lancement de votre application musicale</string>
     <string name="choices_channel_name">Choix d’appareil BeatBridge</string>
     <string name="choices_channel_desc">S’affiche à la connexion d’un appareil pour vous laisser choisir l’action</string>
     <string name="persistent_notification">Notification persistante</string>

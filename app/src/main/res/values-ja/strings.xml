@@ -47,8 +47,6 @@
     <string name="audio_settings">音声設定</string>
     <string name="monitor_channel_name">BeatBridge モニター</string>
     <string name="monitor_channel_desc">ペア設定済みデバイスを検出するためバックグラウンドで動作します</string>
-    <string name="launch_channel_name">BeatBridge アプリ起動</string>
-    <string name="launch_channel_desc">音楽アプリの起動時に短時間表示されます</string>
     <string name="choices_channel_name">BeatBridge デバイス操作</string>
     <string name="choices_channel_desc">デバイス接続時に表示され、実行する動作を選べます</string>
     <string name="persistent_notification">常駐通知</string>
