@@ -19,8 +19,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
+import androidx.core.content.pm.PackageInfoCompat
 import androidx.core.os.LocaleListCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import java.util.Locale
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.beatbridge.databinding.ActivityMainBinding
@@ -126,6 +128,30 @@ class MainActivity : AppCompatActivity() {
         }
 
         syncMonitorService()
+        showUpgradeNotice()
+    }
+
+    private fun showUpgradeNotice() {
+        val info = packageManager.getPackageInfo(packageName, 0)
+        val build = PackageInfoCompat.getLongVersionCode(info)
+        val previous = if (prefs.contains(PREF_LAST_BUILD)) prefs.getLong(PREF_LAST_BUILD, 0) else null
+        if (previous == null || build > previous) {
+            prefs.edit { putLong(PREF_LAST_BUILD, build) }
+        }
+        val now = System.currentTimeMillis()
+        val lastShown = if (prefs.contains(PREF_LAST_UPDATE_NOTICE)) {
+            prefs.getLong(PREF_LAST_UPDATE_NOTICE, 0)
+        } else null
+        if (!UpdateNotice.shouldShow(previous, build, lastShown, now)) return
+
+        prefs.edit(commit = true) { putLong(PREF_LAST_UPDATE_NOTICE, now) }
+        Snackbar.make(
+            binding.root,
+            getString(R.string.new_version_available, info.versionName.orEmpty()),
+            Snackbar.LENGTH_LONG,
+        ).setAction(R.string.whats_new) {
+            startActivity(Intent(this, WhatsNewActivity::class.java))
+        }.show()
     }
 
     private fun openExternalLink(url: String) {
@@ -458,6 +484,8 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val PREFS_NAME = "beatbridge_prefs"
+        const val PREF_LAST_BUILD = "last_seen_build_number"
+        const val PREF_LAST_UPDATE_NOTICE = "last_update_notice_ms"
         const val PREF_SELECTED_DEVICES = "selected_device_addresses"
         const val PREF_SELECTED_APPS = "selected_app_packages"
         const val PREF_ANY_DEVICE = "any_device"
