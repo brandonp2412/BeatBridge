@@ -101,7 +101,7 @@ class BluetoothMonitorService : Service() {
         if (anyDevice && !isAudioDevice(device)) return
         if (!anyDevice) {
             val selectedAddresses = prefs.getStringSet(MainActivity.PREF_SELECTED_DEVICES, emptySet()) ?: emptySet()
-            if (selectedAddresses.isEmpty() || device.address !in selectedAddresses) return
+            if (device.address !in selectedAddresses) return
         }
 
         Log.i(TAG, "Handling configured device connection: ${device.address}")
