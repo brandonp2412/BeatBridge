@@ -415,9 +415,7 @@ class MainActivity : AppCompatActivity() {
 
         val selectedAddresses = prefs.getStringSet(PREF_SELECTED_DEVICES, emptySet()) ?: emptySet()
         selectedAddresses.forEach { address ->
-            if (CompanionDeviceSupport.isAssociated(this, address)) {
-                CompanionDeviceSupport.startObserving(this, address)
-            }
+            CompanionDeviceSupport.startObserving(this, address)
         }
 
         val isEmpty = deviceList.isEmpty()
