@@ -47,8 +47,6 @@
     <string name="audio_settings">Nastavení zvuku</string>
     <string name="monitor_channel_name">Sledování BeatBridge</string>
     <string name="monitor_channel_desc">Běží na pozadí a zjišťuje vaše spárované zařízení</string>
-    <string name="launch_channel_name">Spouštění aplikace BeatBridge</string>
-    <string name="launch_channel_desc">Krátce se zobrazí při spouštění hudební aplikace</string>
     <string name="choices_channel_name">Volby zařízení BeatBridge</string>
     <string name="choices_channel_desc">Zobrazí se při připojení zařízení, abyste mohli zvolit další akci</string>
     <string name="persistent_notification">Trvalé oznámení</string>

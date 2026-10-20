@@ -64,7 +64,6 @@ class BluetoothMonitorService : Service() {
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
-        createLaunchNotificationChannel()
         createActionsNotificationChannel()
         startForeground(NOTIFICATION_ID, buildNotification())
         val filter = IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED).apply {
@@ -268,17 +267,6 @@ class BluetoothMonitorService : Service() {
         getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
     }
 
-    private fun createLaunchNotificationChannel() {
-        val channel = NotificationChannel(
-            LAUNCH_CHANNEL_ID,
-            getString(R.string.launch_channel_name),
-            NotificationManager.IMPORTANCE_HIGH
-        ).apply {
-            description = getString(R.string.launch_channel_desc)
-        }
-        getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
-    }
-
     private fun createActionsNotificationChannel() {
         val channel = NotificationChannel(
             ACTIONS_CHANNEL_ID,
@@ -356,7 +344,6 @@ class BluetoothMonitorService : Service() {
     companion object {
         private const val TAG = "BeatBridge"
         private const val CHANNEL_ID = "beatbridge_monitor"
-        private const val LAUNCH_CHANNEL_ID = "beatbridge_launch"
         private const val ACTIONS_CHANNEL_ID = "beatbridge_device_actions"
         private const val NOTIFICATION_ID = 1
         const val ACTIONS_NOTIFICATION_ID = 2

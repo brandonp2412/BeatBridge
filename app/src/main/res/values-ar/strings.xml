@@ -48,8 +48,6 @@
     <string name="audio_settings">إعدادات الصوت</string>
     <string name="monitor_channel_name">مراقب BeatBridge</string>
     <string name="monitor_channel_desc">يعمل في الخلفية لاكتشاف جهازك المقترن</string>
-    <string name="launch_channel_name">تشغيل تطبيق BeatBridge</string>
-    <string name="launch_channel_desc">يظهر لفترة وجيزة عند تشغيل تطبيق الموسيقى</string>
     <string name="choices_channel_name">خيارات أجهزة BeatBridge</string>
     <string name="choices_channel_desc">يظهر عند اتصال جهاز لكي تختار ما يحدث</string>
     <string name="persistent_notification">إشعار دائم</string>

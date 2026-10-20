@@ -47,8 +47,6 @@
     <string name="audio_settings">Tetapan audio</string>
     <string name="monitor_channel_name">Pemantau BeatBridge</string>
     <string name="monitor_channel_desc">Berjalan di latar belakang untuk mengesan peranti yang dipasangkan</string>
-    <string name="launch_channel_name">Pelancaran Aplikasi BeatBridge</string>
-    <string name="launch_channel_desc">Dipaparkan sebentar semasa melancarkan aplikasi muzik anda</string>
     <string name="choices_channel_name">Pilihan Peranti BeatBridge</string>
     <string name="choices_channel_desc">Dipaparkan apabila peranti disambungkan supaya anda boleh memilih tindakan yang akan berlaku</string>
     <string name="persistent_notification">Pemberitahuan berterusan</string>

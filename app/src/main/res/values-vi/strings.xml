@@ -48,8 +48,6 @@ Hãy ghép đôi một thiết bị trong Cài đặt Android rồi quay lại �
     <string name="audio_settings">Cài đặt âm thanh</string>
     <string name="monitor_channel_name">Giám sát BeatBridge</string>
     <string name="monitor_channel_desc">Chạy trong nền để phát hiện thiết bị đã ghép đôi của bạn</string>
-    <string name="launch_channel_name">Khởi chạy ứng dụng BeatBridge</string>
-    <string name="launch_channel_desc">Hiển thị nhanh khi mở ứng dụng nhạc của bạn</string>
     <string name="choices_channel_name">Lựa chọn thiết bị BeatBridge</string>
     <string name="choices_channel_desc">Hiển thị khi thiết bị kết nối để bạn chọn điều sẽ xảy ra</string>
     <string name="persistent_notification">Thông báo cố định</string>

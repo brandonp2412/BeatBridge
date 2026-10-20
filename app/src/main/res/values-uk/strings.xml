@@ -47,8 +47,6 @@
     <string name="audio_settings">Налаштування звуку</string>
     <string name="monitor_channel_name">Моніторинг BeatBridge</string>
     <string name="monitor_channel_desc">Працює у фоні, щоб виявляти ваш спарений пристрій</string>
-    <string name="launch_channel_name">Запуск застосунку BeatBridge</string>
-    <string name="launch_channel_desc">Коротко відображається під час запуску музичного застосунку</string>
     <string name="choices_channel_name">Вибір дій BeatBridge</string>
     <string name="choices_channel_desc">Відображається під час підключення пристрою, щоб ви могли вибрати дію</string>
     <string name="persistent_notification">Постійне сповіщення</string>

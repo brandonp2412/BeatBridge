@@ -47,8 +47,6 @@
     <string name="audio_settings">การตั้งค่าเสียง</string>
     <string name="monitor_channel_name">การตรวจสอบ BeatBridge</string>
     <string name="monitor_channel_desc">ทำงานเบื้องหลังเพื่อตรวจหาอุปกรณ์ที่จับคู่ของคุณ</string>
-    <string name="launch_channel_name">การเปิดแอป BeatBridge</string>
-    <string name="launch_channel_desc">แสดงชั่วครู่เมื่อเปิดแอปเพลงของคุณ</string>
     <string name="choices_channel_name">ตัวเลือกอุปกรณ์ BeatBridge</string>
     <string name="choices_channel_desc">แสดงเมื่ออุปกรณ์เชื่อมต่อเพื่อให้คุณเลือกสิ่งที่จะเกิดขึ้น</string>
     <string name="persistent_notification">การแจ้งเตือนแบบถาวร</string>

@@ -47,8 +47,6 @@
     <string name="audio_settings">Configurações de áudio</string>
     <string name="monitor_channel_name">Monitor do BeatBridge</string>
     <string name="monitor_channel_desc">Executa em segundo plano para detectar seu dispositivo pareado</string>
-    <string name="launch_channel_name">Inicialização de apps do BeatBridge</string>
-    <string name="launch_channel_desc">Exibido brevemente ao iniciar seu app de música</string>
     <string name="choices_channel_name">Opções de dispositivo do BeatBridge</string>
     <string name="choices_channel_desc">Exibido quando um dispositivo se conecta para você escolher o que acontece</string>
     <string name="persistent_notification">Notificação persistente</string>

@@ -47,8 +47,6 @@
     <string name="audio_settings">音频设置</string>
     <string name="monitor_channel_name">BeatBridge 监控</string>
     <string name="monitor_channel_desc">在后台运行以检测已配对设备</string>
-    <string name="launch_channel_name">BeatBridge 应用启动</string>
-    <string name="launch_channel_desc">启动音乐应用时短暂显示</string>
     <string name="choices_channel_name">BeatBridge 设备选项</string>
     <string name="choices_channel_desc">设备连接时显示，以便选择接下来执行的操作</string>
     <string name="persistent_notification">常驻通知</string>

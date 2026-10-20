@@ -48,8 +48,6 @@
     <string name="audio_settings">تنظیمات صدا</string>
     <string name="monitor_channel_name">پایش BeatBridge</string>
     <string name="monitor_channel_desc">برای شناسایی دستگاه جفت‌شده شما در پس‌زمینه اجرا می‌شود</string>
-    <string name="launch_channel_name">اجرای برنامه BeatBridge</string>
-    <string name="launch_channel_desc">هنگام اجرای برنامه موسیقی شما برای مدت کوتاهی نمایش داده می‌شود</string>
     <string name="choices_channel_name">انتخاب‌های دستگاه BeatBridge</string>
     <string name="choices_channel_desc">هنگام اتصال دستگاه نمایش داده می‌شود تا بتوانید انتخاب کنید چه اتفاقی بیفتد</string>
     <string name="persistent_notification">اعلان دائمی</string>

@@ -47,8 +47,6 @@
     <string name="audio_settings">Setări audio</string>
     <string name="monitor_channel_name">Monitorizare BeatBridge</string>
     <string name="monitor_channel_desc">Rulează în fundal pentru a detecta dispozitivul asociat</string>
-    <string name="launch_channel_name">Lansare aplicație BeatBridge</string>
-    <string name="launch_channel_desc">Afișat pentru scurt timp la lansarea aplicației de muzică</string>
     <string name="choices_channel_name">Opțiuni dispozitiv BeatBridge</string>
     <string name="choices_channel_desc">Afișat când se conectează un dispozitiv ca să poți alege ce urmează</string>
     <string name="persistent_notification">Notificare persistentă</string>
