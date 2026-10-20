@@ -11,8 +11,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
@@ -28,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.beatbridge.databinding.ActivityMainBinding
 import androidx.core.content.edit
 import androidx.core.net.toUri
+import androidx.core.widget.doAfterTextChanged
 
 class MainActivity : AppCompatActivity() {
 
@@ -138,8 +137,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadMusicApps() {
-        musicAppList.clear()
-
         val launchIntent = Intent(Intent.ACTION_MAIN, null).apply {
             addCategory(Intent.CATEGORY_LAUNCHER)
         }
@@ -172,20 +169,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupSearch() {
-        binding.etDeviceSearch.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable?) {
-                deviceAdapter.filter(s?.toString() ?: "")
-            }
-        })
-        binding.etAppSearch.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable?) {
-                appAdapter.filter(s?.toString() ?: "")
-            }
-        })
+        binding.etDeviceSearch.doAfterTextChanged { s ->
+            deviceAdapter.filter(s?.toString() ?: "")
+        }
+        binding.etAppSearch.doAfterTextChanged { s ->
+            appAdapter.filter(s?.toString() ?: "")
+        }
     }
 
     private fun setupAppRecyclerView() {
