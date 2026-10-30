@@ -1,0 +1,2 @@
+• Show upgrade changelog snackbar no more than every 14 days
+• merge: reconcile cross-host project histories

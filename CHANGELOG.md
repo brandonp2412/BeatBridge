@@ -3,6 +3,26 @@
 All notable changes to BeatBridge are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.82] - 2026-10-30
+
+### Changed
+- ci: validate main pushes and require manual releases
+- merge: reconcile cross-host project histories
+- chore: remove redundant main window background (#31)
+- chore: prune no-op search listener callbacks (#30)
+- chore: remove duplicate companion association check (#28)
+- chore: remove unused launch notification channel (#27)
+- chore: deduplicate identical Android launcher icons (#26)
+- chore: drop redundant empty selected-device guard (#29)
+- chore: remove unused device-configure callback default (#24)
+- chore: remove unused color resources (#21)
+- chore: remove unused View import (#22)
+- chore: remove unused app-launch return values (#23)
+- chore: remove redundant companion support precondition (#25)
+- Show upgrade changelog snackbar no more than every 14 days
+- chore: upgrade Android tooling and libraries
+- chore: stop tracking Serena project files
+
 ## [1.0.81] - 2026-10-12
 
 ### Changed
