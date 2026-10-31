@@ -1,1 +1,1 @@
-• Preserve Nox BeatBridge worktree fixes
+• Preserve earlier BeatBridge fixes
