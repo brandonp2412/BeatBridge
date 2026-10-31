@@ -195,7 +195,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 - Merge remote-tracking branch 'origin/main'
-- Preserve Nox BeatBridge worktree fixes
+- Preserve existing BeatBridge worktree fixes
 
 ## [1.0.55] - 2026-09-10
 
