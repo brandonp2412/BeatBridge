@@ -3,6 +3,14 @@
 All notable changes to BeatBridge are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.83] - 2026-11-01
+
+### Changed
+- fix(android): normalize companion callbacks verified on Samsung
+- fix(android): handle restricted foreground service starts
+- docs: remove internal device reference from changelog
+- docs: remove internal device identifiers from public text
+
 ## [1.0.82] - 2026-10-30
 
 ### Changed
