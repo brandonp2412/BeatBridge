@@ -1,0 +1,41 @@
+Samsung verification, 2026-11-01 (Pacific/Auckland)
+
+Base source: 81d67c4ab9dc2dd718f5f9449921a4b81d5eb5fc
+Device: Samsung Galaxy S25 (SM-S931B), Android 17.
+Installed release: com.beatbridge, 1.0.82, versionCode 8203.
+Install: adb install -r; succeeded. No uninstall or data clearing.
+Original firstInstallTime remained 2026-09-19 08:25:06.
+Final installed APK matches the built release by SHA-256:
+c99d8c53e6734d6f8daa94d1106486a98cf0e0fd598dc1e772c2455f1d72ba13
+
+Buildq tasks 3232 and 3243 passed Gradle unit tests and release assembly.
+All 22 unit tests passed (initial task reused Gradle's cached results).
+Task 3243 also assembled the Android test APK.
+
+Samsung checks:
+- Existing DSX-A410BT selection survived the update.
+- Android granted the new companion background foreground-service permission.
+- Monitor service reported isForeground=true after leaving the activity.
+- Temporarily selected AirPods and accepted its companion association.
+- At 17:00:31 the real Bluetooth connection launched com.metrolist.music;
+  MEDIA_PLAY followed at 17:00:34. User confirmed playback.
+- This exposed a lowercase MAC in the Android companion presence callback;
+  Android rejected it, although the ACL path successfully started playback.
+- Normalized companion intent addresses to uppercase, rebuilt, and updated.
+- Four selected ForegroundStartInstrumentedTest tests passed on Samsung:
+  allowed starts, injected Android rejection, unrelated permission failure,
+  and uppercase addresses for both connection and disconnection intents.
+- At 17:02:52 a real AirPods reconnect produced the ACL callback and both
+  companion callbacks with uppercase addresses. Duplicate callbacks were
+  ignored. Metrolist launched; MEDIA_PLAY followed at 17:02:55.
+  User confirmed playback again. No address error on this connection.
+- Removed temporary AirPods selection and association. UI returned to
+  Watching DSX-A410BT. Car-stereo selection and music-app choices preserved.
+
+Limits:
+The rejection regression injects Android's exception through ContextWrapper.
+It does not establish an actual OS-denied background start or reboot recovery.
+The playback check used AirPods; the car stereo was unavailable.
+Only the selected test class ran; existing UI tests that clear preferences
+were not invoked. The helper test APK remains installed to avoid uninstalls.
+Raw local evidence: /home/brandon/samsung-proof-20261101

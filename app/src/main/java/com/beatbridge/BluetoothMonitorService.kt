@@ -386,7 +386,7 @@ class BluetoothMonitorService : Service() {
         fun companionConnectionIntent(context: Context, address: String, connected: Boolean): Intent =
             Intent(context, BluetoothMonitorService::class.java)
                 .setAction(if (connected) ACTION_COMPANION_CONNECTED else ACTION_COMPANION_DISCONNECTED)
-                .putExtra(EXTRA_DEVICE_ADDRESS, address)
+                .putExtra(EXTRA_DEVICE_ADDRESS, address.uppercase(java.util.Locale.ROOT))
 
         internal fun isDuplicateConnection(
             lastHandledAt: Long?,
