@@ -5,7 +5,6 @@ import android.companion.DevicePresenceEvent
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 
 @RequiresApi(Build.VERSION_CODES.S)
 class BeatBridgeCompanionService : CompanionDeviceService() {
@@ -36,7 +35,7 @@ class BeatBridgeCompanionService : CompanionDeviceService() {
     }
 
     private fun dispatchConnection(address: String, connected: Boolean) {
-        ContextCompat.startForegroundService(
+        BluetoothMonitorService.startIfAllowed(
             this,
             BluetoothMonitorService.companionConnectionIntent(this, address, connected),
         )

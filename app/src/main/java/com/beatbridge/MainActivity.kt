@@ -476,7 +476,7 @@ class MainActivity : AppCompatActivity() {
         )
         val serviceIntent = Intent(this, BluetoothMonitorService::class.java)
         if (shouldMonitor) {
-            startForegroundService(serviceIntent)
+            BluetoothMonitorService.startIfAllowed(this, serviceIntent)
         } else {
             stopService(serviceIntent)
         }

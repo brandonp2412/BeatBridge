@@ -7,6 +7,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.app.ForegroundServiceStartNotAllowedException
 import android.bluetooth.BluetoothClass
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
@@ -29,6 +30,8 @@ import androidx.core.app.NotificationCompat
 class BluetoothMonitorService : Service() {
 
     private val handler = Handler(Looper.getMainLooper())
+    private var isForeground = false
+    private var receiverRegistered = false
     private var equalizer: Equalizer? = null
     private var equalizerDeviceAddress: String? = null
     private val lastHandledConnections = mutableMapOf<String, Long>()
@@ -65,11 +68,22 @@ class BluetoothMonitorService : Service() {
         super.onCreate()
         createNotificationChannel()
         createActionsNotificationChannel()
-        startForeground(NOTIFICATION_ID, buildNotification())
+        try {
+            startForeground(NOTIFICATION_ID, buildNotification())
+            isForeground = true
+        } catch (e: RuntimeException) {
+            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.S ||
+                e !is ForegroundServiceStartNotAllowedException
+            ) throw e
+            Log.w(TAG, "Monitor foreground start rejected by Android", e)
+            stopSelf()
+            return
+        }
         val filter = IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED).apply {
             addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
         }
         registerReceiver(bluetoothReceiver, filter)
+        receiverRegistered = true
         Log.i(TAG, "Monitor service created")
     }
 
@@ -294,6 +308,10 @@ class BluetoothMonitorService : Service() {
             .build()
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (!isForeground) {
+            stopSelf(startId)
+            return START_NOT_STICKY
+        }
         when (intent?.action) {
             ACTION_COMPANION_CONNECTED -> {
                 val address = intent.getStringExtra(EXTRA_DEVICE_ADDRESS)
@@ -337,7 +355,7 @@ class BluetoothMonitorService : Service() {
         super.onDestroy()
         handler.removeCallbacksAndMessages(null)
         releaseEqualizer()
-        unregisterReceiver(bluetoothReceiver)
+        if (receiverRegistered) unregisterReceiver(bluetoothReceiver)
         Log.i(TAG, "Monitor service destroyed")
     }
 
@@ -352,6 +370,18 @@ class BluetoothMonitorService : Service() {
         private const val ACTION_COMPANION_DISCONNECTED = "com.beatbridge.action.COMPANION_DISCONNECTED"
         private const val EXTRA_DEVICE_ADDRESS = "device_address"
         internal const val CONNECTION_DEDUPE_MS = 3_000L
+
+        fun startIfAllowed(context: Context, intent: Intent): Boolean =
+            try {
+                androidx.core.content.ContextCompat.startForegroundService(context, intent)
+                true
+            } catch (e: RuntimeException) {
+                if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.S ||
+                    e !is ForegroundServiceStartNotAllowedException
+                ) throw e
+                Log.w(TAG, "Android denied a background monitor start", e)
+                false
+            }
 
         fun companionConnectionIntent(context: Context, address: String, connected: Boolean): Intent =
             Intent(context, BluetoothMonitorService::class.java)

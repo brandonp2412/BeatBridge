@@ -24,6 +24,9 @@ class BootReceiver : BroadcastReceiver() {
             PackageManager.PERMISSION_GRANTED
         if (!MainActivity.shouldMonitor(hasBluetoothPermissions, anyDevice, selectedDevices)) return
 
-        context.startForegroundService(Intent(context, BluetoothMonitorService::class.java))
+        BluetoothMonitorService.startIfAllowed(
+            context,
+            Intent(context, BluetoothMonitorService::class.java),
+        )
     }
 }
