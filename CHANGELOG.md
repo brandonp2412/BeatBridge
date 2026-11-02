@@ -3,6 +3,11 @@
 All notable changes to BeatBridge are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.84] - 2026-11-02
+
+### Changed
+- chore: scrub private verification artifacts [skip ci]
+
 ## [1.0.83] - 2026-11-01
 
 ### Changed
