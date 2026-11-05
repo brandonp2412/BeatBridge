@@ -22,7 +22,6 @@ import android.media.audiofx.Equalizer
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.os.SystemClock
 import android.util.Log
 import android.view.KeyEvent
 import androidx.core.app.NotificationCompat
@@ -34,7 +33,7 @@ class BluetoothMonitorService : Service() {
     private var receiverRegistered = false
     private var equalizer: Equalizer? = null
     private var equalizerDeviceAddress: String? = null
-    private val lastHandledConnections = mutableMapOf<String, Long>()
+    private val connectionSessions = ConnectionSessionTracker()
 
     private val bluetoothReceiver = object : BroadcastReceiver() {
         @SuppressLint("MissingPermission")
@@ -54,11 +53,8 @@ class BluetoothMonitorService : Service() {
                 BluetoothDevice.ACTION_ACL_DISCONNECTED -> {
                     device?.let {
                         Log.i(TAG, "ACL disconnected: ${it.address}")
-                        lastHandledConnections.remove(it.address)
-                    }
-                    if (device == null || device.address == equalizerDeviceAddress) {
-                        releaseEqualizer()
-                    }
+                        disconnectDevice(it.address)
+                    } ?: releaseEqualizer()
                 }
             }
         }
@@ -98,23 +94,28 @@ class BluetoothMonitorService : Service() {
     }
 
     private fun maybeHandleDeviceConnected(device: BluetoothDevice) {
-        val now = SystemClock.elapsedRealtime()
-        val previous = lastHandledConnections[device.address]
-        if (isDuplicateConnection(previous, now)) {
+        val sessionId = connectionSessions.connected(device.address)
+        if (sessionId == null) {
             Log.i(TAG, "Ignoring duplicate connection callback for ${device.address}")
             return
         }
-        lastHandledConnections[device.address] = now
-        handleDeviceConnected(device)
+        handleDeviceConnected(device, sessionId)
     }
 
-    private fun handleDeviceConnected(device: BluetoothDevice) {
+    private fun disconnectDevice(address: String) {
+        connectionSessions.disconnected(address)
+        if (equalizerDeviceAddress?.equals(address, ignoreCase = true) == true) {
+            releaseEqualizer()
+        }
+    }
+
+    private fun handleDeviceConnected(device: BluetoothDevice, sessionId: Long) {
         val prefs = getSharedPreferences(MainActivity.PREFS_NAME, MODE_PRIVATE)
         val anyDevice = prefs.getBoolean(MainActivity.PREF_ANY_DEVICE, false)
         if (anyDevice && !isAudioDevice(device)) return
         if (!anyDevice) {
             val selectedAddresses = prefs.getStringSet(MainActivity.PREF_SELECTED_DEVICES, emptySet()) ?: emptySet()
-            if (device.address !in selectedAddresses) return
+            if (!ConnectionSessionTracker.matchesSelectedAddress(selectedAddresses, device.address)) return
         }
 
         Log.i(TAG, "Handling configured device connection: ${device.address}")
@@ -133,7 +134,7 @@ class BluetoothMonitorService : Service() {
         }
 
         if (appPackages.isNotEmpty()) {
-            launchAppsSequentially(appPackages, delayMs)
+            launchAppsSequentially(device.address, sessionId, appPackages, delayMs)
         } else {
             triggerMediaPlay()
         }
@@ -213,8 +214,14 @@ class BluetoothMonitorService : Service() {
         packageName
     }
 
-    private fun launchAppsSequentially(packages: List<String>, delayMs: Long) {
+    private fun launchAppsSequentially(
+        address: String,
+        sessionId: Long,
+        packages: List<String>,
+        delayMs: Long,
+    ) {
         fun step(index: Int) {
+            if (!connectionSessions.isCurrent(address, sessionId)) return
             if (index >= packages.size) {
                 triggerMediaPlay()
                 return
@@ -324,8 +331,7 @@ class BluetoothMonitorService : Service() {
                 val address = intent.getStringExtra(EXTRA_DEVICE_ADDRESS)
                 if (!address.isNullOrBlank()) {
                     Log.i(TAG, "Companion service reported disconnected: $address")
-                    lastHandledConnections.remove(address)
-                    if (address == equalizerDeviceAddress) releaseEqualizer()
+                    disconnectDevice(address)
                 }
             }
         }
@@ -369,7 +375,6 @@ class BluetoothMonitorService : Service() {
         private const val ACTION_COMPANION_CONNECTED = "com.beatbridge.action.COMPANION_CONNECTED"
         private const val ACTION_COMPANION_DISCONNECTED = "com.beatbridge.action.COMPANION_DISCONNECTED"
         private const val EXTRA_DEVICE_ADDRESS = "device_address"
-        internal const val CONNECTION_DEDUPE_MS = 3_000L
 
         fun startIfAllowed(context: Context, intent: Intent): Boolean =
             try {
@@ -387,11 +392,5 @@ class BluetoothMonitorService : Service() {
             Intent(context, BluetoothMonitorService::class.java)
                 .setAction(if (connected) ACTION_COMPANION_CONNECTED else ACTION_COMPANION_DISCONNECTED)
                 .putExtra(EXTRA_DEVICE_ADDRESS, address.uppercase(java.util.Locale.ROOT))
-
-        internal fun isDuplicateConnection(
-            lastHandledAt: Long?,
-            now: Long,
-            windowMs: Long = CONNECTION_DEDUPE_MS,
-        ): Boolean = lastHandledAt != null && now - lastHandledAt in 0 until windowMs
     }
 }
