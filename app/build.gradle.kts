@@ -4,6 +4,10 @@ plugins {
     id("com.android.application")
 }
 
+dependencyLocking {
+    lockAllConfigurations()
+}
+
 val versionProps = Properties().also { props ->
     val f = rootProject.file("version.properties")
     if (f.exists()) props.load(f.inputStream())
