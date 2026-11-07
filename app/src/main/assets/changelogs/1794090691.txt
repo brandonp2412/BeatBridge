@@ -1,0 +1,2 @@
+• build(android): upgrade AGP and enforce reproducible releases
+• fix(android): optimize release and handle system insets

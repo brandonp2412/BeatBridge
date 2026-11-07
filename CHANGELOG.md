@@ -3,6 +3,12 @@
 All notable changes to BeatBridge are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.85] - 2026-11-07
+
+### Changed
+- fix(android): optimize release and handle system insets
+- build(android): upgrade AGP and enforce reproducible releases
+
 ## [1.0.84] - 2026-11-02
 
 ### Changed
