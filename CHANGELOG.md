@@ -3,6 +3,11 @@
 All notable changes to BeatBridge are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.86] - 2026-11-15
+
+### Changed
+- fix(android): disable ABI splits for Play app bundles
+
 ## [1.0.85] - 2026-11-07
 
 ### Changed
