@@ -119,9 +119,9 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        loadMusicApps()
         setupDeviceRecyclerView()
         setupAppRecyclerView()
+        loadMusicApps()
         setupSearch()
         setupAnyDeviceToggle()
         setupDelaySlider()
@@ -174,21 +174,28 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadMusicApps() {
-        val launchIntent = Intent(Intent.ACTION_MAIN, null).apply {
-            addCategory(Intent.CATEGORY_LAUNCHER)
-        }
-        val found = packageManager.queryIntentActivities(launchIntent, 0)
-            .mapNotNull { resolveInfo ->
-                val pkg = resolveInfo.activityInfo.packageName
-                val label = resolveInfo.loadLabel(packageManager).toString()
-                if (pkg == packageName) null else MusicApp(pkg, label)
+        Thread({
+            val launchIntent = Intent(Intent.ACTION_MAIN, null).apply {
+                addCategory(Intent.CATEGORY_LAUNCHER)
             }
+            val found = packageManager.queryIntentActivities(launchIntent, 0)
+                .mapNotNull { resolveInfo ->
+                    val pkg = resolveInfo.activityInfo.packageName
+                    val label = resolveInfo.loadLabel(packageManager).toString()
+                    if (pkg == packageName) null else MusicApp(pkg, label)
+                }
+            val apps = normalizeMusicApps(found)
 
-        musicAppList.addAll(normalizeMusicApps(found))
-
-        val isEmpty = musicAppList.isEmpty()
-        binding.tvAppsEmpty.visibility = if (isEmpty) View.VISIBLE else View.GONE
-        binding.rvApps.visibility = if (isEmpty) View.GONE else View.VISIBLE
+            runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                musicAppList.clear()
+                musicAppList.addAll(apps)
+                appAdapter.filter(binding.etAppSearch.text?.toString().orEmpty())
+                val isEmpty = musicAppList.isEmpty()
+                binding.tvAppsEmpty.visibility = if (isEmpty) View.VISIBLE else View.GONE
+                binding.rvApps.visibility = if (isEmpty) View.GONE else View.VISIBLE
+            }
+        }, "BeatBridge-app-discovery").start()
     }
 
     private fun setupDeviceRecyclerView() {
