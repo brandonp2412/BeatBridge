@@ -75,7 +75,10 @@ jobs:
 
       - name: Submit production release
         run: |
+          VERSION=$(sed -n 's/^versionName=//p' version.properties)
+          python3 scripts/release_notes.py "release-notes/$VERSION.txt"
           python3 scripts/publish_google_play.py \
             --aab app/build/outputs/bundle/release/app-release.aab \
             --track production \
+            --notes "$(cat "release-notes/$VERSION.txt")" \
             --status "${{ inputs.release_status }}"
