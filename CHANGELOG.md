@@ -3,6 +3,11 @@
 All notable changes to BeatBridge are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.87] - 2026-11-26
+
+### Changed
+- fix(android): load installed music apps off the main thread
+
 ## [1.0.86] - 2026-11-15
 
 ### Changed

@@ -1,0 +1,1 @@
+• fix(android): load installed music apps off the main thread
