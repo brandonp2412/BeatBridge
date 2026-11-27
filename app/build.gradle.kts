@@ -63,6 +63,9 @@ android {
 
     buildTypes {
         debug {
+            if (providers.gradleProperty("isolatedE2E").map(String::toBoolean).getOrElse(false)) {
+                applicationIdSuffix = ".toolchain.e2e"
+            }
             if (storePassword != null) {
                 signingConfig = signingConfigs.getByName("release")
             }
